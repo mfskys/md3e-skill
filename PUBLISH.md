@@ -119,12 +119,14 @@ MD3E Skill v1.3.0 — Material Design 3 Expressive (MD3E) AI 技能包
 ```powershell
 $src  = 'D:\path\to\md3e'
 $dest = Join-Path $env:USERPROFILE '.codebuddy\skills\md3e'
-New-Item -ItemType Directory -Path $dest -Force | Out-Null
-Copy-Item -Path (Join-Path $src '*') -Destination $dest -Recurse -Force
+robocopy $src $dest /E /XD .git .github dist __pycache__ /XF .gitignore .gitattributes *.pyc *.zip /NFL /NDL /NJH /NJS /NP
 ```
 
 - 安装位置：`%USERPROFILE%\.codebuddy\skills\md3e\`（用户级技能目录，对所有项目生效）
-- 每次 `md3e/` 内容有更新，重新执行此命令即可覆盖更新。
+- **不要用 `Copy-Item "$src\*"`**：它会把隐藏的 `.git` 整个复制进技能目录（几十 MB 的无用数据，
+  还会把本地历史带出去）。上面用 robocopy 排除 `.git`、`dist`、`__pycache__` 等再同步。
+- robocopy 退出码 **0–7 都是成功**（1 = 复制了文件），≥ 8 才是错误。
+- 每次 `md3e/` 内容有更新，重新执行此命令即可镜像同步（robocopy 只复制有变化的部分）。
 - 同步后新开一个对话即可使用最新版本。
 
 ---
@@ -149,8 +151,7 @@ python scripts/package_skill.py --out ../dist
 
 # 4. 同步到本地技能目录
 $dest = Join-Path $env:USERPROFILE '.codebuddy\skills\md3e'
-New-Item -ItemType Directory -Path $dest -Force | Out-Null
-Copy-Item -Path (Join-Path $repo '*') -Destination $dest -Recurse -Force
+robocopy $repo $dest /E /XD .git .github dist __pycache__ /XF .gitignore .gitattributes *.pyc *.zip /NFL /NDL /NJH /NJS /NP
 
 Write-Host "完成。接下来去 https://github.com/mfskys/md3e-skill/releases/new 创建 Release。"
 ```
