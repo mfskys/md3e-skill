@@ -12,6 +12,11 @@ and drop the resulting ``md3e/`` folder straight into their skills directory:
         ├── assets/
         └── scripts/
 
+Only what the skill needs at run time is packaged. Repository-maintenance files
+(``audit_run.py``, ``CONTRIBUTING.md``, ``PUBLISH.md`` and the packager itself)
+are excluded; ``README.md`` / ``CHANGELOG.md`` / ``LICENSE`` are kept for
+attribution and version history.
+
 Every archive entry uses a forward slash. Windows PowerShell's
 ``Compress-Archive`` writes backslashes instead, which the ZIP specification
 forbids: on macOS/Linux the tree then extracts as one flat pile of files whose
@@ -37,6 +42,14 @@ EXCLUDE_DIRS = {'.git', '.github', '.idea', '.vscode', '__pycache__',
 EXCLUDE_FILES = {'.gitignore', '.gitattributes', '.DS_Store', 'Thumbs.db'}
 EXCLUDE_PATTERNS = ('*.pyc', '*.pyo', '*.zip')
 
+# Repository-maintenance files — kept in the repo, but end users don't need them.
+EXCLUDE_RELATIVE = {
+    'audit_run.py',
+    'CONTRIBUTING.md',
+    'PUBLISH.md',
+    'scripts/package_skill.py',
+}
+
 
 def iter_skill_files(root: Path):
     """Yield skill-relative paths of everything that should ship."""
@@ -45,7 +58,10 @@ def iter_skill_files(root: Path):
         for name in sorted(filenames):
             if name in EXCLUDE_FILES or any(fnmatch.fnmatch(name, p) for p in EXCLUDE_PATTERNS):
                 continue
-            yield Path(dirpath, name).relative_to(root)
+            rel = Path(dirpath, name).relative_to(root)
+            if rel.as_posix() in EXCLUDE_RELATIVE:
+                continue
+            yield rel
 
 
 def main():
@@ -72,7 +88,7 @@ def main():
     size_mb = sum((src / rel).stat().st_size for rel in files) / 1024 / 1024
     print(f'Packaged {len(files)} files ({size_mb:.1f} MB)')
     print(f'  archive : {zip_path}')
-    print(f'  contents: {args.name}/  (SKILL.md + references/ + assets/ + scripts/)')
+    print(f'  contents: {args.name}/  (SKILL.md + references/ + assets/ + scripts/ + README/CHANGELOG/LICENSE)')
 
 
 if __name__ == '__main__':

@@ -60,6 +60,9 @@ Version/dependency refresh to the **2026-10-08** baseline, plus a tooling and co
   `expressiveLightColorScheme()` while `Color.kt` (and `generate_theme.py`) provide
   `LightColorScheme`; the template now uses `LightColorScheme` and documents the built-in
   alternative.
+- The release zip now ships only what the skill needs at run time: repository-maintenance files
+  (`audit_run.py`, `CONTRIBUTING.md`, `PUBLISH.md`, `scripts/package_skill.py`) are excluded;
+  `README.md` / `CHANGELOG.md` / `LICENSE` stay for attribution and version history.
 
 ### Docs
 - Unified the `m3-content` page count at **256 Markdown files = 249 spec pages + 7 hub pages**
