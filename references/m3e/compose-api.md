@@ -1,13 +1,13 @@
 # M3E 在 Compose 中的 API 与迁移
 
-核对日期：**2026-09-14**
-来源：Compose Material 3 官方版本说明（页面更新 2026-09-09）✅ +
+核对日期：**2026-10-08**
+来源：Compose Material 3 官方版本说明（页面更新 2026-10-07）✅ +
 Compose 中的 Material Design 3（页面更新 2026-09-08）✅
 
 ---
 
 > 📌 **版本策略**：本项目**采用最新版本（含 Alpha/Beta/RC）**——
-> 即 `material3 = 1.5.0-alpha28`，见 `../version-baseline.md`。
+> 即 `material3 = 1.5.0-beta01`，见 `../version-baseline.md`。
 > 本文件中"稳定线（1.4.0）"的表述只是**官方通道状态说明**，不代表我们的选择。
 
 ## 一、版本门槛速查
@@ -18,17 +18,19 @@ Compose 中的 Material Design 3（页面更新 2026-09-08）✅
 | 动态取色（`dynamicLightColorScheme` 等） | M3 早期，需 **API 31+** | ✅ 稳定 |
 | 组件动画切换到 `MotionScheme` | **1.4.0** | ✅ 稳定 |
 | `MotionScheme.standard()` / `expressive()` | 1.4.0-alpha02 起（由 `standardMotionScheme`/`expressiveMotionScheme` 重命名） | 随版本 |
-| `MaterialExpressiveTheme`、`expressiveLightColorScheme` | 1.5.0-alpha18 | ⚠️ alpha |
-| `ToggleButton` / FAB Menu | 1.4.0-alpha19 | ⚠️ alpha 线 |
-| `ButtonGroup` | 1.4.0-alpha22 | ⚠️ alpha 线 |
-| `SplitButton` | 1.4.0-alpha20 | ⚠️ alpha 线 |
-| Flexible TopAppBar 系列 / `FlexibleBottomAppBar` | 1.5.0-alpha23 | ⚠️ alpha 线 |
-| `FloatingToolbar` | 1.5.0-alpha22 | ⚠️ alpha 线 |
-| `SearchBarState` + slot 版 `SearchBar` | 1.5.0-alpha24 | ⚠️ alpha 线 |
-| `carouselParallaxScrollEffect` | 1.5.0-alpha28 | ⚠️ alpha 线 |
-| `material3-ripple` | 1.5.0-alpha24 | ⚠️ alpha 线（独立库） |
+| `MaterialExpressiveTheme`、`expressiveLightColorScheme` | 1.5.0-alpha18 | ⚠️ 1.5.0 线 |
+| `ToggleButton` / FAB Menu | 1.4.0-alpha19 | ⚠️ 1.5.0 线 |
+| `ButtonGroup` | 1.4.0-alpha22 | ⚠️ 1.5.0 线 |
+| `SplitButton` | 1.4.0-alpha20 | ⚠️ 1.5.0 线 |
+| Flexible TopAppBar 系列 / `FlexibleBottomAppBar` | 1.5.0-alpha23 | ⚠️ 1.5.0 线 |
+| `FloatingToolbar` | 1.5.0-alpha22 | ⚠️ 1.5.0 线 |
+| `SearchBarState` + slot 版 `SearchBar` | 1.5.0-alpha24 | ⚠️ 1.5.0 线 |
+| `carouselParallaxScrollEffect` | 1.5.0-alpha28 | ⚠️ 1.5.0 线 |
+| `material3-ripple` | 1.5.0-alpha24 | ⚠️ 1.5.0 线（独立库） |
+| `PolygonShape` 就地 transform API | 1.5.0-beta01 | ⚠️ 1.5.0 线 |
+| `CarouselDefaults.ItemSpacing` / `.ContentPadding` | 1.5.0-beta01 | ⚠️ 1.5.0 线 |
 
-**关键结论**：**M3E 的完整组件集目前只在 alpha 线**。
+**关键结论**：**M3E 的完整组件集目前只在 1.5.0 线**（该线已于 2026-10-07 进入 beta）。
 稳定线（1.4.0）提供的是"M3 + MotionScheme + 部分 Expressive"，不包含全套 M3E 新组件。
 
 ---
@@ -41,7 +43,7 @@ Compose 中的 Material Design 3（页面更新 2026-09-08）✅
 | **`androidx.compose.material.icons` 不再推荐** | 官方建议改用 fonts.google.com/icons 的 Material Symbols 矢量图 |
 | `NavigationBarItem` / `NavigationRailItem` 选中标签色 | `onSurface` → **`secondary`**；恢复需手动设 `selectedTextColor = MaterialTheme.colorScheme.onSurface` |
 | 组件动画机制 | 全部改用新的 **`MotionScheme`** |
-| **1.4.0-beta01 移除了所有 `ExperimentalMaterial3ExpressiveApi` / `ExperimentalMaterial3ComponentOverrideApi` 的公共 API** | 想继续用必须切到 **1.5.0-alpha** |
+| **1.4.0-beta01 移除了所有 `ExperimentalMaterial3ExpressiveApi` / `ExperimentalMaterial3ComponentOverrideApi` 的公共 API** | 想继续用必须切到 **1.5.0 线** |
 
 ---
 
@@ -50,7 +52,7 @@ Compose 中的 Material Design 3（页面更新 2026-09-08）✅
 ```
 1. 锁定版本策略
    ├─ 稳：material3 = 1.4.0（BOM 决定），只用稳定组件 + MotionScheme
-   └─ 全：material3 = 1.5.0-alphaNN（compose-bom-alpha 已覆盖 material3，一般无需单独写版本）
+   └─ 全：material3 = 1.5.0-betaNN（compose-bom-alpha 已覆盖 material3，一般无需单独写版本）
 
 2. 主题层
    ├─ 浅/深色 ColorScheme（Material Theme Builder 生成 Color.kt / Theme.kt）
@@ -77,12 +79,14 @@ Compose 中的 Material Design 3（页面更新 2026-09-08）✅
 
 ---
 
-## 四、alpha 线的 API 变动频率（风险提示）
+## 四、1.5.0 线的 API 变动频率（风险提示）
 
-1.5.0-alpha 线在多个月内发生了**大量重命名与移除**，例如：
+1.5.0 线在多个月内发生了**大量重命名与移除**，例如：
 
 | 版本 | 变动 |
 | --- | --- |
+| beta01 | `TopAppBarDefaults.enterAlwaysScrollBehavior` 的 `reverseLayout` 重载以弃用形式恢复；`SliderState` 的 `DraggableState` 恢复（二进制兼容）；`PolygonShape` 改为就地 `transform {}` / `copy()`，`CornerRounding` 上移并新增 `dp()` / `fraction()`；`HorizontalCenteredHeroCarousel` 的 `maxItemWidth` → `preferredItemWidth`；新增 `CarouselDefaults.ItemSpacing` / `.ContentPadding` |
+| alpha29 | **源码破坏**：`Slider`/`RangeSlider` 的 `onValueChange` 变为**必填**且参数顺序变化；`TimeInput`/`DateInput` 改用新 `TextFieldState` 文本字段 API |
 | alpha28 | `Slider`/`RangeSlider` 无状态重载弃用；`RangeSliderState` 字段重命名 |
 | alpha27 | `TopAppBarDefaults` 旧 scrollBehavior 重载移除；`LocalMotionScheme` 移除；`RichTimePickerDialog` → `VibrantTimePickerDialog` |
 | alpha26 | `ExposedDropdownMenu` 改为扩展函数（**需改 import**） |

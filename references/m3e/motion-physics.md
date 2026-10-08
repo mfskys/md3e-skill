@@ -1,6 +1,6 @@
 # M3E 动效物理系统（Motion Physics）
 
-核对日期：**2026-09-14**
+核对日期：**2026-10-08**
 
 | 内容 | 来源 | 可信度 |
 | --- | --- | --- |
@@ -67,7 +67,7 @@ animateFloatAsState(targetValue = x, animationSpec = spec)
 
 ### 主题接入
 
-- `MaterialExpressiveTheme`（1.4.0/1.5.0-alpha 线）可一次性把 M3E 的颜色方案与动效方案接上 ⚠️。
+- `MaterialExpressiveTheme`（1.5.0 线，自 alpha18 起）可一次性把 M3E 的颜色方案与动效方案接上 ⚠️。
 - 组件动画在 **M3 1.4.0 起已改用 `MotionScheme` 定义** ✅ —— 因此自定义组件应与主题方案保持一致，
   不要自己写死时长，否则同屏动效节奏会打架。
 

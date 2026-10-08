@@ -1,6 +1,6 @@
 # Material 3 Expressive Design Language Overview
 
-Verified: **2026-09-14** | Markers: ✅ checked against official text / ⚠️ verify yourself / 🚧 experimental API
+Verified: **2026-10-08** | Markers: ✅ checked against official text / ⚠️ verify yourself / 🚧 experimental API
 
 | Source | Notes |
 | --- | --- |
@@ -137,18 +137,18 @@ Official selection table ✅:
 
 ## 8. M3E Adoption Strategy (aggressive track)
 
-> 📌 This project uses **`material3 = 1.5.0-alpha28`**, so **the full M3E component set is available**.
+> 📌 This project uses **`material3 = 1.5.0-beta01`**, so **the full M3E component set is available**.
 > See `../version-baseline.md`.
 
 1. **Theme first**: wire the three subsystems via `MaterialTheme` + dynamic color —
    prerequisite for every M3E component.
 2. **Motion via `MotionScheme`**: component animations switched to `MotionScheme` in 1.4.0;
    custom animations should read `MaterialTheme.motionScheme` instead of hard-coding `tween` durations.
-3. **Components from the alpha line**: ToggleButton, ButtonGroup, SplitButton, FAB Menu,
+3. **Components from the 1.5.0 line**: ToggleButton, ButtonGroup, SplitButton, FAB Menu,
    FlexibleTopAppBar, slot SearchBar, etc. are all available;
    but **confine call sites** to `ui/expressive/` and record an exit plan.
 4. **Do not rely on old `ExperimentalMaterial3ExpressiveApi` signatures**: public APIs under it
-   were removed in 1.4.0-beta01; the alpha line keeps renaming (see `compose-api.en.md` §4) —
+   were removed in 1.4.0-beta01; the 1.5.0 line keeps renaming (see `compose-api.en.md` §4) —
    always read release notes before upgrading.
 5. **Icon source switch**: from M3 1.4.0, `material-icons-core` is no longer a transitive dependency
    and `androidx.compose.material.icons` is discouraged; use Material Symbols vectors instead.

@@ -3,10 +3,11 @@
 Material 3 Expressive (M3E) is an **expansion** of Material Design 3, not a replacement. This
 document covers what changed, what's new, and what stayed the same.
 
-> **Version baseline (2026-09-14):** full M3E component set ships only on the **alpha line**
-> (`material3` **1.5.0-alpha28**). Stable **1.4.0** = M3 + `MotionScheme` + partial Expressive.
-> Since **1.4.0-beta01**, all public `ExperimentalMaterial3ExpressiveApi` APIs were **removed from
-> the stable line**. Details: `references/version-baseline.md`, `references/m3e/compose-api.md`.
+> **Version baseline (2026-10-08):** full M3E component set ships only on the **1.5.0 line**
+> (`material3` **1.5.0-beta01**, which entered beta on 2026-10-07). Stable **1.4.0** = M3 +
+> `MotionScheme` + partial Expressive. Since **1.4.0-beta01**, all public
+> `ExperimentalMaterial3ExpressiveApi` APIs were **removed from the stable line**.
+> Details: `references/version-baseline.md`, `references/m3e/compose-api.md`.
 
 ---
 
@@ -188,13 +189,13 @@ val animSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
 ### Notes
 
 - `MaterialExpressiveTheme` is backwards compatible — all M3 components work inside it
-- Some M3E APIs still use `@ExperimentalMaterial3ExpressiveApi` on the alpha line; on **stable
-  1.4.0-beta01+** those public experimental APIs were removed — stay on 1.5.0-alpha for full M3E
+- Some M3E APIs still use `@ExperimentalMaterial3ExpressiveApi` on the 1.5.0 line; on **stable
+  1.4.0-beta01+** those public experimental APIs were removed — stay on the **1.5.0** line for full M3E
 - Graduated non-experimental (as of 1.5.0-alpha22/23): Flexible AppBar family, `FloatingToolbar`,
   `ButtonGroup` stable APIs, slot `SearchBarState` (alpha24)
 - Dynamic color works the same in M3 and M3E
 - **Icons:** declare `material-icons-core` explicitly or switch to Material Symbols
-- **Alpha churn:** read release notes before every material3 alpha bump — see
+- **Preview-line churn:** read release notes before every material3 alpha/beta bump — see
   `references/version-baseline.md` §4 (`LocalMotionScheme` removed, `ExposedDropdownMenu` import
   change, Slider stateless overloads deprecated, etc.)
 

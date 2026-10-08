@@ -1,17 +1,17 @@
 # M3E 组件清单
 
-核对日期：**2026-09-14**
+核对日期：**2026-10-08**
 来源：Compose Material 3 官方版本说明（https://developer.android.com/jetpack/androidx/releases/compose-material3，
-页面更新 2026-09-09）✅
+页面更新 2026-10-07）✅
 
 **读法说明**：括号里的 `alphaNN` 是"该 API 从实验性毕业"的版本。
-`1.4.0` 是当前**稳定线**，`1.5.0-alphaNN` 是 **alpha 线**。
+`1.4.0` 是当前**稳定线**，`1.5.0-betaNN` 是 **1.5.0 线**。
 要判断某个组件能否用，先看它在哪条线上。
 
 ---
 
 > 📌 **版本策略**：本项目**采用最新版本（含 Alpha/Beta/RC）**——
-> `material3 = 1.5.0-alpha28`，因此下文所有"alpha 线"组件**都在我们的可用范围内**。
+> `material3 = 1.5.0-beta01`，因此下文所有"1.5.0 线"组件**都在我们的可用范围内**。
 > 见 `../version-baseline.md`。第 11 节的"采用建议"已按此更新。
 
 ## 一、按钮与操作
@@ -133,7 +133,7 @@
 | 需求 | 首选 | 备注 |
 | --- | --- | --- |
 | 主操作 | `Button` / `FilledTonalButton` | 一个屏幕**只放一个**最强强调按钮 |
-| 相关操作组合 | `ButtonGroup` | 5.0-alpha 线 |
+| 相关操作组合 | `ButtonGroup` | 1.5.0 线 |
 | 主操作 + 附加菜单 | `SplitButton` | 同上 |
 | 顶部标题 + 滚动折叠 | `MediumFlexibleTopAppBar` / `LargeFlexibleTopAppBar` | 需按窗口高度决定是否折叠（见 `../m3-content/foundations/layout/breakpoints/overview.md`） |
 | 底部常驻操作栏 | `FlexibleBottomAppBar` | 小屏比 TopAppBar 更易触达 |
@@ -146,13 +146,13 @@
 
 ## 十一、采用建议（已按"激进策略"更新）
 
-1. **直接用 alpha 线的 M3E 全套**（`material3 = 1.5.0-alpha28`）：
+1. **直接用 1.5.0 线的 M3E 全套**（`material3 = 1.5.0-beta01`）：
    ToggleButton / ButtonGroup / SplitButton / FAB Menu / Flexible AppBar /
    slot 版 SearchBar 全部可用，不再有"稳定线拿不到"的问题。
 2. **调用点收敛**：M3E 组件集中放在 `ui/expressive/`（或 `ui/components/`），
-   便于应对 alpha 线的重命名与移除。
-3. **每个 alpha 依赖登记退出计划**：升级到 stable 时删除兼容层；
+   便于应对 1.5.0 线的重命名与移除。
+3. **每个预览版依赖登记退出计划**：升级到 stable 时删除兼容层；
    回落映射见 `../version-baseline.md`。
 4. **图标从 Material Symbols 取**：M3 1.4.0 起不再传递 `material-icons-core`，
    且 `androidx.compose.material.icons` 不再推荐。
-5. **升级前必读 release notes**：1.5.0-alpha 线变动频繁（见 `compose-api.md` 第四节）。
+5. **升级前必读 release notes**：1.5.0 线变动频繁（见 `compose-api.md` 第四节）。

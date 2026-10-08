@@ -1,6 +1,6 @@
 # Material 3 Expressive 设计语言总览
 
-核对日期：**2026-09-14** ｜ 标记约定：✅ 官方原文已核对 / ⚠️ 需自行复核 / 🚧 实验性 API
+核对日期：**2026-10-08** ｜ 标记约定：✅ 官方原文已核对 / ⚠️ 需自行复核 / 🚧 实验性 API
 
 | 来源 | 说明 |
 | --- | --- |
@@ -133,18 +133,18 @@ val colorScheme = when {
 
 ## 八、M3E 落地策略建议（已按"激进策略"更新）
 
-> 📌 本项目采用 **`material3 = 1.5.0-alpha28`**，即 **M3E 全套组件都可用**。
+> 📌 本项目采用 **`material3 = 1.5.0-beta01`**，即 **M3E 全套组件都可用**。
 > 见 `../version-baseline.md`。
 
 1. **主题先行**：先用 `MaterialTheme` + 动态取色把三大子系统接好，
    这是所有 M3E 组件的前提。
 2. **动效用 `MotionScheme`**：组件动画 1.4.0 起已切到 `MotionScheme`，自定义动画应显式取
    `MaterialTheme.motionScheme`，不要自己写死 `tween` 时长。
-3. **组件直接用 alpha 线**：ToggleButton、ButtonGroup、SplitButton、FAB Menu、
+3. **组件直接用 1.5.0 线**：ToggleButton、ButtonGroup、SplitButton、FAB Menu、
    FlexibleTopAppBar、slot 版 SearchBar 等全部可用；
    但**调用点收敛**到 `ui/expressive/`，并登记退出计划。
 4. **不要依赖 `ExperimentalMaterial3ExpressiveApi` 的旧签名**：1.4.0-beta01 已移除该项下的公共 API；
-   alpha 线持续重命名（见 `compose-api.md` 第四节），升级前必读 release notes。
+   1.5.0 线持续重命名（见 `compose-api.md` 第四节），升级前必读 release notes。
 5. **图标来源切换**：M3 1.4.0 起不再传递 `material-icons-core`，
    且 `androidx.compose.material.icons` 不再推荐，改用 Material Symbols 矢量图。
 6. **规范细节以浏览器查阅为准**：动效曲线、组件规格表等精确数值本库标注 ⚠️，

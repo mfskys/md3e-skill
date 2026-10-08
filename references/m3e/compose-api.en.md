@@ -1,13 +1,13 @@
 # M3E Compose API & Migration
 
-Verified: **2026-09-14**
-Sources: Compose Material 3 official release notes (page updated 2026-09-09) ✅ +
+Verified: **2026-10-08**
+Sources: Compose Material 3 official release notes (page updated 2026-10-07) ✅ +
 Material Design 3 for Compose (page updated 2026-09-08) ✅
 
 ---
 
 > 📌 **Version policy**: this project **adopts the newest versions (including Alpha/Beta/RC)** —
-> i.e. `material3 = 1.5.0-alpha28`, see `../version-baseline.md`.
+> i.e. `material3 = 1.5.0-beta01`, see `../version-baseline.md`.
 > Mentions of the "stable line (1.4.0)" below are **channel status notes only**, not our choice.
 
 ## 1. Version gates quick reference
@@ -18,17 +18,20 @@ Material Design 3 for Compose (page updated 2026-09-08) ✅
 | Dynamic color (`dynamicLightColorScheme` etc.) | Early M3, needs **API 31+** | ✅ Stable |
 | Component animations switch to `MotionScheme` | **1.4.0** | ✅ Stable |
 | `MotionScheme.standard()` / `expressive()` | Since 1.4.0-alpha02 (renamed from `standardMotionScheme`/`expressiveMotionScheme`) | Version-dependent |
-| `MaterialExpressiveTheme`, `expressiveLightColorScheme` | 1.5.0-alpha18 | ⚠️ alpha |
-| `ToggleButton` / FAB Menu | 1.4.0-alpha19 | ⚠️ alpha line |
-| `ButtonGroup` | 1.4.0-alpha22 | ⚠️ alpha line |
-| `SplitButton` | 1.4.0-alpha20 | ⚠️ alpha line |
-| Flexible TopAppBar family / `FlexibleBottomAppBar` | 1.5.0-alpha23 | ⚠️ alpha line |
-| `FloatingToolbar` | 1.5.0-alpha22 | ⚠️ alpha line |
-| `SearchBarState` + slot `SearchBar` | 1.5.0-alpha24 | ⚠️ alpha line |
-| `carouselParallaxScrollEffect` | 1.5.0-alpha28 | ⚠️ alpha line |
-| `material3-ripple` | 1.5.0-alpha24 | ⚠️ alpha line (separate library) |
+| `MaterialExpressiveTheme`, `expressiveLightColorScheme` | 1.5.0-alpha18 | ⚠️ 1.5.0 line |
+| `ToggleButton` / FAB Menu | 1.4.0-alpha19 | ⚠️ 1.5.0 line |
+| `ButtonGroup` | 1.4.0-alpha22 | ⚠️ 1.5.0 line |
+| `SplitButton` | 1.4.0-alpha20 | ⚠️ 1.5.0 line |
+| Flexible TopAppBar family / `FlexibleBottomAppBar` | 1.5.0-alpha23 | ⚠️ 1.5.0 line |
+| `FloatingToolbar` | 1.5.0-alpha22 | ⚠️ 1.5.0 line |
+| `SearchBarState` + slot `SearchBar` | 1.5.0-alpha24 | ⚠️ 1.5.0 line |
+| `carouselParallaxScrollEffect` | 1.5.0-alpha28 | ⚠️ 1.5.0 line |
+| `material3-ripple` | 1.5.0-alpha24 | ⚠️ 1.5.0 line (separate library) |
+| `PolygonShape` in-place transform API | 1.5.0-beta01 | ⚠️ 1.5.0 line |
+| `CarouselDefaults.ItemSpacing` / `.ContentPadding` | 1.5.0-beta01 | ⚠️ 1.5.0 line |
 
-**Key conclusion**: **the full M3E component set currently exists only on the alpha line**.
+**Key conclusion**: **the full M3E component set currently exists only on the 1.5.0 line**
+(which entered beta on 2026-10-07).
 The stable line (1.4.0) ships "M3 + MotionScheme + partial Expressive" without the full M3E new components.
 
 ---
@@ -41,7 +44,7 @@ The stable line (1.4.0) ships "M3 + MotionScheme + partial Expressive" without t
 | **`androidx.compose.material.icons` discouraged** | Officially recommend Material Symbols vectors from fonts.google.com/icons |
 | `NavigationBarItem` / `NavigationRailItem` selected label color | `onSurface` → **`secondary`**; to restore set `selectedTextColor = MaterialTheme.colorScheme.onSurface` manually |
 | Component animation mechanism | All moved to **`MotionScheme`** |
-| **1.4.0-beta01 removed all public APIs under `ExperimentalMaterial3ExpressiveApi` / `ExperimentalMaterial3ComponentOverrideApi`** | To keep using them, switch to **1.5.0-alpha** |
+| **1.4.0-beta01 removed all public APIs under `ExperimentalMaterial3ExpressiveApi` / `ExperimentalMaterial3ComponentOverrideApi`** | To keep using them, switch to the **1.5.0 line** |
 
 ---
 
@@ -50,7 +53,7 @@ The stable line (1.4.0) ships "M3 + MotionScheme + partial Expressive" without t
 ```
 1. Lock the version policy
    ├─ Stable: material3 = 1.4.0 (via BOM), stable components + MotionScheme only
-   └─ Full:   material3 = 1.5.0-alphaNN (compose-bom-alpha already covers material3; usually no explicit version)
+   └─ Full:   material3 = 1.5.0-betaNN (compose-bom-alpha already covers material3; usually no explicit version)
 
 2. Theme layer
    ├─ Light/dark ColorScheme (Material Theme Builder → Color.kt / Theme.kt)
@@ -77,12 +80,14 @@ The stable line (1.4.0) ships "M3 + MotionScheme + partial Expressive" without t
 
 ---
 
-## 4. Alpha-line API churn (risk notice)
+## 4. 1.5.0-line API churn (risk notice)
 
-The 1.5.0-alpha line saw **many renames and removals** over months, e.g.:
+The 1.5.0 line saw **many renames and removals** over months, e.g.:
 
 | Version | Change |
 | --- | --- |
+| beta01 | `TopAppBarDefaults.enterAlwaysScrollBehavior` `reverseLayout` overload restored as deprecated; `SliderState` `DraggableState` restored (binary compat); `PolygonShape` now in-place `transform {}` / `copy()`, `CornerRounding` moved to top level with `dp()` / `fraction()`; `HorizontalCenteredHeroCarousel` `maxItemWidth` → `preferredItemWidth`; new `CarouselDefaults.ItemSpacing` / `.ContentPadding` |
+| alpha29 | **Source-breaking**: `Slider`/`RangeSlider` `onValueChange` now required and reordered; `TimeInput`/`DateInput` moved to the new `TextFieldState` text-field API |
 | alpha28 | Stateless `Slider`/`RangeSlider` overloads deprecated; `RangeSliderState` field renames |
 | alpha27 | Old `TopAppBarDefaults` scrollBehavior overloads removed; `LocalMotionScheme` removed; `RichTimePickerDialog` → `VibrantTimePickerDialog` |
 | alpha26 | `ExposedDropdownMenu` becomes an extension function (**update imports**) |

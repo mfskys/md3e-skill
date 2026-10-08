@@ -2,10 +2,10 @@
 
 Organized catalog of all Material 3 / Material 3 Expressive components available in
 `androidx.compose.material3`. Components marked **[M3E]** are Expressive-specific; some still
-require `@ExperimentalMaterial3ExpressiveApi` on the **1.5.0-alpha** line — others graduated
+require `@ExperimentalMaterial3ExpressiveApi` on the **1.5.0** line — others graduated
 non-experimental (Flexible AppBars, FloatingToolbar, ButtonGroup APIs, SearchBarState).
 
-**Version baseline (2026-09-14):** full M3E = `material3` **1.5.0-alpha28**; stable **1.4.0**
+**Version baseline (2026-10-08):** full M3E = `material3` **1.5.0-beta01**; stable **1.4.0**
 lacks the full Expressive set. See `references/version-baseline.md` and `references/m3e/components.md`.
 
 For full API signatures, search `references/compose-api-full.md` with the component name.

@@ -1,7 +1,7 @@
 ---
 name: md3e
-version: 1.2.0
-description: "Material Design 3 Expressive (MD3E) design system skill for Android Jetpack Compose. This skill should be used when building Android UI with Material 3 / Material 3 Expressive design language, including theming (color schemes, typography, shapes, motion), component implementation (buttons, cards, navigation, FAB, floating toolbar, button group, etc.), and design guidance (when to use which component, M3 vs M3E differences, expressive design principles). Covers both MD3E (the evolution released 2025, targeting Android 16) and baseline M3 (many components only have M3 specs). Knowledge baseline 2026-09-14: material3 1.5.0-alpha28 / stable 1.4.0. Triggers on requests like Material 3 Expressive, MD3E, Material Design 3, M3 theme, MaterialExpressiveTheme, Compose Material 3 component, or when designing/building Android UI that should follow Google Material design guidelines."
+version: 1.3.0
+description: "Material Design 3 Expressive (MD3E) design system skill for Android Jetpack Compose. This skill should be used when building Android UI with Material 3 / Material 3 Expressive design language, including theming (color schemes, typography, shapes, motion), component implementation (buttons, cards, navigation, FAB, floating toolbar, button group, etc.), and design guidance (when to use which component, M3 vs M3E differences, expressive design principles). Covers both MD3E (the evolution released 2025, targeting Android 16) and baseline M3 (many components only have M3 specs). Knowledge baseline 2026-10-08: material3 1.5.0-beta01 / stable 1.4.0. Triggers on requests like Material 3 Expressive, MD3E, Material Design 3, M3 theme, MaterialExpressiveTheme, Compose Material 3 component, or when designing/building Android UI that should follow Google Material design guidelines."
 ---
 
 # Material Design 3 Expressive (MD3E) Skill
@@ -13,10 +13,12 @@ implementation in Android Jetpack Compose (`androidx.compose.material3`). MD3E i
 of M3, with research-backed updates to theming, components, motion, typography, and shapes. It targets
 Android 16 but is available via the Compose Material 3 library (1.5.0-alpha+) for lower API levels.
 
-**Knowledge baseline: 2026-09-14.** Recommended dependency for full M3E:
-`androidx.compose.material3:material3:1.5.0-alpha28` (or `compose-bom-alpha`). Stable **1.4.0**
-provides M3 + `MotionScheme` + partial Expressive only — since **1.4.0-beta01** the stable line
-removed public `ExperimentalMaterial3ExpressiveApi` APIs.
+**Knowledge baseline: 2026-10-08.** Recommended dependency for full M3E:
+`androidx.compose.material3:material3:1.5.0-beta01` (or `compose-bom-alpha:2026.10.00`). Stable
+**1.4.0** provides M3 + `MotionScheme` + partial Expressive only — since **1.4.0-beta01** the stable
+line removed public `ExperimentalMaterial3ExpressiveApi` APIs. The 1.5.0 line **entered beta on
+2026-10-07**, so the Expressive APIs are stabilizing; Google still does not recommend alpha/beta
+builds for production.
 
 **M3 vs M3E:** MD3E is an *expansion* of M3, not a replacement. Many components still only have M3
 specs. Prefer MD3E APIs where available; fall back to M3 for components not yet updated.
@@ -30,7 +32,7 @@ specs. Prefer MD3E APIs where available; fall back to M3 for components not yet 
 - Answering questions about Material 3 / M3E specs (color roles, type scale, shape scale)
 - Designing expressive UI with new MD3E components (FloatingToolbar, ButtonGroup, WideNavigationRail, etc.)
 - Reviewing UI for Material design compliance
-- Checking version gates / alpha-line API churn (SplitButton, SearchBar, renames)
+- Checking version gates / 1.5.0-line API churn (SplitButton, SearchBar, renames)
 
 ## Quick Reference: Key MD3E APIs
 
@@ -44,7 +46,7 @@ specs. Prefer MD3E APIs where available; fall back to M3 for components not yet 
 
 ### MD3E-Only Components (version gates: see `references/version-baseline.md`)
 
-On **1.5.0-alpha** line (full set); several graduated non-experimental:
+On the **1.5.0** line (full set); several graduated non-experimental:
 
 - `HorizontalFloatingToolbar` / `VerticalFloatingToolbar` — floating contextual toolbars (alpha22+)
 - `ButtonGroup` — connected button row with overflow menu (APIs stable alpha22+; `ButtonGroupScope` sealed alpha25+)
@@ -57,6 +59,7 @@ On **1.5.0-alpha** line (full set); several graduated non-experimental:
 - Slot-based `SearchBar` + `SearchBarState` (stable alpha24); `AppBarWithSearch` replaces `TopSearchBar`
 - Expressive list items / menus, Expressive TimePicker (`VibrantTimePickerDialog` was `RichTimePickerDialog`)
 - `ToggleButton` / `FilledTonalToggleButton` (was `TonalToggleButton`); `carouselParallaxScrollEffect` (alpha28)
+- `PolygonShape` in-place transform API — `transform { }` / `copy()`, `CornerRounding.dp()` / `.fraction()` (beta01)
 
 ## Workflow
 
@@ -64,8 +67,8 @@ Follow these steps when building or modifying Material UI:
 
 1. **Set up theming** — Use `MaterialExpressiveTheme` instead of `MaterialTheme`. See the snippet
    below for the standard scaffold. Dynamic color requires API 31+ with fallback.
-2. **Pin versions** — For full M3E use `material3` **1.5.0-alpha28** (or `compose-bom-alpha`).
-   Read `references/version-baseline.md` before choosing stable vs alpha; declare
+2. **Pin versions** — For full M3E use `material3` **1.5.0-beta01** (or `compose-bom-alpha:2026.10.00`).
+   Read `references/version-baseline.md` before choosing stable vs the 1.5.0 line; declare
    `material-icons-core` explicitly (not transitive since 1.4.0) or use Material Symbols.
 3. **Generate a theme from a brand color (optional)** — Run `scripts/generate_theme.py` to derive a
    full light/dark color scheme from one seed color. Copy `assets/templates/` into the project and
@@ -110,17 +113,20 @@ fun AppTheme(
 
 ```bash
 python scripts/generate_theme.py --seed #6750A4 --package com.example.app --output ./theme/
+python scripts/generate_theme.py --seed #6750A4 --variant expressive --contrast 0.25 --output ./theme/
 ```
 
-Outputs `Color.kt` + `Theme.kt`. Uses Material Color Utilities (HCT); has a built-in fallback if the
-library is not installed.
+Outputs `Color.kt` + `Theme.kt`. Uses Material Color Utilities (HCT) when installed — the script
+auto-detects both the 0.2.x (`theme_from_argb_color`) and the legacy 0.1.x APIs. Without the library
+it falls back to a built-in **HSL approximation** (not HCT — values will differ). `--variant` picks
+the HCT variant (`tonalspot` = M3 baseline, `expressive`, `vibrant`, …); `--contrast` sets 0.0–1.0.
 
 ## Resources (read on demand)
 
 Only open these when the workflow above points to them — they are large and not needed every turn.
 
-- `references/version-baseline.md` — Version matrix, feature gates, alpha churn log (2026-09-14).
-- `references/m3e/` — Curated latest M3E notes (verified 2026-09-14), Chinese primary with
+- `references/version-baseline.md` — Version matrix, feature gates, 1.5.0-line churn log (2026-10-08).
+- `references/m3e/` — Curated latest M3E notes (verified 2026-10-08), Chinese primary with
   English mirrors (`*.en.md`): `design-system.md`, `color-typography-shape.md`,
   `motion-physics.md`, `components.md`, `compose-api.md`.
 - `references/compose-api-full.md` — Full `androidx.compose.material3` API reference (~8000 lines).
@@ -132,9 +138,10 @@ Only open these when the workflow above points to them — they are large and no
 - `references/m3-vs-m3e-diff.md` — M3↔M3E differences, migration, I/O 2026 updates.
 - `references/expressive-design-tactics.md` — The 7 official M3E design tactics with examples.
 - `references/design-research.md` — HCT color science, variable fonts, motion/accessibility research.
-- `references/m3-content/` — Mirror of m3.material.io (**249 pages, captured 2026-09-14**, clean
-  Markdown + front matter). Authoritative design specs; read `m3-content/components/{name}/specs.md`
-  or `m3-content/styles/{category}/` as needed.
+- `references/m3-content/` — Mirror of m3.material.io (**256 pages** = 249 spec pages + 7 hub pages;
+  captured 2026-09-14, re-verified against the official sitemap on 2026-10-08 — no page added or
+  removed; clean Markdown + front matter). Authoritative design specs; read
+  `m3-content/components/{name}/specs.md` or `m3-content/styles/{category}/`.
 - `assets/templates/` — Ready-to-use `MD3ETheme.kt`, `Color.kt`, `Type.kt`, `Shape.kt`. Copy into
   `ui/theme/` and customize.
 - `scripts/generate_theme.py` — Seed color → complete Compose theme (see Workflow step 3).

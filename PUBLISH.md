@@ -41,11 +41,11 @@ git push origin main
 
 ```powershell
 cd D:\path\to\md3e
-git tag v1.2.0              # 首次发布
-# 升级版本示例：
-#   git tag v1.3.0          # 新功能
-#   git tag v1.2.1          # 修 bug
-git push origin v1.2.0
+git tag v1.3.0              # 本次发布
+# 升级版本示例（当前为 v1.3.0）：
+#   git tag v1.4.0          # 新功能
+#   git tag v1.3.1          # 修 bug
+git push origin v1.3.0
 ```
 
 - Tag 是 Git 对某次 commit 的版本标记，Release 必须依赖一个 Tag。
@@ -58,14 +58,17 @@ git push origin v1.2.0
 发布包放在**仓库外**的目录（例如仓库同级的 `dist/`），避免污染仓库：
 
 ```powershell
-$repo  = 'D:\path\to\md3e'
-$dist  = Join-Path (Split-Path $repo -Parent) 'dist'
-if (-not (Test-Path $dist)) { New-Item -ItemType Directory -Path $dist -Force }
-Compress-Archive -Path (Join-Path $repo '*') -DestinationPath (Join-Path $dist 'md3e.zip') -Force
+cd D:\path\to\md3e
+python scripts/package_skill.py --out ../dist
 ```
 
-- 生成位置：`<repo的上级目录>\dist\md3e.zip`
-- 用 `-Force` 覆盖旧包，每次发布前重新生成。
+- 生成位置：`<repo的上级目录>/dist/md3e.zip`
+- 脚本每次重建整个 zip，发布前重新运行即可。
+- **不要用 PowerShell 的 `Compress-Archive`**：它写入的条目用反斜杠分隔（`references\a\b.md`），
+  违反 ZIP 规范，在 macOS / Linux 上解压会被当成单个文件名，整棵目录树被压平；它也不会生成
+  技能要求的顶层目录。
+- 产出的 zip 结构固定为 `md3e/SKILL.md` + `md3e/references/` + `md3e/assets/` + `md3e/scripts/`，
+  用户解压后可直接把 `md3e/` 拷进技能目录。
 - 这个 zip 用于上传到 GitHub Release 的 "Attach binaries"，方便用户一键下载。
 - **不要**把本机绝对路径、用户名等写进仓库内文档后再打包。
 
@@ -75,8 +78,8 @@ Compress-Archive -Path (Join-Path $repo '*') -DestinationPath (Join-Path $dist '
 
 1. 打开：https://github.com/mfskys/md3e-skill/releases/new
 2. 填写：
-   - **Choose a tag**：选刚推的 `v1.2.0`（或新版本号）
-   - **Release title**：`MD3E Skill v1.2.0`
+   - **Choose a tag**：选刚推的 `v1.3.0`（或新版本号）
+   - **Release title**：`MD3E Skill v1.3.0`
    - **Release description**：粘贴下方模板
    - **Attach binaries**：把上一步生成的 `md3e.zip` 拖进去
    - **Set as the latest**：勾上
@@ -85,13 +88,13 @@ Compress-Archive -Path (Join-Path $repo '*') -DestinationPath (Join-Path $dist '
 ### Release 描述模板
 
 ```markdown
-首次发布 — Material Design 3 Expressive (MD3E) AI 技能包
+MD3E Skill v1.3.0 — Material Design 3 Expressive (MD3E) AI 技能包
 
 适用于 Android Jetpack Compose，兼容 CodeBuddy / Cursor / Windsurf 等支持 Skill 格式的 AI 编程助手。
 
 ## 功能
 - 完整 androidx.compose.material3 API 参考（约 8000 行）
-- 249 个 m3.material.io 官方设计规范文件
+- 256 个 m3.material.io 官方设计规范文件（249 规范页 + 7 导航页）
 - 48 个色彩角色、15 种排版、5 级形状、弹簧动效系统
 - 全组件目录 + M3/M3E 差异对比 + 迁移指南
 - 7 大表现力设计策略 + 设计研究文档
@@ -134,17 +137,15 @@ cd $repo
 
 # 1. 提交代码
 git add .
-git commit -m "release: v1.2.0"
+git commit -m "release: v1.3.0"
 git push origin main
 
 # 2. 打 Tag
-git tag v1.2.0
-git push origin v1.2.0
+git tag v1.3.0
+git push origin v1.3.0
 
 # 3. 生成发布包
-$dist = Join-Path (Split-Path $repo -Parent) 'dist'
-if (-not (Test-Path $dist)) { New-Item -ItemType Directory -Path $dist -Force }
-Compress-Archive -Path (Join-Path $repo '*') -DestinationPath (Join-Path $dist 'md3e.zip') -Force
+python scripts/package_skill.py --out ../dist
 
 # 4. 同步到本地技能目录
 $dest = Join-Path $env:USERPROFILE '.codebuddy\skills\md3e'
@@ -158,9 +159,11 @@ Write-Host "完成。接下来去 https://github.com/mfskys/md3e-skill/releases/
 
 ## 版本号约定（SemVer）
 
-- `v1.2.0` → `v1.3.0`：新增功能（向下兼容）
-- `v1.2.0` → `v1.2.1`：修 bug（向下兼容）
-- `v1.2.0` → `v2.0.0`：破坏性改动（不向下兼容）
+当前版本：**v1.3.0**。
+
+- `v1.3.0` → `v1.4.0`：新增功能（向下兼容）
+- `v1.3.0` → `v1.3.1`：修 bug（向下兼容）
+- `v1.3.0` → `v2.0.0`：破坏性改动（不向下兼容）
 
 ---
 

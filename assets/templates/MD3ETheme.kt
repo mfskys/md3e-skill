@@ -4,11 +4,8 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MotionScheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.expressiveLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
@@ -16,7 +13,9 @@ import androidx.compose.ui.platform.LocalContext
  * MD3E Theme template — MaterialExpressiveTheme with spring motion + dynamic color.
  *
  * Replace `com.example.app` with your package name.
- * Customize DarkColorScheme / use expressiveLightColorScheme() or your own lightColorScheme().
+ * Uses `LightColorScheme` / `DarkColorScheme` from Color.kt. To use the built-in expressive
+ * palette instead, swap the light branch for `expressiveLightColorScheme()` (import it from
+ * `androidx.compose.material3`).
  */
 @Composable
 fun AppTheme(
@@ -32,7 +31,7 @@ fun AppTheme(
             else dynamicLightColorScheme(context)
         }
         darkTheme -> DarkColorScheme
-        else -> expressiveLightColorScheme()
+        else -> LightColorScheme
     }
 
     MaterialExpressiveTheme(

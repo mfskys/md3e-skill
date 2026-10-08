@@ -15,17 +15,17 @@ Material 3 Expressive 是 Google 于 2025 年推出的 Material Design 3 演进�
 
 本技能**同时覆盖 MD3E 和基础 M3**——许多组件目前只有 M3 规范，因此技能在 MD3E 可用时优先使用，不可用时回退到 M3。
 
-**知识基线：2026-09-14。** 完整 M3E 组件集需要 `material3` **1.5.0-alpha28**；稳定线 **1.4.0** 仅提供 M3 + MotionScheme + 部分 Expressive。
+**知识基线：2026-10-08。** 完整 M3E 组件集需要 `material3` **1.5.0-beta01**（1.5.0 线已于 2026-10-07 进入 beta）；稳定线 **1.4.0** 仅提供 M3 + MotionScheme + 部分 Expressive。
 
 ## 功能特性
 
-- **完整 API 参考**：完整的 `androidx.compose.material3` 包文档（10000+ 行）
+- **完整 API 参考**：完整的 `androidx.compose.material3` 包文档（约 8000 行）
 - **设计 Token**：全部色彩角色、排版样式、形状规格、动效系统的精确数值
 - **组件目录**：按类别组织的全部 M3/M3E 组件，标注 M3/M3E 归属与用法
-- **版本基线**：功能门槛、alpha 线变动日志、BOM 覆盖范围（2026-09-14）
+- **版本基线**：功能门槛、1.5.0 线变动日志、BOM 覆盖范围（2026-10-08）
 - **M3E 精要笔记**：设计体系、色彩/排版/形状、动效物理、组件清单、Compose API
 - **M3 vs M3E 差异**：清晰的对比表与迁移指南
-- **官方规范镜像**：249 页干净 Markdown（抓取于 2026-09-14）
+- **官方规范镜像**：256 页 Markdown（249 规范页 + 7 导航页；抓取于 2026-09-14，2026-10-08 经官方 sitemap 复核，无页面增删）
 - **代码模板**：可直接使用的 `MD3ETheme.kt`、`Color.kt`、`Type.kt`、`Shape.kt`
 - **主题生成器**：Python 脚本，从单个种子色生成完整配色方案
 
@@ -62,21 +62,21 @@ pip install material-color-utilities
 md3e/
 ├── SKILL.md                          # 入口：触发条件、工作流、API 速查
 ├── references/
-│   ├── version-baseline.md           # 版本矩阵、功能门槛、alpha 变动（2026-09-14）
-│   ├── m3e/                          # M3E 精要笔记（中文 5 + 英文 *.en.md 镜像，核对 2026-09-14）
+│   ├── version-baseline.md           # 版本矩阵、功能门槛、1.5.0 线变动（2026-10-08）
+│   ├── m3e/                          # M3E 精要笔记（中文 5 + 英文 *.en.md 镜像，核对 2026-10-08）
 │   │   ├── design-system.md          # 主题体系、动态取色、系统 UI（另有 .en.md）
 │   │   ├── color-typography-shape.md # 颜色 / 排版 / 形状（另有 .en.md）
 │   │   ├── motion-physics.md         # MotionScheme 弹簧动效（另有 .en.md）
 │   │   ├── components.md             # 按版本线标注的组件清单（另有 .en.md）
-│   │   └── compose-api.md            # API 门槛、迁移、alpha 变动（另有 .en.md）
-│   ├── compose-api-full.md           # 完整官方 API 参考（10000+ 行）
+│   │   └── compose-api.md            # API 门槛、迁移、1.5.0 线变动（另有 .en.md）
+│   ├── compose-api-full.md           # 完整官方 API 参考（约 8000 行）
 │   ├── design-tokens.md              # 色彩/排版/形状/动效/高度 token
 │   ├── components-catalog.md         # 全组件目录（按类别，M3/M3E 标注）
 │   ├── m3-vs-m3e-diff.md             # 差异对比 + 迁移指南 + IO2026 更新
 │   ├── expressive-design-tactics.md  # 7 大表现力设计策略详解
 │   ├── design-research.md            # 色彩科学/可读性/动效模式/无障碍研究
-│   └── m3-content/                   # m3.material.io 官网镜像（249 页，2026-09-14）
-│       ├── components/               # 37 个组件 × 概览/规格/指南/无障碍
+│   └── m3-content/                   # m3.material.io 官网镜像（256 页，2026-09-14）
+│       ├── components/               # 36 个组件 × 概览/规格/指南/无障碍
 │       ├── styles/                   # 色彩、动效、形状、排版、间距...
 │       └── foundations/              # 布局、设计 token、手表、XR、无障碍
 ├── assets/

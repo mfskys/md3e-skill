@@ -17,10 +17,18 @@ to contribute.
 2. Make your changes. Keep `SKILL.md` concise — only add context the model lacks.
 3. Verify the theme generator runs:
    ```bash
-   pip install material-color-utilities   # optional, has built-in fallback
+   pip install material-color-utilities   # optional; without it an HSL approximation is used
    python scripts/generate_theme.py --seed #6750A4 --output ./theme/
    ```
-4. Commit with a clear message, then open a Pull Request against `main`.
+4. Run the repository self-audit — it must exit 0:
+   ```bash
+   python audit_run.py
+   ```
+5. If you touched anything that ships, rebuild the release package:
+   ```bash
+   python scripts/package_skill.py --out ../dist
+   ```
+6. Commit with a clear message, then open a Pull Request against `main`.
 
 ## Content Guidelines
 
@@ -29,6 +37,9 @@ to contribute.
   API reference.
 - Prefer MD3E APIs where available; fall back to baseline M3 and say so explicitly.
 - Update `CHANGELOG.md` under the appropriate version (SemVer, see `PUBLISH.md`).
+- When refreshing the version baseline, update the date in `SKILL.md`, `README.md`,
+  `README.zh-CN.md`, `references/version-baseline.md` and every `references/m3e/*.md`
+  (including the `*.en.md` mirrors), then re-run `python audit_run.py`.
 
 ## License
 

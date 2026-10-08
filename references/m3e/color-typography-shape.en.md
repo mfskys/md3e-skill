@@ -1,6 +1,6 @@
 # M3E Color / Typography / Shape
 
-Verified: **2026-09-14**
+Verified: **2026-10-08**
 Sources: Material Design 3 for Compose (official, page updated 2026-09-08) ✅ +
 Compose Material 3 release notes (page updated 2026-09-09) ✅
 

@@ -1,6 +1,6 @@
 # M3E Motion Physics System
 
-Verified: **2026-09-14**
+Verified: **2026-10-08**
 
 | Content | Source | Confidence |
 | --- | --- | --- |
@@ -68,7 +68,7 @@ animateFloatAsState(targetValue = x, animationSpec = spec)
 
 ### Theme wiring
 
-- `MaterialExpressiveTheme` (1.4.0 / 1.5.0-alpha line) can wire M3E color + motion schemes in one call ⚠️.
+- `MaterialExpressiveTheme` (1.5.0 line, since alpha18) can wire M3E color + motion schemes in one call ⚠️.
 - Component animations **have used `MotionScheme` since M3 1.4.0** ✅ — custom components should
   match the theme's scheme; hard-coded durations will fight on-screen rhythm.
 
