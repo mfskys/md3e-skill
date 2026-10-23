@@ -1,6 +1,6 @@
 # M3E Motion Physics System
 
-Verified: **2026-10-08**
+Verified: **2026-10-23**
 
 | Content | Source | Confidence |
 | --- | --- | --- |

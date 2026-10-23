@@ -1,6 +1,6 @@
 # M3E Color / Typography / Shape
 
-Verified: **2026-10-08**
+Verified: **2026-10-23**
 Sources: Material Design 3 for Compose (official, page updated 2026-09-08) ✅ +
 Compose Material 3 release notes (page updated 2026-09-09) ✅
 
@@ -54,8 +54,12 @@ Official **Material Theme Builder** generates and exports Compose code from bran
 
 ## 2.1 Type scale
 
-**5 categories × 3 sizes = 15 styles** ✅: Display / Headline / Title / Body / Label,
+**5 categories × 3 sizes = 15 base styles** ✅: Display / Headline / Title / Body / Label,
 each Large / Medium / Small.
+
+**M3E (1.5.0 line) exposes 30 slots**: those 15 base styles + 15 `*Emphasized` variants
+(`displayLargeEmphasized` … `labelSmallEmphasized`), read via
+`MaterialTheme.typography.titleLargeEmphasized`. Stable 1.4.0 has only the 15 base styles.
 
 Default examples (listed in official docs) ✅:
 
@@ -82,15 +86,18 @@ Access: `MaterialTheme.typography.titleLarge`.
 
 # 3. Shape System
 
-## 3.1 Five corner radii
+## 3.1 Eight corner radii
 
-| Step | Example values (official docs) |
+| Step | Value (verified in `ShapeTokens.kt`, 2026-10-23) |
 | --- | --- |
 | `extraSmall` | 4dp |
 | `small` | 8dp |
 | `medium` | 12dp |
 | `large` | 16dp |
-| `extraLarge` | 24dp |
+| `largeIncreased` | 20dp (M3E) |
+| `extraLarge` | 28dp |
+| `extraLargeIncreased` | 32dp (M3E) |
+| `extraExtraLarge` | 48dp (M3E) |
 
 All are `RoundedCornerShape`; also `RectangleShape`, `CircleShape`.
 Access: `MaterialTheme.shapes.medium`, or override per component.

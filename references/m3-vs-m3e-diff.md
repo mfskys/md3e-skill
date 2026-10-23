@@ -3,8 +3,8 @@
 Material 3 Expressive (M3E) is an **expansion** of Material Design 3, not a replacement. This
 document covers what changed, what's new, and what stayed the same.
 
-> **Version baseline (2026-10-08):** full M3E component set ships only on the **1.5.0 line**
-> (`material3` **1.5.0-beta01**, which entered beta on 2026-10-07). Stable **1.4.0** = M3 +
+> **Version baseline (2026-10-23):** full M3E component set ships only on the **1.5.0 line**
+> (`material3` **1.5.0-beta02**, 2026-10-21; the line entered beta on 2026-10-07). Stable **1.4.0** = M3 +
 > `MotionScheme` + partial Expressive. Since **1.4.0-beta01**, all public
 > `ExperimentalMaterial3ExpressiveApi` APIs were **removed from the stable line**.
 > Details: `references/version-baseline.md`, `references/m3e/compose-api.md`.
@@ -19,8 +19,8 @@ document covers what changed, what's new, and what stayed the same.
 | Color scheme | `lightColorScheme()` / `darkColorScheme()` | + `expressiveLightColorScheme()` |
 | Color roles | 30 roles | + 18 Fixed roles + 7 surface container roles = 48+ |
 | Motion | Easing curves + duration tokens | `MotionScheme` (spring physics), stable since 1.4.0 |
-| Shapes | 5-size scale (uniform usage) | 5-size scale (varied, mixed, morphing) |
-| Typography | 15 styles (static) | 15 styles (variable fonts, emphasis) |
+| Shapes | 5-size scale (uniform usage) | **8-size scale** (5 M3 + `largeIncreased` / `extraLargeIncreased` / `extraExtraLarge`; varied, mixed, morphing) |
+| Typography | 15 styles (static) | **30 slots** (15 base + 15 `*Emphasized`; variable fonts) |
 | Experimental API | `@ExperimentalMaterial3Api` | `@ExperimentalMaterial3ExpressiveApi` (removed from stable 1.4.0-beta01; still used on 1.5.0-alpha for some APIs) |
 | Min Compose version | 1.0+ | 1.5.0-alpha+ (for full M3E) |
 | Target Android | Any | Android 16 (visual style), but works on lower |
@@ -60,7 +60,7 @@ primary/secondary/tertiary).
 |-----------|---------|
 | `HorizontalFloatingToolbar` / `VerticalFloatingToolbar` (`FloatingToolbar`) | Contextual toolbar floating above content (1.5.0-alpha22+) |
 | `ButtonGroup` | Connected button row with overflow menu and compression animation (1.4.0-alpha22+) |
-| `SplitButton` | Primary action + overflow trigger (**use `SplitButton`, not `SplitButtonLayout`** — layout deprecated alpha25) |
+| `SplitButtonLayout` | Primary action + overflow trigger. **There is no `SplitButton` composable** (source-verified 2026-10-23) — use `SplitButtonLayout(leadingButton = …, trailingButton = …)` with `SplitButtonDefaults.LeadingButton` / `TrailingButton` |
 | `WideNavigationRail` / `ModalWideNavigationRail` | Expanded navigation rail for medium/expanded screens |
 | `ToggleFloatingActionButton` | FAB that morphs between two states |
 | `FloatingActionButtonMenu` | FAB that expands into a vertical menu |

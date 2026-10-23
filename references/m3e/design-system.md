@@ -1,6 +1,6 @@
 # Material 3 Expressive 设计语言总览
 
-核对日期：**2026-10-08** ｜ 标记约定：✅ 官方原文已核对 / ⚠️ 需自行复核 / 🚧 实验性 API
+核对日期：**2026-10-23** ｜ 标记约定：✅ 官方原文已核对 / ⚠️ 需自行复核 / 🚧 实验性 API
 
 | 来源 | 说明 |
 | --- | --- |
@@ -46,8 +46,8 @@ MaterialTheme(
 | 子系统 | 内容 | 详见 |
 | --- | --- | --- |
 | ColorScheme | 5 个关键色 + 各自的 13 色调调色板；角色语义（primary / onPrimary / primaryContainer …） | `color-typography-shape.md` |
-| Typography | 5 类 × 3 号 = 15 个样式 | 同上 |
-| Shapes | extraSmall → extraLarge 五档圆角 | 同上 |
+| Typography | 5 类 × 3 号 = 15 个基础样式；M3E 增至 30 个槽位（+15 `*Emphasized`） | 同上 |
+| Shapes | 八档圆角（M3 五档 + M3E 的 `largeIncreased` / `extraLargeIncreased` / `extraExtraLarge`） | 同上 |
 | Motion | 弹簧物理动效（M3E 新增） | `motion-physics.md` |
 
 ---
@@ -133,14 +133,14 @@ val colorScheme = when {
 
 ## 八、M3E 落地策略建议（已按"激进策略"更新）
 
-> 📌 本项目采用 **`material3 = 1.5.0-beta01`**，即 **M3E 全套组件都可用**。
+> 📌 本项目采用 **`material3 = 1.5.0-beta02`**，即 **M3E 全套组件都可用**。
 > 见 `../version-baseline.md`。
 
 1. **主题先行**：先用 `MaterialTheme` + 动态取色把三大子系统接好，
    这是所有 M3E 组件的前提。
 2. **动效用 `MotionScheme`**：组件动画 1.4.0 起已切到 `MotionScheme`，自定义动画应显式取
    `MaterialTheme.motionScheme`，不要自己写死 `tween` 时长。
-3. **组件直接用 1.5.0 线**：ToggleButton、ButtonGroup、SplitButton、FAB Menu、
+3. **组件直接用 1.5.0 线**：ToggleButton、ButtonGroup、SplitButtonLayout、FAB Menu、
    FlexibleTopAppBar、slot 版 SearchBar 等全部可用；
    但**调用点收敛**到 `ui/expressive/`，并登记退出计划。
 4. **不要依赖 `ExperimentalMaterial3ExpressiveApi` 的旧签名**：1.4.0-beta01 已移除该项下的公共 API；

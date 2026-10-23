@@ -4,6 +4,78 @@ All notable changes to this skill are documented here. The format is based on
 [Semantic Versioning](https://semver.org/lang/zh-CN/) and the skill follows the
 `MAJOR.MINOR.PATCH` scheme described in `PUBLISH.md`.
 
+## [1.4.0] - 2026-10-23
+
+Source-verified refresh: M3E signatures were checked against the actual `androidx/androidx`
+source tree, and the skill gained the "how to actually write it" layer it was missing.
+
+### Added
+- `references/m3e-api-signatures.md` — source-verified signatures for 1.5.0-line components:
+  `MaterialExpressiveTheme`, 8-size `Shapes`, `MotionScheme`, `Horizontal/VerticalFloatingToolbar`,
+  `ButtonGroup`, `ToggleButton`, `SplitButtonLayout`, `ToggleFloatingActionButton`,
+  `FloatingActionButtonMenu`, `WideNavigationRail`, `ShortNavigationBar`, `SearchBar`/`SearchBarState`,
+  Flexible AppBars, `LoadingIndicator`, wavy progress, `ScrollField`, `MaterialShapes`.
+- `references/compose-patterns.md` — 11 verified code patterns (theming, scaffold, adaptive
+  navigation, floating toolbar, connected button group, split button, search, loading, lists,
+  motion, accessibility) with anti-pattern table.
+- `references/official-samples.md` — map of the 49 official `*Samples.kt` files, the six
+  `android/compose-samples` apps, Now in Android, Material Catalog and the official docs,
+  plus rules for copying from them.
+- `references/m3-content/blog/` — 4 M3E / I/O 2026 articles; `references/m3-content/develop/` —
+  Compose, MDC-Android, Flutter and Web guides. Mirror is now **263 pages = 249 spec + 14 hub**.
+- `references/component-index.md` — component → source file → official sample → spec page, plus URL
+  templates and a "which source wins on conflict" table.
+- `scripts/install_skill.py` — one-command install for native-skill assistants: allow-list copy,
+  refuses to install inside the source tree, supports `--target` / `--assistant` / `--home` /
+  `--dry-run` / `--force`, and prints the verification question.
+
+### Fixed
+- **`SplitButton` does not exist**: the container is `SplitButtonLayout` + `SplitButtonDefaults.
+  LeadingButton` / `TrailingButton`. Corrected in `SKILL.md`, the component catalog, the M3E notes
+  (zh + en) and the diff doc.
+- **`Shapes` has 8 sizes**, not 5: `largeIncreased` / `extraLargeIncreased` / `extraExtraLarge` were
+  missing; `extraLarge` is **28dp** (was documented as 24dp). Synced in `design-tokens.md`,
+  `Shape.kt` and the SKILL quick reference.
+- **`Typography` has 30 slots** on the 1.5.0 line: the 15 base styles + 15 `*Emphasized` variants.
+- **`LoadingIndicator` / `ContainedLoadingIndicator` exist** (`progress: () -> Float`); the
+  wavy indicators are named `LinearWavyProgressIndicator` / `CircularWavyProgressIndicator`.
+- **`PolygonShape` lives in `androidx.compose.foundation.shape`**, not `material3`;
+  `MaterialShapes` only provides 35 `RoundedPolygon` presets + `toShape()` / `toPath()`.
+- **`SearchBarState`** transitions are the suspend `animateToExpanded()` / `animateToCollapsed()`;
+  there is no `show()` / `hide()` / `isExpanded`.
+- Catalog gaps filled: `ShortNavigationBar`, `ScrollField`, `AppBarRow` / `AppBarColumn`,
+  `LoadingIndicator`, wavy progress.
+
+### Changed
+- Version baseline → **2026-10-23**: `material3` **1.5.0-beta02** (2026-10-21),
+  `material3-a2ui` 1.0.0-alpha02; beta02 carries no documented API changes.
+- `SKILL.md` workflow is now 8 steps and explicitly says "start from official patterns";
+  `official-samples.md` / `compose-patterns.md` / `m3e-api-signatures.md` added to resources.
+- `version-baseline.md` gained a "source-verified facts" section; `m3e/compose-api.md` replaced its
+  open-verification list with verified results.
+- README (en/zh) feature lists and structure trees updated.
+
+### Docs
+- `official-samples.md` now records **verified** dependency versions (raw files, 2026-10-23):
+  `compose-samples` (Jetchat / Reply / Jetsnack, identical) uses stable BOM **2026.09.00**
+  (→ `material3` 1.4.0), Kotlin **2.4.20**, AGP **9.3.1**; Now in Android uses
+  `compose-bom-alpha` **2025.09.01**, Kotlin **2.3.0**, AGP **9.3.2**. Consequence documented:
+  official samples do **not** exercise the 1.5.0-line Expressive components.
+- Installation docs now cover both native-skill assistants (CodeBuddy, Claude Code, any
+  Agent-Skills-compatible tool) and rules-based assistants (Cursor, Windsurf, Trae, Cline,
+  GitHub Copilot, 通义灵码, 文心快码, CodeGeeX).
+- `PUBLISH.md`: release template, tag examples and version policy bumped to **v1.4.0**;
+  drive-letter placeholders replaced with `<repo>`; install section generalized.
+
+### Packaging
+- `audit_run.py`: knowledge baseline → 2026-10-23; nested Git checkouts are pruned from the
+  Markdown scan, so a local source clone never slows the audit.
+- `scripts/package_skill.py`: switched to an **allow-list** (`SKILL.md`, `README*`,
+  `CHANGELOG.md`, `LICENSE`, `references/`, `assets/`, `scripts/`) — anything else in the working
+  tree is ignored by construction.
+- Local reference checkouts and scratch dirs stay out of Git through `.git/info/exclude`
+  (machine-local, never committed) and out of the archive through the allow-list.
+
 ## [1.3.0] - 2026-10-08
 
 Version/dependency refresh to the **2026-10-08** baseline, plus a tooling and consistency pass.

@@ -6,8 +6,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 /**
- * M3 Typography — all 15 type scale styles.
+ * M3 Typography — the 15 base type-scale styles.
  * Default font: Roboto. Replace fontFamily with your custom font if needed.
+ *
+ * On the 1.5.0 line, `Typography` also exposes 15 `*Emphasized` slots
+ * (`displayLargeEmphasized` … `labelSmallEmphasized`). They are intentionally not
+ * re-declared here: leave them null to inherit the official `TypographyTokens` values,
+ * or set them explicitly if your brand needs a different emphasized cut.
  */
 val AppTypography = Typography(
     // Display

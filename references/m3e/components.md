@@ -1,8 +1,8 @@
 # M3E 组件清单
 
-核对日期：**2026-10-08**
+核对日期：**2026-10-23**
 来源：Compose Material 3 官方版本说明（https://developer.android.com/jetpack/androidx/releases/compose-material3，
-页面更新 2026-10-07）✅
+页面更新 2026-10-21）+ `androidx/androidx` 源码逐文件核对 ✅
 
 **读法说明**：括号里的 `alphaNN` 是"该 API 从实验性毕业"的版本。
 `1.4.0` 是当前**稳定线**，`1.5.0-betaNN` 是 **1.5.0 线**。
@@ -11,8 +11,8 @@
 ---
 
 > 📌 **版本策略**：本项目**采用最新版本（含 Alpha/Beta/RC）**——
-> `material3 = 1.5.0-beta01`，因此下文所有"1.5.0 线"组件**都在我们的可用范围内**。
-> 见 `../version-baseline.md`。第 11 节的"采用建议"已按此更新。
+> `material3 = 1.5.0-beta02`，因此下文所有"1.5.0 线"组件**都在我们的可用范围内**。
+> 见 `../version-baseline.md`。第 12 节的"采用建议"已按此更新。
 
 ## 一、按钮与操作
 
@@ -21,7 +21,7 @@
 | `ToggleButton` 系列 | 1.4.0-alpha19 稳定 | M3E 新增的切换按钮 |
 | `FilledTonalToggleButton` | alpha25 重命名 | 原名 `TonalToggleButton` |
 | `ButtonGroup` | 1.4.0-alpha22 稳定 | 按钮组；alpha25 起 `ButtonGroupScope` 改为 **sealed interface**，`Modifier.animateWidth` 拆成两个重载 |
-| `SplitButton` | 1.4.0-alpha20 转非实验 | alpha25 起 **弃用 `SplitButtonLayout`**，统一用 `SplitButton` |
+| `SplitButtonLayout` | 1.4.0-alpha20 转非实验 | ⚠️ 源码核对（2026-10-23）：**没有 `SplitButton` 这个 composable**。容器始终是 `SplitButtonLayout(leadingButton, trailingButton, …)`，前后两半用 `SplitButtonDefaults.LeadingButton` / `TrailingButton`（含 `Tonal*` / `Outlined*` / `Elevated*`） |
 | FAB 与 **FAB Menu** | 1.4.0-alpha19 毕业 | FAB 展开菜单是 M3E 的标志性交互 |
 | `ExtendedFloatingActionButton` / `Button` / `TextButton` | 稳定 | 强调程度递减的三档（传统 M3） |
 
@@ -113,7 +113,18 @@
 
 ---
 
-## 九、自适应相关组件（本项目底座的核心）
+## 九、反馈与加载
+
+| 组件 | 状态 | 要点 |
+| --- | --- | --- |
+| `LoadingIndicator` / `ContainedLoadingIndicator` | 1.5.0 线 | 无参 = 不确定进度；`progress: () -> Float` = 确定进度（lambda 形式避免每帧重组）。**主线源码中仍需 `@ExperimentalMaterial3ExpressiveApi`** |
+| `LinearWavyProgressIndicator` / `CircularWavyProgressIndicator` | 1.5.0 线 | 波浪轨道；函数名不是 `WavyProgressIndicator` |
+| `PullToRefreshDefaults.LoadingIndicator(state, isRefreshing)` | 1.5.0 线 | 下拉刷新默认指示器 |
+| `ShortNavigationBar` / `ShortNavigationBarItem` | 1.5.0 线 | 紧凑底栏；`NavigationSuiteScaffold` 在 COMPACT 下渲染它 |
+
+---
+
+## 十、自适应相关组件（本项目底座的核心）
 
 | 组件 | 库 | 说明 |
 | --- | --- | --- |
@@ -128,13 +139,13 @@
 
 ---
 
-## 十、选型速查
+## 十一、选型速查
 
 | 需求 | 首选 | 备注 |
 | --- | --- | --- |
 | 主操作 | `Button` / `FilledTonalButton` | 一个屏幕**只放一个**最强强调按钮 |
 | 相关操作组合 | `ButtonGroup` | 1.5.0 线 |
-| 主操作 + 附加菜单 | `SplitButton` | 同上 |
+| 主操作 + 附加菜单 | `SplitButtonLayout` + `SplitButtonDefaults.LeadingButton/TrailingButton` | 没有 `SplitButton` composable |
 | 顶部标题 + 滚动折叠 | `MediumFlexibleTopAppBar` / `LargeFlexibleTopAppBar` | 需按窗口高度决定是否折叠（见 `../m3-content/foundations/layout/breakpoints/overview.md`） |
 | 底部常驻操作栏 | `FlexibleBottomAppBar` | 小屏比 TopAppBar 更易触达 |
 | 全屏/侧边导航 | `NavigationSuiteScaffold` | 不要手写三种导航的判断 |
@@ -144,11 +155,11 @@
 
 ---
 
-## 十一、采用建议（已按"激进策略"更新）
+## 十二、采用建议（已按"激进策略"更新）
 
-1. **直接用 1.5.0 线的 M3E 全套**（`material3 = 1.5.0-beta01`）：
-   ToggleButton / ButtonGroup / SplitButton / FAB Menu / Flexible AppBar /
-   slot 版 SearchBar 全部可用，不再有"稳定线拿不到"的问题。
+1. **直接用 1.5.0 线的 M3E 全套**（`material3 = 1.5.0-beta02`）：
+   ToggleButton / ButtonGroup / SplitButtonLayout / FAB Menu / Flexible AppBar /
+   slot 版 SearchBar / LoadingIndicator / ScrollField 全部可用，不再有"稳定线拿不到"的问题。
 2. **调用点收敛**：M3E 组件集中放在 `ui/expressive/`（或 `ui/components/`），
    便于应对 1.5.0 线的重命名与移除。
 3. **每个预览版依赖登记退出计划**：升级到 stable 时删除兼容层；

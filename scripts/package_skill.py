@@ -36,32 +36,40 @@ from pathlib import Path
 
 DEFAULT_NAME = 'md3e'
 
+# Whitelist: only these ship. Everything else in the working tree (VCS data,
+# local source checkouts, scratch dirs, maintenance scripts) is ignored by
+# construction, so an unrelated local folder can never leak into the archive.
+SHIP_FILES = ('SKILL.md', 'README.md', 'README.zh-CN.md', 'CHANGELOG.md', 'LICENSE')
+SHIP_DIRS = ('references', 'assets', 'scripts')
+
 # VCS, editor, build and OS cruft — never packaged.
 EXCLUDE_DIRS = {'.git', '.github', '.idea', '.vscode', '__pycache__',
                 'dist', 'output', 'theme', 'node_modules'}
 EXCLUDE_FILES = {'.gitignore', '.gitattributes', '.DS_Store', 'Thumbs.db'}
 EXCLUDE_PATTERNS = ('*.pyc', '*.pyo', '*.zip')
 
-# Repository-maintenance files — kept in the repo, but end users don't need them.
-EXCLUDE_RELATIVE = {
-    'audit_run.py',
-    'CONTRIBUTING.md',
-    'PUBLISH.md',
-    'scripts/package_skill.py',
-}
+# Kept in the repo, but end users don't need it.
+EXCLUDE_RELATIVE = {'scripts/package_skill.py'}
 
 
 def iter_skill_files(root: Path):
     """Yield skill-relative paths of everything that should ship."""
-    for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = sorted(d for d in dirnames if d not in EXCLUDE_DIRS)
-        for name in sorted(filenames):
-            if name in EXCLUDE_FILES or any(fnmatch.fnmatch(name, p) for p in EXCLUDE_PATTERNS):
-                continue
-            rel = Path(dirpath, name).relative_to(root)
-            if rel.as_posix() in EXCLUDE_RELATIVE:
-                continue
-            yield rel
+    for name in SHIP_FILES:
+        if (root / name).is_file():
+            yield Path(name)
+    for dirname in SHIP_DIRS:
+        base = root / dirname
+        if not base.is_dir():
+            continue
+        for dirpath, dirnames, filenames in os.walk(base):
+            dirnames[:] = sorted(d for d in dirnames if d not in EXCLUDE_DIRS)
+            for name in sorted(filenames):
+                if name in EXCLUDE_FILES or any(fnmatch.fnmatch(name, p) for p in EXCLUDE_PATTERNS):
+                    continue
+                rel = Path(dirpath, name).relative_to(root)
+                if rel.as_posix() in EXCLUDE_RELATIVE:
+                    continue
+                yield rel
 
 
 def main():

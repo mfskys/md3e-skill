@@ -5,8 +5,9 @@ Organized catalog of all Material 3 / Material 3 Expressive components available
 require `@ExperimentalMaterial3ExpressiveApi` on the **1.5.0** line — others graduated
 non-experimental (Flexible AppBars, FloatingToolbar, ButtonGroup APIs, SearchBarState).
 
-**Version baseline (2026-10-08):** full M3E = `material3` **1.5.0-beta01**; stable **1.4.0**
+**Version baseline (2026-10-23):** full M3E = `material3` **1.5.0-beta02**; stable **1.4.0**
 lacks the full Expressive set. See `references/version-baseline.md` and `references/m3e/components.md`.
+Signatures in this catalog were re-checked against the `androidx-main` source on 2026-10-23.
 
 For full API signatures, search `references/compose-api-full.md` with the component name.
 
@@ -58,8 +59,10 @@ Uses `FloatingActionButtonMenuScope`.
 - `ButtonGroupDefaults` — default values
 
 ### Split Button **[M3E]**
-- `SplitButton` — primary action + overflow trigger (**preferred**; `SplitButtonLayout` deprecated since alpha25)
-- `SplitButtonDefaults`, `SplitButtonShapes`
+- `SplitButtonLayout(leadingButton, trailingButton, modifier, spacing)` — the only container API;
+  there is **no** `SplitButton` composable (source-verified 2026-10-23)
+- `SplitButtonDefaults.LeadingButton` / `TrailingButton` (+ `Tonal*`, `Outlined*`, `Elevated*` variants)
+- `SplitButtonShapes`, `leadingButtonShapesFor(buttonHeight)`, `trailingButtonShapesFor(buttonHeight)`
 
 ---
 
@@ -73,8 +76,12 @@ Uses `FloatingActionButtonMenuScope`.
 
 ### Wide Navigation Rail **[M3E]**
 `WideNavigationRail` / `ModalWideNavigationRail` — expanded rail for medium/expanded screens.
-State: `WideNavigationRailState`. Colors: `WideNavigationRailColors`.
-Properties: `ModalWideNavigationRailProperties`.
+State: `WideNavigationRailState` (`rememberWideNavigationRailState()`), colors:
+`WideNavigationRailColors`, properties: `ModalWideNavigationRailProperties`.
+
+### Short Navigation Bar **[M3E]**
+`ShortNavigationBar` + `ShortNavigationBarItem` — compact bottom bar for small/medium width;
+`ShortNavigationBarArrangement`, `ShortNavigationBarDefaults`.
 
 ### Navigation Drawer (M3 — stable)
 | Composable | Usage |
@@ -114,6 +121,10 @@ Also: `TopAppBarScrollBehavior`, `TopAppBarDefaults`.
 Supporting types: `FloatingToolbarScrollBehavior`, `FloatingToolbarState`,
 `FloatingToolbarColors`, `FloatingToolbarExitDirection`, `FloatingToolbarDefaults`,
 `FloatingToolbarHorizontalFabPosition`, `FloatingToolbarVerticalFabPosition`.
+
+### App Bar Overflow Containers **[M3E]**
+`AppBarRow` / `AppBarColumn` + `clickableItem(icon, label, onClick)` — overflow containers used as
+`trailingContent` of floating toolbars (items that don't fit move into an overflow menu).
 
 ### Search Bar (prefer slot API on 1.5.0-alpha)
 - `SearchBarState` + slot-based `SearchBar` **[M3E]** — stable since **1.5.0-alpha24** (old
@@ -189,6 +200,10 @@ Params: `value`/`state`, `onValueChange`, `label`, `placeholder`, `leadingIcon`,
 Colors: `ChipColors`, `SelectableChipColors`. Elevation: `ChipElevation`,
 `SelectableChipElevation`. Shapes: `ChipShapes`.
 
+### Scroll Field **[M3E]**
+`ScrollField` + `rememberScrollFieldState(itemCount, index)` — wheel-style picker input
+(used by the Expressive time picker).
+
 ### Date/Time Pickers (M3 stable; Expressive TimePicker [M3E])
 `DatePicker`, `DatePickerDialog`, `DateRangePicker`, `TimePicker`, `TimeInput`.
 State: `DatePickerState`, `DateRangePickerState`, `TimePickerState`.
@@ -212,7 +227,11 @@ State: `ExposedDropdownMenuAnchorType`, `ExposedDropdownMenuBoxScope`.
 `LinearProgressIndicator`, `CircularProgressIndicator`.
 
 ### Loading Indicator **[M3E]**
-New component for expressive loading states. Part of the 14 M3E components announced May 2025.
+- `LoadingIndicator` / `ContainedLoadingIndicator` — no-arg overloads are indeterminate;
+  `progress: () -> Float` makes them determinate. Requires `@ExperimentalMaterial3ExpressiveApi`.
+- `LinearWavyProgressIndicator` / `CircularWavyProgressIndicator` — wavy track styles
+  (function names are `*WavyProgressIndicator`, not `WavyProgressIndicator`).
+- `PullToRefreshDefaults.LoadingIndicator(state, isRefreshing)` for pull-to-refresh.
 
 ### Snackbar (M3 — stable)
 `Snackbar`, `SnackbarHost` + `SnackbarHostState`.

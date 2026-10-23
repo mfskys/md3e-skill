@@ -1,13 +1,14 @@
 # M3E 在 Compose 中的 API 与迁移
 
-核对日期：**2026-10-08**
-来源：Compose Material 3 官方版本说明（页面更新 2026-10-07）✅ +
-Compose 中的 Material Design 3（页面更新 2026-09-08）✅
+核对日期：**2026-10-23**
+来源：Compose Material 3 官方版本说明（页面更新 2026-10-21）✅ +
+Compose 中的 Material Design 3（页面更新 2026-10-19）✅ +
+`androidx/androidx` 源码（`androidx-main`，逐文件核对）✅
 
 ---
 
 > 📌 **版本策略**：本项目**采用最新版本（含 Alpha/Beta/RC）**——
-> 即 `material3 = 1.5.0-beta01`，见 `../version-baseline.md`。
+> 即 `material3 = 1.5.0-beta02`，见 `../version-baseline.md`。
 > 本文件中"稳定线（1.4.0）"的表述只是**官方通道状态说明**，不代表我们的选择。
 
 ## 一、版本门槛速查
@@ -21,7 +22,7 @@ Compose 中的 Material Design 3（页面更新 2026-09-08）✅
 | `MaterialExpressiveTheme`、`expressiveLightColorScheme` | 1.5.0-alpha18 | ⚠️ 1.5.0 线 |
 | `ToggleButton` / FAB Menu | 1.4.0-alpha19 | ⚠️ 1.5.0 线 |
 | `ButtonGroup` | 1.4.0-alpha22 | ⚠️ 1.5.0 线 |
-| `SplitButton` | 1.4.0-alpha20 | ⚠️ 1.5.0 线 |
+| `SplitButtonLayout`（**没有 `SplitButton`**） | 1.4.0-alpha20 | ⚠️ 1.5.0 线 |
 | Flexible TopAppBar 系列 / `FlexibleBottomAppBar` | 1.5.0-alpha23 | ⚠️ 1.5.0 线 |
 | `FloatingToolbar` | 1.5.0-alpha22 | ⚠️ 1.5.0 线 |
 | `SearchBarState` + slot 版 `SearchBar` | 1.5.0-alpha24 | ⚠️ 1.5.0 线 |
@@ -152,10 +153,14 @@ animateFloatAsState(targetValue = target, animationSpec = spec)
 
 ---
 
-## 七、待人工核对项 ⚠️
+## 七、核对结果（2026-10-23 源码核对）
 
-1. `m3.material.io` 上的组件**规格表**（尺寸、间距、状态层不透明度）——站点需 JS 渲染；
-2. `MotionScheme` 中各 spec 方法的**完整签名与 token 值**；
-3. `MaterialShapes` / 形状形变 API 在当前 Compose 版本中的确切可用性；
-4. M3E 的**加载指示器（LoadingIndicator）** 等组件在 `material3` 中的归属与稳定性
-   （本文件未从 release notes 中核对到明确条目）。
+| 原待核对项 | 结论 |
+| --- | --- |
+| `MotionScheme` 签名与 token | ✅ 是 interface：`standard()` / `expressive()` + `default` / `fast` / `slow` × `Spatial` / `Effects` 六个 spec 方法；token 在 `MotionSchemeKeyTokens` |
+| `MaterialShapes` / 形状形变 | ✅ `MaterialShapes` 提供 35 个 `RoundedPolygon` 预设 + `toShape()` / `toPath()`；`PolygonShape` 在 **`androidx.compose.foundation.shape`**，用 `transform { }` / `copy()` |
+| `LoadingIndicator` 归属 | ✅ 在 `androidx.compose.material3`：`LoadingIndicator` / `ContainedLoadingIndicator`，`progress: () -> Float`；主线仍需 `@ExperimentalMaterial3ExpressiveApi` |
+| `m3.material.io` 规格表 | ⚠️ 站点需 JS 渲染；以 `m3-content/` 镜像为准，镜像不含动态规格表数值 |
+
+仍需编译器确认：`NavigationSuiteScaffold` 的新版 `navigationItems` + `NavigationSuiteItem` API
+在 1.5.0-beta02 是否可用（`androidx-main` 已有；发布通道以编译结果为准）。

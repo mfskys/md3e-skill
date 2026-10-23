@@ -1,6 +1,6 @@
 # Material 3 Expressive Design Language Overview
 
-Verified: **2026-10-08** | Markers: ✅ checked against official text / ⚠️ verify yourself / 🚧 experimental API
+Verified: **2026-10-23** | Markers: ✅ checked against official text / ⚠️ verify yourself / 🚧 experimental API
 
 | Source | Notes |
 | --- | --- |
@@ -49,8 +49,8 @@ MaterialTheme(
 | Subsystem | Contents | Details |
 | --- | --- | --- |
 | ColorScheme | 5 key colors + 13-tone palettes each; role semantics (primary / onPrimary / primaryContainer …) | `color-typography-shape.en.md` |
-| Typography | 5 categories × 3 sizes = 15 styles | same |
-| Shapes | extraSmall → extraLarge five corner radii | same |
+| Typography | 5 categories × 3 sizes = 15 base styles; M3E adds 15 `*Emphasized` slots (30 total) | same |
+| Shapes | Eight corner radii (M3's five + M3E `largeIncreased` / `extraLargeIncreased` / `extraExtraLarge`) | same |
 | Motion | Spring physics motion (new in M3E) | `motion-physics.en.md` |
 
 ---
@@ -137,14 +137,14 @@ Official selection table ✅:
 
 ## 8. M3E Adoption Strategy (aggressive track)
 
-> 📌 This project uses **`material3 = 1.5.0-beta01`**, so **the full M3E component set is available**.
+> 📌 This project uses **`material3 = 1.5.0-beta02`**, so **the full M3E component set is available**.
 > See `../version-baseline.md`.
 
 1. **Theme first**: wire the three subsystems via `MaterialTheme` + dynamic color —
    prerequisite for every M3E component.
 2. **Motion via `MotionScheme`**: component animations switched to `MotionScheme` in 1.4.0;
    custom animations should read `MaterialTheme.motionScheme` instead of hard-coding `tween` durations.
-3. **Components from the 1.5.0 line**: ToggleButton, ButtonGroup, SplitButton, FAB Menu,
+3. **Components from the 1.5.0 line**: ToggleButton, ButtonGroup, SplitButtonLayout, FAB Menu,
    FlexibleTopAppBar, slot SearchBar, etc. are all available;
    but **confine call sites** to `ui/expressive/` and record an exit plan.
 4. **Do not rely on old `ExperimentalMaterial3ExpressiveApi` signatures**: public APIs under it

@@ -1,13 +1,14 @@
 # M3E Compose API & Migration
 
-Verified: **2026-10-08**
-Sources: Compose Material 3 official release notes (page updated 2026-10-07) ✅ +
-Material Design 3 for Compose (page updated 2026-09-08) ✅
+Verified: **2026-10-23**
+Sources: Compose Material 3 official release notes (page updated 2026-10-21) ✅ +
+Material Design 3 for Compose (page updated 2026-10-19) ✅ +
+`androidx/androidx` source tree (`androidx-main`, file-by-file) ✅
 
 ---
 
 > 📌 **Version policy**: this project **adopts the newest versions (including Alpha/Beta/RC)** —
-> i.e. `material3 = 1.5.0-beta01`, see `../version-baseline.md`.
+> i.e. `material3 = 1.5.0-beta02`, see `../version-baseline.md`.
 > Mentions of the "stable line (1.4.0)" below are **channel status notes only**, not our choice.
 
 ## 1. Version gates quick reference
@@ -21,7 +22,7 @@ Material Design 3 for Compose (page updated 2026-09-08) ✅
 | `MaterialExpressiveTheme`, `expressiveLightColorScheme` | 1.5.0-alpha18 | ⚠️ 1.5.0 line |
 | `ToggleButton` / FAB Menu | 1.4.0-alpha19 | ⚠️ 1.5.0 line |
 | `ButtonGroup` | 1.4.0-alpha22 | ⚠️ 1.5.0 line |
-| `SplitButton` | 1.4.0-alpha20 | ⚠️ 1.5.0 line |
+| `SplitButtonLayout` (**no `SplitButton` composable**) | 1.4.0-alpha20 | ⚠️ 1.5.0 line |
 | Flexible TopAppBar family / `FlexibleBottomAppBar` | 1.5.0-alpha23 | ⚠️ 1.5.0 line |
 | `FloatingToolbar` | 1.5.0-alpha22 | ⚠️ 1.5.0 line |
 | `SearchBarState` + slot `SearchBar` | 1.5.0-alpha24 | ⚠️ 1.5.0 line |
@@ -91,7 +92,7 @@ The 1.5.0 line saw **many renames and removals** over months, e.g.:
 | alpha28 | Stateless `Slider`/`RangeSlider` overloads deprecated; `RangeSliderState` field renames |
 | alpha27 | Old `TopAppBarDefaults` scrollBehavior overloads removed; `LocalMotionScheme` removed; `RichTimePickerDialog` → `VibrantTimePickerDialog` |
 | alpha26 | `ExposedDropdownMenu` becomes an extension function (**update imports**) |
-| alpha25 | `TonalToggleButton` → `FilledTonalToggleButton`; ComponentOverride API removed; `SplitButtonLayout` deprecated |
+| alpha25 | `TonalToggleButton` → `FilledTonalToggleButton`; ComponentOverride API removed; `SplitButtonLayout` remains the container API (source-verified 2026-10-23: there is no `SplitButton` composable) |
 | alpha24 | `SearchBarState` stable; `material3-ripple` new library |
 | alpha23 | ComponentOverride API removed; Expressive AppBar graduated; `TextFieldLabelPosition.Attached` deprecated |
 | alpha20 | BottomSheet remember APIs unified |
@@ -153,10 +154,14 @@ animateFloatAsState(targetValue = target, animationSpec = spec)
 
 ---
 
-## 7. Open verification items ⚠️
+## 7. Verification results (source-checked 2026-10-23)
 
-1. Component **spec tables** on `m3.material.io` (sizes, spacing, state layer opacity) — site needs JS;
-2. **Full signatures and token values** of `MotionScheme` spec methods;
-3. Exact availability of `MaterialShapes` / shape morph APIs in the current Compose version;
-4. Ownership/stability of M3E **LoadingIndicator** etc. in `material3`
-   (no clear entry verified in release notes for this file).
+| Former open item | Result |
+| --- | --- |
+| `MotionScheme` signatures / tokens | ✅ Interface: `standard()` / `expressive()` + `default`/`fast`/`slow` × `Spatial`/`Effects`; tokens live in `MotionSchemeKeyTokens` |
+| `MaterialShapes` / shape morph | ✅ 35 preset `RoundedPolygon`s + `toShape()` / `toPath()`; `PolygonShape` lives in **`androidx.compose.foundation.shape`** and uses `transform {}` / `copy()` |
+| `LoadingIndicator` ownership | ✅ `androidx.compose.material3`: `LoadingIndicator` / `ContainedLoadingIndicator`, `progress: () -> Float`; still `@ExperimentalMaterial3ExpressiveApi` on main |
+| `m3.material.io` spec tables | ⚠️ JS-rendered site; rely on the `m3-content/` mirror, which does not include dynamic spec-table values |
+
+Still compiler-dependent: whether the new `NavigationSuiteScaffold` `navigationItems` +
+`NavigationSuiteItem` API is available in 1.5.0-beta02 (present on `androidx-main`).

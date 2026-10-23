@@ -16,6 +16,9 @@ import androidx.compose.ui.platform.LocalContext
  * Uses `LightColorScheme` / `DarkColorScheme` from Color.kt. To use the built-in expressive
  * palette instead, swap the light branch for `expressiveLightColorScheme()` (import it from
  * `androidx.compose.material3`).
+ *
+ * Requires `material3:1.5.0-beta02` or newer: `MaterialExpressiveTheme` and the 8-parameter
+ * `Shapes` used by Shape.kt do not exist on the stable 1.4.0 line.
  */
 @Composable
 fun AppTheme(

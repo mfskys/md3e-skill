@@ -1,11 +1,11 @@
 # MD3E Version Baseline
 
-Knowledge baseline date: **2026-10-08**. Sources: official AndroidX release notes
-(compose-material3 page updated 2026-10-07), Google Maven metadata (verified 2026-10-08),
-Compose developer guide.
+Knowledge baseline date: **2026-10-23**. Sources: official AndroidX release notes
+(compose-material3 page updated 2026-10-21), Google Maven metadata, Compose developer guide,
+and the `androidx/androidx` source tree (signatures re-verified 2026-10-23).
 
-> **Recommendation for full M3E**: use the 1.5.0 line — `androidx.compose.material3:material3:1.5.0-beta01`
-> (as of 2026-10-07), or `compose-bom-alpha:2026.10.00`. The stable line **1.4.0** ships M3 +
+> **Recommendation for full M3E**: use the 1.5.0 line — `androidx.compose.material3:material3:1.5.0-beta02`
+> (2026-10-21), with the matching `compose-bom-alpha`. The stable line **1.4.0** ships M3 +
 > `MotionScheme` + partial Expressive only. The 1.5.0 line **entered beta on 2026-10-07**, so the
 > Expressive API surface is stabilizing, but Google still does not recommend alpha/beta builds
 > for production.
@@ -16,17 +16,17 @@ Compose developer guide.
 
 | Component | Stable | Latest pre-release (2026-10) | Notes |
 | --- | --- | --- | --- |
-| Compose Material 3 | **1.4.0** (2025-09-24) | **1.5.0-beta01** (2026-10-07) | Full M3E components only on the 1.5.0 line |
+| Compose Material 3 | **1.4.0** (2025-09-24) | **1.5.0-beta02** (2026-10-21) | Full M3E components only on the 1.5.0 line |
 | Compose Material 3 Adaptive | **1.3.0** (2026-08-12) | **1.4.0-alpha03** | `NavigationSuiteScaffold`, pane scaffolds |
 | Compose core (UI/Foundation/…) | **1.12.1** | **1.13.0-beta01** via `compose-bom-alpha` | BOM also maps material3 + adaptive |
-| Compose BOM | `2026.09.00` | `compose-bom-alpha:2026.10.00` | Explicit versions override BOM |
+| Compose BOM | `2026.09.00` | `compose-bom-alpha:2026.10.00` (beta01 era; re-check after beta02) | Explicit versions override BOM |
 | `material-icons-core` | 1.7.8 (frozen in BOM) | — | **No longer transitive from material3 1.4.0+** |
 | Navigation 3 | **1.2.0** | 1.3.0-alpha02 | Outside Compose BOM |
 | WindowManager | 1.5.1 | 1.6.0-alpha05 | Foldables |
-| `material3-a2ui` | — | 1.0.0-alpha01 (2026-09-23) | Agent-to-UI renderer — new artifact |
-| `material3-ripple` | — | 1.5.0-beta01 | Separate artifact, tracks the 1.5.0 line |
+| `material3-a2ui` | — | 1.0.0-alpha02 (2026-10-21) | Agent-to-UI renderer — new artifact |
+| `material3-ripple` | — | 1.5.0-beta02 | Separate artifact, tracks the 1.5.0 line |
 
-### BOM coverage (verified via POM, 2026-10-08)
+### BOM coverage (verified via POM, 2026-10-08 for the beta01 era)
 
 `compose-bom-alpha:2026.10.00` **does** manage:
 
@@ -35,6 +35,9 @@ Compose developer guide.
 - `androidx.compose.material3:material3-ripple` → 1.5.0-beta01
 - `androidx.compose.material3:material3-window-size-class` → 1.5.0-beta01
 - core UI/runtime/foundation/animation → 1.13.0-beta01
+
+> beta02 shipped on 2026-10-21; the alpha BOM may still resolve beta01 until the next BOM release.
+> Pin `material3:1.5.0-beta02` explicitly if you need the newest fixes.
 
 **Not** in BOM (declare explicitly): `navigation3`, `window`, `lifecycle`, `activity`, and
 `androidx.compose.material3.adaptive:adaptive` (1.4.0-alpha03 — a *different* group than the
@@ -78,7 +81,7 @@ in-BOM `material3-adaptive`).
 | `MaterialExpressiveTheme`, `expressiveLightColorScheme` | 1.5.0-alpha18 (API ref also shows alpha23 additions) | 1.5.0 line |
 | `ToggleButton` / FAB Menu | 1.4.0-alpha19 | 1.5.0 line |
 | `ButtonGroup` | 1.4.0-alpha22 (promoted stable APIs in alpha22) | 1.5.0 line |
-| `SplitButton` | 1.4.0-alpha20 | 1.5.0 line |
+| `SplitButtonLayout` (no `SplitButton` composable) | 1.4.0-alpha20 | 1.5.0 line |
 | Flexible TopAppBar series / `FlexibleBottomAppBar` | 1.5.0-alpha23 (graduated non-experimental) | 1.5.0 line |
 | `FloatingToolbar` | 1.5.0-alpha22 | 1.5.0 line |
 | `SearchBarState` + slot `SearchBar` | 1.5.0-alpha24 | 1.5.0 line |
@@ -94,6 +97,7 @@ in-BOM `material3-adaptive`).
 
 | Version | Notable changes |
 | --- | --- |
+| **beta02** (2026-10-21) | Release notes list **no API changes** — routine beta stabilization. `material3`, `material3-ripple` and `material3-a2ui` (1.0.0-alpha02) were bumped together. |
 | **beta01** (2026-10-07) | Restored `TopAppBarDefaults.enterAlwaysScrollBehavior` `reverseLayout` overload (**deprecated**, for 1.4 compatibility); restored `SliderState` `DraggableState` and hidden-deprecated nullable-`onValueChange` `Slider`/`VerticalSlider`/`RangeSlider` overloads (binary compatibility); `CornerRounding` moved to top level with new `dp()` / `fraction()` factories; `PolygonShape.transformed()` / `scaledToFit()` removed in favour of in-place `PolygonShape.transform(PolygonShapeTransformScope.() -> Unit)` and `PolygonShape.copy()`; `HorizontalCenteredHeroCarousel` `maxItemWidth` → **`preferredItemWidth`**; new `CarouselDefaults.ItemSpacing` / `CarouselDefaults.ContentPadding` |
 | **alpha29** (2026-09-23) | **Source-breaking**: `Slider` / `RangeSlider` `onValueChange` **required** and reordered; `Slider`/`RangeSlider` now handle `onValueChange` / `onValueChangeFinished` internally instead of forwarding to the state objects; `DatePicker` month-navigation now resolves in 1 frame; `TimeInput` / `DateInput` moved to the new `TextFieldState` text-field API |
 | alpha28 (2026-09-09) | Stateless `Slider`/`RangeSlider` overloads deprecated; `RangeSliderState` field renames (`activeRangeStart/End` → `startValue/endValue`); global `carouselParallaxScrollEffect` |
@@ -129,8 +133,28 @@ M3E to graduated APIs, or wait for Material Compose **1.5.0 stable** promotion o
 
 ---
 
-## 6. Related reading in this skill
+## 6. Source-verified facts (2026-10-23)
 
+Checked against the actual `androidx-main` source, not release-note prose:
+
+| Fact | Detail |
+| --- | --- |
+| No `SplitButton` composable | The container is `SplitButtonLayout(leadingButton, trailingButton, modifier, spacing)`; halves come from `SplitButtonDefaults.LeadingButton` / `TrailingButton` (+ `Tonal*`, `Outlined*`, `Elevated*`). Do not write `SplitButton(...)`. |
+| `Shapes` has 8 sizes | Add `largeIncreased`, `extraLargeIncreased`, `extraExtraLarge` to the classic 5. |
+| `MaterialExpressiveTheme` params are nullable | `null` falls back to `expressiveLightColorScheme()` / `MotionScheme.expressive()` / `Shapes()` / `Typography()`; nested themes inherit instead of resetting. |
+| `MotionScheme` is an interface | `standard()` / `expressive()` + `default` / `fast` / `slow` × `Spatial` / `Effects` spec functions; read via `MaterialTheme.motionScheme`. |
+| `LoadingIndicator.progress` is a lambda | `progress: () -> Float`; same for `ContainedLoadingIndicator` and the wavy indicators. |
+| Wavy indicator names | `LinearWavyProgressIndicator` / `CircularWavyProgressIndicator` (not `WavyProgressIndicator`). |
+| `PolygonShape` package | `androidx.compose.foundation.shape.PolygonShape`; `MaterialShapes` only provides `RoundedPolygon` presets + `toShape()`. |
+| `SearchBarState` transitions | `animateToExpanded()` / `animateToCollapsed()` are **suspend**; there is no `show()` / `hide()`. |
+| Expressive opt-in is mostly gone on main | Only `LoadingIndicator` / `ContainedLoadingIndicator` still carry `@ExperimentalMaterial3ExpressiveApi` on `androidx-main`; add opt-ins only if the compiler asks. |
+| New M3E components missing from earlier docs | `ShortNavigationBar`, `ScrollField`, `AppBarRow` / `AppBarColumn`, `LoadingIndicator`, wavy progress. |
+
+## 7. Related reading in this skill
+
+- `references/m3e-api-signatures.md` — source-verified 1.5.0-line signatures
+- `references/compose-patterns.md` — verified code patterns
+- `references/official-samples.md` — where the official samples live
 - `references/m3e/compose-api.md` — API gates, migration steps, version churn (+ `.en.md`)
 - `references/m3e/components.md` — component inventory by version line (+ `.en.md`)
 - `references/m3e/design-system.md` — theming, dynamic color, system UI (+ `.en.md`)

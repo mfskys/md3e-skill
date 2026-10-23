@@ -122,7 +122,9 @@ MD3E supports three contrast levels accessible via system settings:
 
 ## 2. Typography Scale
 
-15 text styles organized into 5 groups × 3 sizes. Default font: Roboto.
+**30 typography slots on the 1.5.0 line** = 15 base styles (5 groups × 3 sizes) + 15
+`*Emphasized` variants (e.g. `titleLargeEmphasized`). Default font: Roboto. The base 15 exist on
+every M3 version; the Emphasized variants are M3E-only (`Typography` on stable 1.4.0 has 15).
 
 | Style | Font Size / Line Height | Weight | Letter Spacing | Usage |
 |-------|------------------------|--------|----------------|-------|
@@ -145,6 +147,10 @@ MD3E supports three contrast levels accessible via system settings:
 ### MD3E Typography Enhancements
 
 - **Variable fonts**: MD3E encourages variable fonts for dynamic weight/width adjustments
+- **Emphasized slots (M3E)**: `Typography` gains 15 parallel slots — `displayLargeEmphasized`,
+  `headlineSmallEmphasized`, `titleLargeEmphasized`, `bodyMediumEmphasized`, `labelSmallEmphasized`,
+  … Read them with `MaterialTheme.typography.titleLargeEmphasized`. Their token values live in
+  `TypographyTokens` (they are not simply "bold"); on stable 1.4.0 these properties do not exist.
 - **Emphasis styles**: use heavier weights and larger sizes to create editorial-style hierarchy
 - **Font family**: M3 `Typography` has no `defaultFontFamily` parameter — set `fontFamily` on each `TextStyle` (or use a shared constant) instead
 
@@ -168,7 +174,8 @@ Access via `MaterialTheme.typography.titleLarge`, etc.
 
 ## 3. Shape Scale
 
-5 shape sizes from square to fully rounded:
+8 shape sizes in the 1.5.0 line (M3's 5 + 3 M3E sizes), from square to fully rounded.
+Values verified against `ShapeTokens.kt` in `androidx-main` (2026-10-23):
 
 | Shape | Corner Radius | Typical Usage |
 |-------|-------------|---------------|
@@ -176,7 +183,10 @@ Access via `MaterialTheme.typography.titleLarge`, etc.
 | `small` | 8dp | Chips, small buttons, tooltip |
 | `medium` | 12dp | Cards, dialogs, FAB (small) |
 | `large` | 16dp | FAB (standard), large cards, sheets |
-| `extraLarge` | 24dp | FAB (extended), large containers, search bar |
+| `largeIncreased` | 20dp | **M3E**: between `large` and `extraLarge` |
+| `extraLarge` | 28dp | FAB (extended), large containers, search bar |
+| `extraLargeIncreased` | 32dp | **M3E**: between `extraLarge` and `extraExtraLarge` |
+| `extraExtraLarge` | 48dp | **M3E**: near-circular containers |
 
 ### Additional Shapes
 - `RectangleShape` — no corner radius (full-bleed images, dividers)
@@ -190,7 +200,11 @@ val shapes = Shapes(
     small = RoundedCornerShape(8.dp),
     medium = RoundedCornerShape(12.dp),
     large = RoundedCornerShape(16.dp),
-    extraLarge = RoundedCornerShape(24.dp)
+    extraLarge = RoundedCornerShape(28.dp),
+    // M3E (1.5.0 line) — optional on M3, used by new components
+    largeIncreased = RoundedCornerShape(20.dp),
+    extraLargeIncreased = RoundedCornerShape(32.dp),
+    extraExtraLarge = RoundedCornerShape(48.dp),
 )
 ```
 

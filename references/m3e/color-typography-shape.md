@@ -1,6 +1,6 @@
 # M3E 颜色 / 排版 / 形状
 
-核对日期：**2026-10-08**
+核对日期：**2026-10-23**
 来源：Compose 中的 Material Design 3（官方，页面更新 2026-09-08）✅ +
 Compose Material 3 版本说明（页面更新 2026-09-09）✅
 
@@ -54,7 +54,11 @@ Compose Material 3 版本说明（页面更新 2026-09-09）✅
 
 ## 2.1 字阶
 
-**5 类 × 3 号 = 15 个样式** ✅：Display / Headline / Title / Body / Label，各含 Large / Medium / Small。
+**5 类 × 3 号 = 15 个基础样式** ✅：Display / Headline / Title / Body / Label，各含 Large / Medium / Small。
+
+**M3E（1.5.0 线）共 30 个槽位**：上述 15 个基础样式 + 15 个 `*Emphasized` 变体
+（`displayLargeEmphasized` … `labelSmallEmphasized`），用
+`MaterialTheme.typography.titleLargeEmphasized` 访问；稳定线 1.4.0 只有 15 个。
 
 默认值示例（官方文档列出）✅：
 
@@ -81,15 +85,18 @@ Compose Material 3 版本说明（页面更新 2026-09-09）✅
 
 # 三、形状系统
 
-## 3.1 五档圆角
+## 3.1 八档圆角
 
-| 档位 | 示例值（官方文档） |
+| 档位 | 值（源码 `ShapeTokens.kt` 核对，2026-10-23） |
 | --- | --- |
 | `extraSmall` | 4dp |
 | `small` | 8dp |
 | `medium` | 12dp |
 | `large` | 16dp |
-| `extraLarge` | 24dp |
+| `largeIncreased` | 20dp（M3E） |
+| `extraLarge` | 28dp |
+| `extraLargeIncreased` | 32dp（M3E） |
+| `extraExtraLarge` | 48dp（M3E） |
 
 均为 `RoundedCornerShape`；另有 `RectangleShape`、`CircleShape`。
 访问：`MaterialTheme.shapes.medium`，或按组件单独指定。

@@ -20,7 +20,7 @@ import zipfile
 ROOT = os.getcwd()
 
 # Knowledge baseline declared in SKILL.md / README — update when refreshing the docs.
-KNOWLEDGE_BASELINE = '2026-10-08'
+KNOWLEDGE_BASELINE = '2026-10-23'
 
 # Directories excluded from repo-wide scans.
 SKIP_DIRS = {'.git', 'node_modules', '__pycache__', 'dist'}
@@ -50,10 +50,21 @@ def parse_frontmatter(text):
     return data
 
 
+def is_nested_repo(path):
+    """True for a directory that is its own Git checkout (e.g. a local clone)."""
+    return os.path.isdir(os.path.join(path, '.git'))
+
+
 def iter_markdown():
-    """Yield repo-relative paths of Markdown files, skipping excluded dirs."""
+    """Yield repo-relative paths of Markdown files, skipping excluded dirs.
+
+    Nested Git checkouts are pruned so that a local source clone inside the
+    working tree never slows the scan or contributes false failures.
+    """
     for dirpath, dirnames, filenames in os.walk('.'):
-        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+        dirnames[:] = [d for d in dirnames
+                       if d not in SKIP_DIRS and not d.startswith('.')
+                       and not is_nested_repo(os.path.join(dirpath, d))]
         for name in filenames:
             if not name.endswith('.md'):
                 continue
@@ -95,8 +106,12 @@ required = [
     'PUBLISH.md', 'CONTRIBUTING.md', '.gitignore',
     'references/version-baseline.md', 'references/design-tokens.md',
     'references/components-catalog.md', 'references/m3-vs-m3e-diff.md',
-    'references/compose-api-full.md', 'references/expressive-design-tactics.md',
+    'references/compose-api-full.md',     'references/expressive-design-tactics.md',
     'references/design-research.md',
+    'references/m3e-api-signatures.md',
+    'references/compose-patterns.md',
+    'references/official-samples.md',
+    'references/component-index.md',
     'references/m3e/design-system.md', 'references/m3e/color-typography-shape.md',
     'references/m3e/motion-physics.md', 'references/m3e/components.md',
     'references/m3e/compose-api.md',
@@ -105,7 +120,8 @@ required = [
     'references/m3e/compose-api.en.md',
     'assets/templates/MD3ETheme.kt', 'assets/templates/Color.kt',
     'assets/templates/Type.kt', 'assets/templates/Shape.kt',
-    'scripts/generate_theme.py', 'scripts/package_skill.py',
+    'scripts/generate_theme.py', 'scripts/install_skill.py',
+    'scripts/package_skill.py',
 ]
 for path in required:
     check(f'exists: {path}', os.path.exists(path))
@@ -116,9 +132,22 @@ for fn, label in [('references/design-tokens.md', 'design-tokens'),
     bad = [i + 1 for i, l in enumerate(read(fn).splitlines()) if 'Typography now supports' in l]
     check(f'{label}: no false defaultFontFamily claim', not bad, bad)
 
-dp = [i + 1 for i, l in enumerate(read('references/design-tokens.md').splitlines()[128:144])
-      if 'dp' in l]
-check('design-tokens: letterSpacing units are sp not dp', not dp, dp)
+tokens = read('references/design-tokens.md')
+type_section = tokens.split('## 2. Typography Scale', 1)[-1].split('## 3.', 1)[0]
+dp = [l for l in type_section.splitlines() if 'dp' in l]
+check('design-tokens: letterSpacing units are sp not dp', not dp, dp[:3])
+
+# Content that was recently corrected — guard against regressions.
+check('design-tokens: 8 shape sizes documented',
+      'largeIncreased' in tokens and 'extraExtraLarge' in tokens)
+check('design-tokens: extraLarge is 28dp', '| `extraLarge` | 28dp |' in tokens)
+check('design-tokens: 15 Emphasized type slots documented', 'titleLargeEmphasized' in tokens)
+check('catalog: SplitButtonLayout documented as the only container',
+      'SplitButtonLayout' in read('references/components-catalog.md'))
+signatures = read('references/m3e-api-signatures.md')
+# The literal below matches Chinese prose inside a doc on purpose — do not translate it.
+check('m3e-api-signatures: records that SplitButton does not exist',
+      '没有 `SplitButton` 这个 composable' in signatures)
 
 # ------------------------------------------------------------- m3-content ---
 check('m3-content dir exists', os.path.isdir('references/m3-content'))
@@ -131,9 +160,10 @@ if os.path.isdir('references/m3-content'):
                 (spec_pages if re.match(r'^---\s*\n', read(path)) else hub_pages).append(path)
     total = len(spec_pages) + len(hub_pages)
     check('m3-content has >= 200 md files', total >= 200, total)
-    # Documented split must match what is on disk (docs claim 249 spec + 7 hub).
+    # Documented split must match what is on disk (docs claim 249 spec + 14 overview/hub).
     check('m3-content spec page count (249)', len(spec_pages) == 249, len(spec_pages))
-    check('m3-content hub page count (7)', len(hub_pages) == 7, len(hub_pages))
+    check('m3-content hub page count (14)', len(hub_pages) == 14, len(hub_pages))
+    check('m3-content total page count (263)', total == 263, total)
 
 # --------------------------------------------- cross-document consistency ---
 stale = []

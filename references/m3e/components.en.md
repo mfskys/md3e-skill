@@ -1,8 +1,8 @@
 # M3E Component Inventory
 
-Verified: **2026-10-08**
+Verified: **2026-10-23**
 Source: Compose Material 3 official release notes (https://developer.android.com/jetpack/androidx/releases/compose-material3,
-page updated 2026-10-07) ✅
+page updated 2026-10-21) + file-by-file check against the `androidx/androidx` source ✅
 
 **How to read**: `alphaNN` in parentheses is the version where the API **graduated from experimental**.
 `1.4.0` is the current **stable line**; `1.5.0-betaNN` is the **1.5.0 line**.
@@ -11,8 +11,8 @@ To judge availability, first check which line it is on.
 ---
 
 > 📌 **Version policy**: this project **adopts the newest versions (including Alpha/Beta/RC)** —
-> `material3 = 1.5.0-beta01` — so all "1.5.0 line" components below **are in scope**.
-> See `../version-baseline.md`. §11 adoption advice already reflects this.
+> `material3 = 1.5.0-beta02` — so all "1.5.0 line" components below **are in scope**.
+> See `../version-baseline.md`. §12 adoption advice already reflects this.
 
 ## 1. Buttons & Actions
 
@@ -21,7 +21,7 @@ To judge availability, first check which line it is on.
 | `ToggleButton` family | Stable since 1.4.0-alpha19 | M3E toggle button |
 | `FilledTonalToggleButton` | Renamed in alpha25 | Formerly `TonalToggleButton` |
 | `ButtonGroup` | Stable since 1.4.0-alpha22 | Button group; from alpha25 `ButtonGroupScope` is a **sealed interface**; `Modifier.animateWidth` split into two overloads |
-| `SplitButton` | Non-experimental since 1.4.0-alpha20 | From alpha25 **`SplitButtonLayout` deprecated** — use `SplitButton` only |
+| `SplitButtonLayout` | Non-experimental since 1.4.0-alpha20 | ⚠️ Source-verified (2026-10-23): **there is no `SplitButton` composable**. The container is always `SplitButtonLayout(leadingButton, trailingButton, …)`; build the halves with `SplitButtonDefaults.LeadingButton` / `TrailingButton` (plus `Tonal*` / `Outlined*` / `Elevated*` variants) |
 | FAB and **FAB Menu** | Graduated 1.4.0-alpha19 | Expanded FAB menu is a signature M3E interaction |
 | `ExtendedFloatingActionButton` / `Button` / `TextButton` | Stable | Three decreasing emphasis levels (classic M3) |
 
@@ -134,7 +134,7 @@ To judge availability, first check which line it is on.
 | --- | --- | --- |
 | Primary action | `Button` / `FilledTonalButton` | **One** strongest-emphasis button per screen |
 | Related action group | `ButtonGroup` | 1.5.0 line |
-| Primary + overflow menu | `SplitButton` | Same |
+| Primary + overflow menu | `SplitButtonLayout` + `SplitButtonDefaults.LeadingButton/TrailingButton` | No `SplitButton` composable |
 | Top title + scroll collapse | `MediumFlexibleTopAppBar` / `LargeFlexibleTopAppBar` | Decide collapse by window height (see `../m3-content/foundations/layout/breakpoints/overview.md`) |
 | Persistent bottom action bar | `FlexibleBottomAppBar` | Easier thumb reach than TopAppBar on small screens |
 | Full-screen / side navigation | `NavigationSuiteScaffold` | Do not hand-write three-nav branching |
@@ -146,8 +146,8 @@ To judge availability, first check which line it is on.
 
 ## 11. Adoption advice (aggressive track)
 
-1. **Use the full 1.5.0-line M3E set** (`material3 = 1.5.0-beta01`):
-   ToggleButton / ButtonGroup / SplitButton / FAB Menu / Flexible AppBar /
+1. **Use the full 1.5.0-line M3E set** (`material3 = 1.5.0-beta02`):
+   ToggleButton / ButtonGroup / SplitButtonLayout / FAB Menu / Flexible AppBar /
    slot SearchBar all available — no more "not on stable" gaps.
 2. **Confine call sites**: keep M3E components in `ui/expressive/` (or `ui/components/`)
    to absorb 1.5.0-line renames/removals.
