@@ -13,8 +13,9 @@ and drop the resulting ``md3e/`` folder straight into their skills directory:
         └── scripts/
 
 Only what the skill needs at run time is packaged. Repository-maintenance files
-(``audit_run.py``, ``CONTRIBUTING.md``, ``PUBLISH.md`` and the packager itself)
-are excluded; ``README.md`` / ``CHANGELOG.md`` / ``LICENSE`` are kept for
+(``audit_run.py``, ``CONTRIBUTING.md``, ``PUBLISH.md``, the packager itself and
+the maintenance helpers ``extract_rules.py`` / ``grab_tokens.py`` / ``check_links.py``) are
+excluded; ``README.md`` / ``CHANGELOG.md`` / ``LICENSE`` are kept for
 attribution and version history.
 
 Every archive entry uses a forward slash. Windows PowerShell's
@@ -48,8 +49,13 @@ EXCLUDE_DIRS = {'.git', '.github', '.idea', '.vscode', '__pycache__',
 EXCLUDE_FILES = {'.gitignore', '.gitattributes', '.DS_Store', 'Thumbs.db'}
 EXCLUDE_PATTERNS = ('*.pyc', '*.pyo', '*.zip')
 
-# Kept in the repo, but end users don't need it.
-EXCLUDE_RELATIVE = {'scripts/package_skill.py'}
+# Kept in the repo, but end users don't need it (repo maintenance tooling).
+EXCLUDE_RELATIVE = {
+    'scripts/package_skill.py',
+    'scripts/extract_rules.py',
+    'scripts/grab_tokens.py',
+    'scripts/check_links.py',
+}
 
 
 def iter_skill_files(root: Path):

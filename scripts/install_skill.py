@@ -6,7 +6,7 @@ keep working after installation.
 
 Usage:
     python scripts/install_skill.py --target ~/.codebuddy/skills
-    python scripts/install_skill.py --assistant codebuddy --global
+    python scripts/install_skill.py --assistant codebuddy --home
     python scripts/install_skill.py --assistant claude
     python scripts/install_skill.py --target ./skills --dry-run
 
@@ -34,6 +34,8 @@ REQUIRED = [
 ASSISTANT_DIRS = {
     'codebuddy': Path('.codebuddy') / 'skills',
     'claude': Path('.claude') / 'skills',
+    'cursor': Path('.cursor') / 'skills',
+    'copilot': Path('.github') / 'skills',
 }
 
 # Only skill content is installed — an allow-list keeps unrelated local folders
