@@ -1,7 +1,12 @@
 ---
 name: md3e
-version: 1.4.0
-description: "Material Design 3 Expressive (MD3E) design system skill for Android Jetpack Compose. This skill should be used when building Android UI with Material 3 / Material 3 Expressive design language, including theming (color schemes, typography, shapes, motion), component implementation (buttons, cards, navigation, FAB, floating toolbar, button group, etc.), and design guidance (when to use which component, M3 vs M3E differences, expressive design principles). Covers both MD3E (the evolution released 2025, targeting Android 16) and baseline M3 (many components only have M3 specs). Knowledge baseline 2026-10-23: material3 1.5.0-beta02 / stable 1.4.0. Triggers on requests like Material 3 Expressive, MD3E, Material Design 3, M3 theme, MaterialExpressiveTheme, Compose Material 3 component, or when designing/building Android UI that should follow Google Material design guidelines."
+license: Apache-2.0
+compatibility: Requires a Jetpack Compose project. Targets material3 1.5.0-rc01 (knowledge baseline 2026-11-10); stable 1.4.0 is supported with the partial-Expressive fallback described in references/version-baseline.md.
+metadata:
+  version: "1.5.0"
+  baseline: "2026-11-10"
+  upstream: "compose-material3 1.5.0-rc01"
+description: "Material Design 3 Expressive (MD3E) design system skill for Android Jetpack Compose. This skill should be used when building Android UI with Material 3 / Material 3 Expressive design language, including theming (color schemes, typography, shapes, motion), component implementation (buttons, cards, navigation, FAB, floating toolbar, button group, etc.), and design guidance (when to use which component, M3 vs M3E differences, expressive design principles). Covers both MD3E (the evolution released 2025, targeting Android 16) and baseline M3 (many components only have M3 specs). Knowledge baseline 2026-11-10: material3 1.5.0-rc01 / stable 1.4.0. Triggers on requests like Material 3 Expressive, MD3E, Material Design 3, M3 theme, MaterialExpressiveTheme, Compose Material 3 component, or when designing/building Android UI that should follow Google Material design guidelines."
 ---
 
 # Material Design 3 Expressive (MD3E) Skill
@@ -13,12 +18,12 @@ implementation in Android Jetpack Compose (`androidx.compose.material3`). MD3E i
 of M3, with research-backed updates to theming, components, motion, typography, and shapes. It targets
 Android 16 but is available via the Compose Material 3 library (1.5.0-alpha+) for lower API levels.
 
-**Knowledge baseline: 2026-10-23.** Recommended dependency for full M3E:
-`androidx.compose.material3:material3:1.5.0-beta02` (2026-10-21; use the matching
-`compose-bom-alpha`). Stable **1.4.0** provides M3 + `MotionScheme` + partial Expressive only — since
+**Knowledge baseline: 2026-11-10.** Recommended dependency for full M3E:
+`androidx.compose.material3:material3:1.5.0-rc01` (2026-11-04; resolved via
+`compose-bom-alpha:2026.11.00`, which manages the full rc01 set). Stable **1.4.0** provides M3 + `MotionScheme` + partial Expressive only — since
 **1.4.0-beta01** the stable line removed public `ExperimentalMaterial3ExpressiveApi` APIs. The 1.5.0
-line **entered beta on 2026-10-07**, so the Expressive APIs are stabilizing; Google still does not
-recommend alpha/beta builds for production.
+line **entered beta on 2026-10-07 and reached RC on 2026-11-04**, so the Expressive API surface is
+frozen; Google still does not recommend pre-release (alpha/beta/RC) builds for production.
 
 **Source of truth:** signatures in this skill were re-verified against the `androidx/androidx`
 source tree on 2026-10-23. Where docs and source disagree, the source wins (see
@@ -74,21 +79,65 @@ On the **1.5.0** line (full set); several graduated non-experimental:
   `androidx.compose.foundation.shape`, **not** `material3`; `MaterialShapes` exposes 35 preset
   `RoundedPolygon`s + `toShape()`
 
+## Deprecated in M3E — do not generate these
+
+The Expressive update retired several baseline components. Generating them is the most common
+way to produce "M3-looking" instead of "M3E-looking" UI. Source: the official `m3.material.io`
+overview pages (2026-11-10), folded into this file.
+
+### Components the design system no longer recommends
+
+| Retired | Use instead | Upstream page |
+| --- | --- | --- |
+| `SegmentedButton` + `Single/MultiChoiceSegmentedButtonRow` | connected `ButtonGroup` | `segmented-buttons/overview` |
+| `ModalNavigationDrawer` / `PermanentNavigationDrawer` / `DismissibleNavigationDrawer` | `ModalWideNavigationRail` / `WideNavigationRail` (expanded rail; `NavigationDrawer` has **no** M3E replacement in the old form) | `navigation-drawer/overview` |
+| baseline `NavigationBar` | `ShortNavigationBar` | `navigation-bar/overview` |
+| baseline `NavigationRail` | `WideNavigationRail` | `navigation-rail/overview` |
+| `MediumTopAppBar` / `LargeTopAppBar` | `MediumFlexibleTopAppBar` / `LargeFlexibleTopAppBar` | `app-bars/overview` |
+| `BottomAppBar` | docked `HorizontalFloatingToolbar` (shorter, nicer) | `toolbars/overview` |
+| `SmallFloatingActionButton` (40dp) | 56dp `FloatingActionButton` (M3E re-based the FAB scale on 56/80/96) | `floating-action-button/overview` |
+| baseline `ExtendedFloatingActionButton` | small extended FAB (56dp) | `extended-fab/overview` |
+| surface-colored FAB | any container-colored FAB | `floating-action-button/overview` |
+| neutral `TextButton` | new color mappings | `buttons/overview` |
+| small buttons with 24dp content padding | 16dp (matches the new size scale) | `buttons/overview` |
+
+Note: these are **design-system** retirements. The composables still compile and are not
+`@Deprecated` in the source — but answering "what should this screen use" with them is wrong for
+an Expressive target. For a legacy M3 target (stable `material3` 1.4.0, no `MaterialExpressiveTheme`)
+the baseline components remain correct.
+
+### APIs that were renamed or removed (compile-level)
+
+| Gone | Replacement | Since |
+| --- | --- | --- |
+| `TopSearchBar` | `AppBarWithSearch` | 1.5.0-line |
+| `LocalMotionScheme` | `MaterialTheme.motionScheme` | alpha27 (removed) |
+| `TonalToggleButton` | `FilledTonalToggleButton` | alpha25 |
+| `RichTimePickerDialog` / `richColors` | `VibrantTimePickerDialog` / `vibrantColors` | alpha27 |
+| `WavyProgressIndicator` | `LinearWavyProgressIndicator` / `CircularWavyProgressIndicator` | 1.5.0-line |
+| `rememberWithGapSearchBarState` | `rememberSearchBarWithGapState` | alpha18 |
+| `standardMotionScheme` / `expressiveMotionScheme` | `MotionScheme.standard()` / `MotionScheme.expressive()` | 1.4.0-alpha02 |
+| `SplitButton(...)` | does not exist — use `SplitButtonLayout(leadingButton, trailingButton)` | 1.5.0-line |
+| ComponentOverride API | removed, use theme defaults | alpha23/alpha25 |
+| `androidx.compose.material.icons` (transitive) | declare `material-icons-core` explicitly, or prefer **Material Symbols** | 1.4.0 |
+
 ## Workflow
 
 Follow these steps when building or modifying Material UI:
 
 1. **Set up theming** — Use `MaterialExpressiveTheme` instead of `MaterialTheme`. See the snippet
    below for the standard scaffold. Dynamic color requires API 31+ with fallback.
-2. **Pin versions** — For full M3E use `material3` **1.5.0-beta02** (2026-10-21) or the matching
-   `compose-bom-alpha`. Read `references/version-baseline.md` before choosing stable vs the 1.5.0
+2. **Pin versions** — For full M3E use `material3` **1.5.0-rc01** (2026-11-04) via
+   `compose-bom-alpha:2026.11.00` or pinned explicitly. Read `references/version-baseline.md` before choosing stable vs the 1.5.0
    line; declare `material-icons-core` explicitly (not transitive since 1.4.0) or use Material Symbols.
 3. **Generate a theme from a brand color (optional)** — Run `scripts/generate_theme.py` to derive a
    full light/dark color scheme from one seed color. Copy `assets/templates/` into the project and
    customize, or let the script emit `Color.kt` + `Theme.kt`.
-4. **Choose components** — Consult `references/components-catalog.md` for the categorized list with
-   M3/MD3E tags and key parameters; `references/m3e/components.md` for version-line status. Then use
-   `references/component-index.md` to jump to the source file, official sample and spec page.
+4. **Choose components** — Check `references/recipes/INDEX.md` first: where a recipe exists it is
+   the **authoritative implementation spec** (every variant, exact token values, colors, shapes,
+   runnable snippets). Otherwise consult `references/components-catalog.md` for the categorized
+   list with M3/MD3E tags; `references/m3e/components.md` for version-line status. Then use
+   `references/component-index.md` to jump to the source file, official sample and recipe section.
 5. **Apply design tokens** — Token values live in `references/design-tokens.md`. Access at runtime via
    `MaterialTheme.colorScheme.*` / `.typography.*` / `.shapes.*` / `.motionScheme.*` (never
    `LocalMotionScheme`, removed in alpha27).
@@ -99,9 +148,10 @@ Follow these steps when building or modifying Material UI:
 7. **Look up API signatures** — 1.5.0-line components: `references/m3e-api-signatures.md`
    (source-verified). Stable-line full snapshot: grep `references/compose-api-full.md`
    (e.g. `### ComponentName`, `fun lightColorScheme`).
-8. **Look up official specs** — For design specs (anatomy, states, measurements), read files under
-   `references/m3-content/` (e.g. `m3-content/components/{name}/specs.md`,
-   `m3-content/styles/{category}/`). Snapshot captured **2026-09-14**.
+8. **Look up design intent** — `references/recipes/` carries the distilled official guidance for
+   each component family (when to use which variant, Do/Don't, accessibility). Cross-component rules
+   (breakpoints, RTL, interaction) live in `references/recipes/foundations.md`. The raw site mirror
+   was folded into these files and removed.
 
 ### Standard theme scaffold
 
@@ -144,16 +194,21 @@ the HCT variant (`tonalspot` = M3 baseline, `expressive`, `vibrant`, …); `--co
 
 Only open these when the workflow above points to them — they are large and not needed every turn.
 
+- `references/recipes/` — **Implementation specs, code-first.** One file per component family:
+  variant inventory (including retired ones, marked ⚠️), exact `*Tokens.kt` values, color/shape/
+  state matrices, runnable snippets, accessibility rules and traps. The official spec pages hide
+  their measurement data inside images, so this layer carries the numbers that actually go into
+  code. Start at `recipes/INDEX.md` for coverage; `recipes/buttons.md` is the reference shape.
 - `references/compose-patterns.md` — Verified code patterns: theming, adaptive navigation,
   floating toolbars, button groups, split buttons, search, loading, lists, motion, a11y.
 - `references/official-samples.md` — Map of the 49 official `*Samples.kt` files, `compose-samples`
   apps, Now in Android, and the official docs; says which file to read for each component.
-- `references/component-index.md` — Component → source file → official sample → spec page.
+- `references/component-index.md` — Component → source file → official sample → recipe section.
   Use it whenever the question is "where is this implemented / how is it used / how should it look".
 - `references/m3e-api-signatures.md` — Source-verified signatures for 1.5.0-line components
   (`MaterialExpressiveTheme`, 8-step `Shapes`, `MotionScheme`, `FloatingToolbar`, `ButtonGroup`,
   `SplitButtonLayout`, `LoadingIndicator`, `Wavy*`, `ShortNavigationBar`, `ScrollField`, …).
-- `references/version-baseline.md` — Version matrix, feature gates, 1.5.0-line churn log (2026-10-23).
+- `references/version-baseline.md` — Version matrix, feature gates, 1.5.0-line churn log (2026-11-10).
 - `references/m3e/` — Curated latest M3E notes (verified 2026-10-23), Chinese primary with
   English mirrors (`*.en.md`): `design-system.md`, `color-typography-shape.md`,
   `motion-physics.md`, `components.md`, `compose-api.md`.
@@ -166,16 +221,6 @@ Only open these when the workflow above points to them — they are large and no
 - `references/m3-vs-m3e-diff.md` — M3↔M3E differences, migration, I/O 2026 updates.
 - `references/expressive-design-tactics.md` — The 7 official M3E design tactics with examples.
 - `references/design-research.md` — HCT color science, variable fonts, motion/accessibility research.
-- `references/m3-content/` — Mirror of m3.material.io (**263 pages** = 249 spec pages + 14
-  overview pages; specs captured 2026-09-14 and sitemap-verified 2026-10-08, M3E articles and
-  platform guides added 2026-10-19). Read
-  `m3-content/components/{name}/specs.md`, `m3-content/styles/{category}/`, or the M3E articles in
-  `m3-content/blog/`. Treat it as the **visual/measurement** reference, not API truth: upstream
-  component pages last changed 2026-07~09, and new Expressive components (floating toolbar, short
-  navigation bar, scroll field) have no standalone spec page yet — fall back to source + samples.
-- `assets/templates/` — Ready-to-use `MD3ETheme.kt`, `Color.kt`, `Type.kt`, `Shape.kt`. Copy into
-  `ui/theme/` and customize.
-- `scripts/generate_theme.py` — Seed color → complete Compose theme (see Workflow step 3).
 
 ## Design Principles (MD3E)
 

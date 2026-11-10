@@ -5,9 +5,14 @@ Organized catalog of all Material 3 / Material 3 Expressive components available
 require `@ExperimentalMaterial3ExpressiveApi` on the **1.5.0** line — others graduated
 non-experimental (Flexible AppBars, FloatingToolbar, ButtonGroup APIs, SearchBarState).
 
-**Version baseline (2026-10-23):** full M3E = `material3` **1.5.0-beta02**; stable **1.4.0**
+**Version baseline (2026-11-10):** full M3E = `material3` **1.5.0-rc01**; stable **1.4.0**
 lacks the full Expressive set. See `references/version-baseline.md` and `references/m3e/components.md`.
-Signatures in this catalog were re-checked against the `androidx-main` source on 2026-10-23.
+Signatures in this catalog were re-checked against the `androidx-main` source on 2026-10-23
+(API surface re-checked from `api/current.txt` on 2026-11-10).
+
+⚠️ **Entries marked "retired in M3E" are still valid composables but are no longer recommended by
+the Expressive design language.** Picking one for an Expressive target produces M3-looking UI.
+Summary table with replacements: `SKILL.md` → "Deprecated in M3E".
 
 For full API signatures, search `references/compose-api-full.md` with the component name.
 
@@ -24,23 +29,32 @@ For full API signatures, search `references/compose-api-full.md` with the compon
 | `OutlinedButton` | Low (outlined) | `surface` + border | Important but not primary |
 | `TextButton` | Lowest (text) | transparent | Low-emphasis, text links |
 
-Key params: `onClick`, `modifier`, `enabled`, `shape`, `colors` (ButtonColors), `elevation`
-(ButtonElevation), `border`, `contentPadding`, `interactionSource`.
+Key params: `onClick`, `modifier`, `enabled`, `shape` **或** `shapes`（两个重载，后者才有按压形变）,
+`colors` (ButtonColors), `elevation` (ButtonElevation), `border`, `contentPadding`, `interactionSource`.
 
-Default button shape: `RoundedCornerShape(20.dp)` (pill shape).
+Default shape: `ButtonDefaults.shape` → `CornerFull`（`CircleShape`，真 pill，不是 `RoundedCornerShape(20.dp)`）。
+方角用 `ButtonDefaults.squareShape`，圆角随尺寸变化 12/12/16/28/28dp。
+
+**五档尺寸（32/40/56/96/136dp）、形状矩阵、颜色矩阵与完整写法见
+`references/recipes/buttons.md`** —— `Button` 没有 `size` 参数，靠 `shapesFor(height)` +
+`contentPaddingFor(height)` + `Modifier.heightIn(min = height)` 组合。
 
 ### Icon Buttons (M3 — stable)
 `IconButton`, `IconToggleButton`, `FilledIconButton`, `FilledIconToggleButton`,
 `FilledTonalIconButton`, `FilledTonalIconToggleButton`, `OutlinedIconButton`,
 `OutlinedIconToggleButton`.
 
-### FABs (M3 — stable)
-| Composable | Size | Usage |
-|------------|------|-------|
-| `FloatingActionButton` | 56dp | Primary screen action |
-| `SmallFloatingActionButton` | 40dp | Secondary action |
-| `LargeFloatingActionButton` | 96dp | Prominent action |
-| `ExtendedFloatingActionButton` | Extended | Action with label |
+### FABs (M3 stable; M3E re-based the size scale)
+| Composable | Size | Status | Usage |
+|------------|------|--------|-------|
+| `FloatingActionButton` | 56dp | ✅ 推荐 — 这就是 M3E 说的 "small FAB" | Primary screen action |
+| `MediumFloatingActionButton` | 80dp | ✅ **[M3E] 新增** (`@ExperimentalMaterial3ExpressiveApi`) | |
+| `LargeFloatingActionButton` | 96dp | ✅ 推荐 | Prominent action |
+| `SmallFloatingActionButton` | 40dp | ⚠️ **M3E 不再推荐** | 仅面向 stable M3 的旧代码 |
+| `ExtendedFloatingActionButton` | small 56 / medium 80 / large 96 | ⚠️ baseline 56dp 不再推荐，用 small extended FAB | Action with label |
+
+> 命名陷阱：M3E 设计语言里的 "small FAB" 指 **56dp**（即 `FloatingActionButton`），
+> 不是 API 里的 `SmallFloatingActionButton`（40dp，已不推荐）。按设计稿选尺寸时认 dp 值，别认 API 名字。
 
 **[M3E]** `ToggleFloatingActionButton` — FAB that morphs between two states with animation.
 Uses `ToggleFloatingActionButtonScope`. Requires `@ExperimentalMaterial3ExpressiveApi`.
@@ -48,15 +62,24 @@ Uses `ToggleFloatingActionButtonScope`. Requires `@ExperimentalMaterial3Expressi
 **[M3E]** `FloatingActionButtonMenu` — FAB that expands into a vertical menu.
 Uses `FloatingActionButtonMenuScope`.
 
-### Segmented Buttons (M3 — stable)
+### Segmented Buttons (M3 — retired in M3E)
 - `SingleChoiceSegmentedButtonRow` + `SegmentedButton` — mutually exclusive options
 - `MultiChoiceSegmentedButtonRow` + `SegmentedButton` — multiple toggle options
+- ⚠️ **M3E 起官方不再推荐**（`segmented-buttons/overview`: "no longer recommended"）。新代码请用
+  connected `ButtonGroup`；仅在面向 stable M3（1.4.0，无 `MaterialExpressiveTheme`）时才保留。
 
 ### Button Group **[M3E]**
-- `ButtonGroup` — connected button row with overflow menu and compression animation (APIs stable since 1.5.0-alpha22)
-- `ButtonGroupScope` — sealed interface; `weight()` and `animateWidth()` overloads (alpha25+)
-- `ButtonGroupMenuState` — overflow menu state
-- `ButtonGroupDefaults` — default values
+两个变体，代码形态完全不同（完整写法见 `compose-patterns.md` 第 5 节）：
+
+- **standard** — `ButtonGroup { clickableItem / toggleableItem / customItem }`；按压时自己变宽、
+  相邻按钮被压缩（`expandedRatio`，默认 0.15f），放不下自动进溢出菜单（`overflowIndicator` 必填）
+- **connected** — `FlowRow` + `ToggleButton` + `ButtonGroupDefaults.connected{Leading,Middle,Trailing}ButtonShapes()`，
+  靠负间距 `ConnectedSpaceBetween` 咬合；**这是 SegmentedButton 的官方替代**
+- 尺寸：`ToggleButtonSize` 五档（ExtraSmall / Small 默认 / Medium / Large / ExtraLarge）
+- 形状：round / square 两套（圆角随尺寸变化 12/12/16/28/28dp，见 `recipes/buttons.md` §2）
+- 选择模式：单选 / 多选 / 必选
+- 配套：`ButtonGroupScope`（sealed interface）、`ButtonGroupMenuState`（`show()` / `dismiss()`）、
+  `ButtonGroupDefaults`（`ExpandedRatio`、`ConnectedSpaceBetween`、`OverflowIndicator`）
 
 ### Split Button **[M3E]**
 - `SplitButtonLayout(leadingButton, trailingButton, modifier, spacing)` — the only container API;
@@ -68,11 +91,13 @@ Uses `FloatingActionButtonMenuScope`.
 
 ## Navigation
 
-### Navigation Bar (M3 — stable)
+### Navigation Bar (M3 — baseline retired in M3E)
 `NavigationBar` + `NavigationBarItem` — bottom navigation, compact screens (≤599dp), 3-5 destinations.
+⚠️ **M3E 不再推荐 baseline navigation bar**（`navigation-bar/overview`）。新代码用 `ShortNavigationBar`。
 
-### Navigation Rail (M3 — stable)
+### Navigation Rail (M3 — baseline retired in M3E)
 `NavigationRail` + `NavigationRailItem` — side navigation, medium screens (600-839dp).
+⚠️ **M3E 不再推荐 baseline navigation rail**（`navigation-rail/overview`）。新代码用 `WideNavigationRail`。
 
 ### Wide Navigation Rail **[M3E]**
 `WideNavigationRail` / `ModalWideNavigationRail` — expanded rail for medium/expanded screens.
@@ -83,7 +108,10 @@ State: `WideNavigationRailState` (`rememberWideNavigationRailState()`), colors:
 `ShortNavigationBar` + `ShortNavigationBarItem` — compact bottom bar for small/medium width;
 `ShortNavigationBarArrangement`, `ShortNavigationBarDefaults`.
 
-### Navigation Drawer (M3 — stable)
+### Navigation Drawer (M3 — retired in M3E)
+⚠️ **M3E 不再推荐 navigation drawer**（`navigation-drawer/overview`）；官方给的替代是 **expanded
+navigation rail**（`WideNavigationRail` / `ModalWideNavigationRail`）。仅在面向 stable M3 时使用下表。
+
 | Composable | Usage |
 |------------|-------|
 | `ModalNavigationDrawer` + `ModalDrawerSheet` | Overlay drawer (compact) |
@@ -94,18 +122,22 @@ State: `WideNavigationRailState` (`rememberWideNavigationRailState()`), colors:
 ### Top App Bar (M3 stable; Flexible [M3E])
 | Composable | Height | Notes |
 |------------|--------|-------|
-| `TopAppBar` | 64dp | Standard top bar |
-| `CenterAlignedTopAppBar` | 64dp | Centered title |
-| `MediumTopAppBar` | 112dp | Collapsing title |
-| `LargeTopAppBar` | 152dp | Full collapsing |
-| `MediumFlexibleTopAppBar` **[M3E]** | Flexible | Flexible content |
-| `LargeFlexibleTopAppBar` **[M3E]** | Flexible | Flexible content |
+| `TopAppBar` | 64dp | Standard top bar（仍推荐） |
+| `CenterAlignedTopAppBar` | 64dp | Centered title（仍推荐） |
+| `MediumTopAppBar` | 112dp | ⚠️ **M3E 不再推荐** → `MediumFlexibleTopAppBar` |
+| `LargeTopAppBar` | 152dp | ⚠️ **M3E 不再推荐** → `LargeFlexibleTopAppBar` |
+| `MediumFlexibleTopAppBar` **[M3E]** | Flexible | ✅ 替代 medium top app bar |
+| `LargeFlexibleTopAppBar` **[M3E]** | Flexible | ✅ 替代 large top app bar |
+| `TwoRowsTopAppBar` **[M3E]** | Flexible | 双行标题 + 副标题 |
 
 Scroll behaviors: `pinnedScrollBehavior`, `enterAlwaysScrollBehavior`,
 `enterAlwaysCollapsedScrollBehavior`, `exitUntilCollapsedScrollBehavior`.
 Also: `TopAppBarScrollBehavior`, `TopAppBarDefaults`.
 
-### Bottom App Bar (M3 stable; Flexible [M3E])
+### Bottom App Bar (M3 — retired in M3E)
+⚠️ **M3E 不再推荐 bottom app bar**（`toolbars/overview`）：改用 **docked `HorizontalFloatingToolbar`**，
+功能相近但更矮、更贴合表达式视觉。下面两项仅在面向 stable M3 时使用。
+
 - `BottomAppBar` — standard bottom bar with FAB slot
 - `FlexibleBottomAppBar` **[M3E]** — flexible arrangement
   - `FlexibleContentPadding`, `FlexibleBottomAppBarHeight`
@@ -158,6 +190,20 @@ Color roles: `containerColor` = surfaceVariant (default) / primaryContainer (sel
 
 ### Divider (M3 — stable)
 `HorizontalDivider`, `VerticalDivider`.
+
+### Carousel (M3 — stable)
+`HorizontalMultiBrowseCarousel`, `HorizontalUncontainedCarousel`, `HorizontalCenteredHeroCarousel`
+— `CarouselState` (`rememberCarouselState()`), `CarouselDefaults` (`ItemSpacing`,
+`ContentPadding`, `MediumMotionScheme`).
+Since **beta01** the centered-hero carousel uses `preferredItemWidth` (was `maxItemWidth`).
+布局选择与规则见 `recipes/carousel.md`。
+
+### Side Sheet (M3 规范有 — **Compose 无对应 API**)
+官方规范里 side sheet 有 standard / modal 两种（实现细节见 `recipes/containers.md`）。
+但 `androidx.compose.material3` 的 API 清单里**没有 `SideSheet` / `ModalSideSheet`**
+（2026-11-10 核对 `api/current.txt`）—— 不要凭空写 `SideSheet(...)`。
+宽屏侧边场景优先用 `WideNavigationRail` / `ModalWideNavigationRail`；确实需要可拖拽面板时
+用 `ModalBottomSheet` 并按需换布局方向，或自己基于 `Surface` + 手势实现。
 
 ---
 

@@ -124,7 +124,7 @@ fun AppScaffold(selected: Int, onSelect: (Int) -> Unit, content: @Composable () 
 它在 `COMPACT / MEDIUM / EXPANDED` 宽度下自动选 `ShortNavigationBar` / `NavigationRail` /
 `WideNavigationRail`。`state.currentValue` 可读当前形态，`state.toggle()` 可收起/展开。
 
-> 1.5.0-beta02 若不支持 `navigationItems` + `NavigationSuiteItem`（新版 API），改用旧签名
+> 1.5.0 线若不支持 `navigationItems` + `NavigationSuiteItem`（新版 API），改用旧签名
 > `NavigationSuiteScaffold(navigationSuiteItems = { ... })`，条目方法以源码为准。
 
 ### 3.2 手写选择（无套件依赖）
@@ -188,7 +188,59 @@ fun EditorScreen() {
 
 ---
 
-## 5. 连通按钮组（单选）
+## 5. 按钮组：全变体（standard / connected）
+
+M3E 的"按钮组"在代码里是**两种不同的东西**，选错样式完全不同：
+
+| 变体 | 代码形态 | 行为 | 用在哪 |
+| --- | --- | --- | --- |
+| **standard** | `ButtonGroup { ... }` | 按下时自己变宽、相邻按钮被压缩（`expandedRatio`）；放不下自动进溢出菜单 | 一排操作按钮，常带"更多" |
+| **connected** | `FlowRow` + `ToggleButton` + `connected*Shapes()` | 按钮连成一体，选中态变形，互不影响宽度 | 筛选 / 切换视图 / 排序（**取代 SegmentedButton**） |
+
+设计侧的对应关系见 `recipes/button-groups.md`：`standard` 和 `connected` 是官方
+两个变体，各有 XS–XL 五档、round / square 两种形状、单选 / 多选 / 必选三种选择模式。
+
+### 5.1 standard：`ButtonGroup` + 溢出菜单
+
+```kotlin
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun SortButtonGroup(selected: Int, onSelect: (Int) -> Unit) {
+    ButtonGroup(
+        overflowIndicator = { menuState ->
+            ButtonGroupDefaults.OverflowIndicator(menuState)
+        },
+        modifier = Modifier.padding(horizontal = 8.dp),
+    ) {
+        toggleableItem(
+            checked = selected == 0,
+            label = "Recent",
+            onCheckedChange = { onSelect(0) },
+        )
+        toggleableItem(
+            checked = selected == 1,
+            label = "Popular",
+            onCheckedChange = { onSelect(1) },
+        )
+        clickableItem(onClick = { /* more */ }, label = "More")
+    }
+}
+```
+
+`ButtonGroupScope` 只有三个 DSL 方法，别去别处找：
+
+| 方法 | 用途 |
+| --- | --- |
+| `clickableItem(onClick, label, icon, weight, enabled)` | 一次性动作按钮 |
+| `toggleableItem(checked, label, onCheckedChange, icon, weight, enabled)` | 可选中按钮（standard 组的选择态） |
+| `customItem(buttonGroupContent, menuContent)` | 自定义外观，自己处理溢出菜单 |
+
+- `weight` 控制相对宽度（`Float.NaN` = 按内容）；也有 `Modifier.weight()` / `Modifier.align()` 版本。
+- 按压压缩幅度由 `expandedRatio`（默认 `0.15f`）控制；0f 完全不联动，1f 按到 200% 宽。
+- 需要自定义压缩动画时用 `customItem` + `Modifier.animateWidth(interactionSource, compressionLimit)`，
+  并给 `Text(softWrap = false, maxLines = 1)`。
+
+### 5.2 connected：单选 / 多选 / 必选
 
 ```kotlin
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -215,10 +267,55 @@ fun FilterRow(options: List<String>, selectedIndex: Int, onSelect: (Int) -> Unit
 }
 ```
 
-- 多选：去掉 `role = Role.RadioButton`，`checked` 换成列表状态。
-- 需要「放不下自动进溢出菜单」用 `ButtonGroup(overflowIndicator = { ButtonGroupDefaults.OverflowIndicator(it) })`。
-- 需要按压压缩动效：在 `customItem` 里用 `Modifier.animateWidth(interactionSource, compressionLimit)`，
-  并给 `Text(softWrap = false, maxLines = 1)`。
+三种选择模式的差异只有两处：`role` 语义和 `checked` 的状态形状。
+
+| 模式 | 语义 | 状态处理 |
+| --- | --- | --- |
+| 单选 | `Role.RadioButton` | 单个 `selectedIndex`，选中时走 `connectedButtonCheckedShape` |
+| 多选 | `Role.Checkbox` | `Set<Int>` 或 `List<Boolean>`，可同时选中多个 |
+| 必选（不可取消） | `Role.RadioButton` | `onCheckedChange` 里拒绝取消当前项 |
+
+`ButtonGroupDefaults.ConnectedSpaceBetween` = **2dp**（`ConnectedButtonGroupSmallTokens.BetweenSpace`，正数）。
+按钮之所以"咬合"是 `connected*ButtonShapes()` 给的**互补圆角**，不是负间距——靠负 margin 拼是错的。
+
+### 5.3 尺寸与形状（五档 × 两种）
+
+尺寸由组内**按钮**决定，不在 `ButtonGroup` 上：
+
+```kotlin
+ToggleButton(
+    checked = checked,
+    onCheckedChange = onCheckedChange,
+    buttonSize = ToggleButtonSize.Medium,   // ExtraSmall / Small(默认) / Medium / Large / ExtraLarge
+    shapes = ToggleButtonDefaults.shapesFor(ToggleButtonSize.Medium),
+) { Text("Medium") }
+```
+
+| `ToggleButtonSize` | 高度来源 | 说明 |
+| --- | --- | --- |
+| `ExtraSmall` | `ButtonDefaults.ExtraSmallContainerHeight` | XS，`md.comp.button-group.standard.xsmall.container.height` = **32dp** |
+| `Small` | `ButtonSmallTokens.ContainerHeight` | **默认值**（`ToggleButtonDefaults.size`） |
+| `Medium` | `ButtonDefaults.MediumContainerHeight` | |
+| `Large` | `ButtonDefaults.LargeContainerHeight` | |
+| `ExtraLarge` | `ButtonDefaults.ExtraLargeContainerHeight` | XL |
+
+round / square 两种形状的圆角（官方 buttons corner sizes 表）：
+
+| | XS | S | M | L | XL |
+| --- | --- | --- | --- | --- | --- |
+| Round button | Full | Full | Full | Full | Full |
+| Square button | 12dp | 12dp | 16dp | 28dp | 28dp |
+| Pressed state | 8dp | 8dp | 12dp | 16dp | 16dp |
+
+连通组的形状不是"每档一个值"，而是三个形状构成一组 `ToggleButtonShapes`
+（default / pressed / checked），所以永远用 `connected*ButtonShapes()` 工厂方法而不是手写圆角。
+
+### 5.4 常见坑
+
+- `ButtonGroup` 的 `overflowIndicator` 是**必填参数**，不是可选项；忘了就编译不过。
+- connected 组不要用 `ButtonGroup` 包，它只负责 standard 变体。
+- `ToggleButtonDefaults.size` 默认是 **Small**，不是 Medium；设计稿看起来更矮就是这个原因。
+- 选中的形状来自 `shapes.checkedShape`，不要手填 `ButtonGroupDefaults.connectedButtonCheckedShape`。
 
 ---
 

@@ -4,7 +4,7 @@ Material 3 Expressive (M3E) is an **expansion** of Material Design 3, not a repl
 document covers what changed, what's new, and what stayed the same.
 
 > **Version baseline (2026-10-23):** full M3E component set ships only on the **1.5.0 line**
-> (`material3` **1.5.0-beta02**, 2026-10-21; the line entered beta on 2026-10-07). Stable **1.4.0** = M3 +
+> (`material3` **1.5.0-rc01**, 2026-11-04; the line entered beta on 2026-10-07). Stable **1.4.0** = M3 +
 > `MotionScheme` + partial Expressive. Since **1.4.0-beta01**, all public
 > `ExperimentalMaterial3ExpressiveApi` APIs were **removed from the stable line**.
 > Details: `references/version-baseline.md`, `references/m3e/compose-api.md`.
@@ -132,6 +132,11 @@ require `@ExperimentalMaterial3ExpressiveApi`:
 - `SwipeToDismissBox`
 - `Icon`, `Text`
 - `ripple()` indication
+
+> ⚠️ 上面这份是"**存在**清单"，不是"**推荐**清单"。其中 `SegmentedButton`、
+> `Modal/Permanent/DismissibleNavigationDrawer`、基线 `NavigationBar` / `NavigationRail`、
+> `MediumTopAppBar` / `LargeTopAppBar`、`BottomAppBar`、40dp `SmallFloatingActionButton`
+> 在 M3E 中**已不再推荐**，替代方案见 `SKILL.md` → "Deprecated in M3E"。
 
 ---
 

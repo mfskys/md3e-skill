@@ -2,24 +2,40 @@
 
 **[English](./README.md)** | **[中文](./README.zh-CN.md)**
 
-A universal AI skill for building Android UI with **Material Design 3 Expressive (MD3E)** using **Jetpack Compose**. Works with native-skill assistants (CodeBuddy, Claude Code, any Agent-Skills-compatible tool) and with rules-based assistants (Cursor, Windsurf, Trae, Cline, GitHub Copilot, 通义灵码, 文心快码, CodeGeeX) through their rules entry.
+An **Agent Skill** for building Android UI with **Material Design 3 Expressive (MD3E)** on
+**Jetpack Compose**.
+
+It follows the [Agent Skills specification](https://agentskills.io/specification): a slim `SKILL.md`
+entry point plus a `references/` tree loaded on demand. Native support is wide — the official client
+showcase lists **46 clients**, including Claude Code, Cursor, VS Code / GitHub Copilot, TRAE, Gemini
+CLI, Codex, JetBrains Junie, Roo Code, Amp, OpenHands, Factory, Spring AI and CodeBuddy. In these,
+the assistant matches your question against the `description`, loads `SKILL.md`, then opens only the
+reference files that question actually needs.
+
+A few editors still have no skill mechanism (Windsurf, Cline, 通义灵码, 文心快码). They can use the
+skill through a rules file, but the cost is real: rules are injected every turn and cannot pull in
+`references/` by themselves, so the model may answer from the `SKILL.md` summary alone.
 
 ## What is MD3E?
 
 Material 3 Expressive is Google's 2025 evolution of Material Design 3, featuring:
 - **Spring-based motion** (MotionScheme) replacing easing curves
 - **Expanded color system** with 18 new Fixed color roles + 7 surface container roles
-- **New components**: FloatingToolbar, ButtonGroup, SplitButton, WideNavigationRail, ToggleFloatingActionButton, FlexibleBottomAppBar, and more
+- **New components**: FloatingToolbar, ButtonGroup, `SplitButtonLayout`, WideNavigationRail, ShortNavigationBar, ToggleFloatingActionButton, LoadingIndicator, and more
 - **Expressive design principles**: bolder colors, varied shapes, variable typography, container grouping
 
 This skill covers **both MD3E and baseline M3** — many components only have M3 specs, so the skill uses MD3E where available and falls back to M3 otherwise.
 
-**Knowledge baseline: 2026-10-23.** Full M3E component set requires `material3` **1.5.0-beta02**
-(the 1.5.0 line entered beta on 2026-10-07); stable **1.4.0** ships M3 + MotionScheme + partial
-Expressive only.
+**Knowledge baseline: 2026-11-10.** Full M3E component set requires `material3` **1.5.0-rc01**
+(the 1.5.0 line entered beta on 2026-10-07 and reached RC on 2026-11-04); stable **1.4.0** ships
+M3 + MotionScheme + partial Expressive only.
 
 ## Features
 
+- **Implementation specs (`references/recipes/`)**: code-first spec per component family — every
+  variant including the retired ones, exact values lifted from `*Tokens.kt`, color / shape / state
+  matrices and runnable snippets. The official pages keep their measurements inside images, so
+  this is the layer that carries the numbers you actually type
 - **Complete API reference**: Full `androidx.compose.material3` package documentation (~8,000 lines)
 - **Source-verified M3E signatures**: 1.5.0-line APIs (`MaterialExpressiveTheme`, 8-size `Shapes`,
   `MotionScheme`, `FloatingToolbar`, `ButtonGroup`, `SplitButtonLayout`, `LoadingIndicator`, …)
@@ -30,11 +46,15 @@ Expressive only.
   Now in Android and the official docs — tells you exactly which file to read per component
 - **Design tokens**: All 48 color roles, 15 base + 15 `*Emphasized` type styles, 8 shape sizes,
   motion system values
-- **Component catalog**: Every M3/M3E component organized by category with usage guidance
-- **Version baseline**: Feature gates, 1.5.0-line churn, BOM coverage (2026-10-23)
+- **Component catalog**: Every M3/M3E component organized by category with usage guidance, plus
+  per-entry deprecation status
+- **Deprecation map**: The baseline components M3E retired — segmented button, navigation drawer,
+  bottom app bar, baseline nav bar/rail, 40dp small FAB, medium/large top app bar — and what
+  replaces each. Keeps generated UI from looking like plain M3
+- **Version baseline**: Feature gates, 1.5.0-line churn, BOM coverage (2026-11-10)
 - **Curated M3E notes**: Design system, color/type/shape, motion physics, components, Compose API
 - **M3 vs M3E diff**: Clear comparison and migration guide
-- **Official spec mirror**: 263 Markdown pages from m3.material.io — 249 spec + 14 overview (specs captured 2026-09-14, sitemap-verified 2026-10-08; M3E articles and platform guides added 2026-10-19)
+- **Official guidance, folded in**: the m3.material.io component pages were distilled into `references/recipes/` — variants, values, code, Do/Don't and accessibility per component — then the raw 263-page mirror was removed so there is a single source of truth
 - **Code templates**: Ready-to-use `MD3ETheme.kt`, `Color.kt`, `Type.kt`, `Shape.kt`
 - **Theme generator**: Python script to generate a complete color scheme from a single seed color
 
@@ -43,36 +63,35 @@ Expressive only.
 The skill is a plain folder — `SKILL.md` + `references/` + `assets/` + `scripts/`. Pick the mode
 your assistant supports.
 
-**Mode 1 — native skill support.** Copy `md3e/` into the skills directory, keeping `SKILL.md` at the
-folder root:
+**Mode 1 — native skill support (recommended).** Copy `md3e/` into the client's skills directory,
+keeping `SKILL.md` at the folder root. The directory name must match the `name` field (`md3e`):
 
-| Assistant | Project-level | User-level |
+| Client | Project-level | User-level |
 | --- | --- | --- |
-| CodeBuddy | `.codebuddy/skills/md3e/` | `~/.codebuddy/skills/md3e/` |
 | Claude Code | `.claude/skills/md3e/` | `~/.claude/skills/md3e/` |
-| Any Agent-Skills-compatible assistant | `<skills-dir>/md3e/` | `~/<skills-dir>/md3e/` |
+| Cursor | `.cursor/skills/md3e/` | `~/.cursor/skills/md3e/` |
+| VS Code / GitHub Copilot | `.github/skills/md3e/` | `~/.copilot/skills/md3e/` |
+| CodeBuddy | `.codebuddy/skills/md3e/` | `~/.codebuddy/skills/md3e/` |
+| Other native clients | see the [client showcase](https://agentskills.io/clients) (46 listed) | |
 
-**How it is used:** no slash command. The `description` in `SKILL.md` is the trigger — ask a normal
-question ("build a floating toolbar", "what are the M3E color roles") and the assistant decides to
-load the skill, then reads `references/*.md` on demand.
+**How it is used:** no slash command needed. The `description` in `SKILL.md` is the trigger — ask a
+normal question ("build a floating toolbar", "what are the M3E color roles") and the assistant
+decides to load the skill, then reads `references/*.md` on demand.
 
-**Mode 2 — rules / custom instructions.** Put **only the body of `SKILL.md`** into the rules entry
-and keep the `md3e/` folder in the repo, so the relative `references/...` paths still resolve. Never
-inline the whole `references/` tree — that defeats progressive disclosure.
+**Mode 2 — rules file (fallback for clients without skill support).** Put **only the body of
+`SKILL.md`** into the rules entry and keep the `md3e/` folder in the repo, so the relative
+`references/...` paths still resolve. Never inline the whole `references/` tree — rules files are
+injected every turn, and inlining turns a 3k-line skill into a permanent context tax.
 
-| Assistant | Rules entry |
+| Client | Rules entry |
 | --- | --- |
-| Cursor | `.cursor/rules/md3e.mdc` |
 | Windsurf | `.windsurf/rules/md3e.md` |
-| Trae | `.trae/rules/md3e.md` |
 | Cline | `.clinerules/md3e.md` |
-| GitHub Copilot | `.github/copilot-instructions.md` |
-| Continue | `.continue/rules/md3e.md` |
-| Codex CLI / Gemini CLI / Qwen Code | `AGENTS.md` / `GEMINI.md` / `QWEN.md` |
-| 通义灵码 / 文心快码 / CodeGeeX | the tool's custom-instruction entry |
+| 通义灵码 / 文心快码 | the tool's custom-instruction entry |
 | Anything else | `AGENTS.md` at the repo root (widely recognised) |
 
-**How it is used:** rules are always-on; the same natural-language questions work.
+**Trade-off:** in this mode the model always has `SKILL.md` in context but has to be *told* to open
+a `references/` file, so it may answer from the summary alone.
 
 ### Let the assistant install it
 
@@ -87,8 +106,10 @@ Most assistants with terminal access can install the skill themselves. Paste thi
 Known locations are built in:
 
 ```bash
-python scripts/install_skill.py --assistant codebuddy --home   # ~/.codebuddy/skills/md3e
 python scripts/install_skill.py --assistant claude --home      # ~/.claude/skills/md3e
+python scripts/install_skill.py --assistant cursor --home      # ~/.cursor/skills/md3e
+python scripts/install_skill.py --assistant copilot            # .github/skills/md3e
+python scripts/install_skill.py --assistant codebuddy --home   # ~/.codebuddy/skills/md3e
 python scripts/install_skill.py --target ./skills              # ./skills/md3e
 python scripts/install_skill.py --target ./skills --dry-run    # show the plan only
 ```
@@ -100,7 +121,8 @@ If the assistant cannot run commands, ask it to extract `md3e.zip`, copy the `md
 skills directory, and then run the same four checks.
 
 **Verify the install**: ask "What is the MD3E knowledge baseline?" — the expected answer is
-`2026-10-23`, citing `references/version-baseline.md`. Any other answer means the skill is not loaded.
+`2026-11-10`, citing `references/version-baseline.md` and `material3` 1.5.0-rc01. Any other answer
+means the skill is not loaded.
 
 ```
 md3e/
@@ -129,7 +151,23 @@ pip install material-color-utilities
 md3e/
 ├── SKILL.md                          # Entry point: triggers, workflow, quick reference
 ├── references/
-│   ├── version-baseline.md           # Version matrix, feature gates, 1.5.0 churn (2026-10-23)
+│   ├── recipes/                      # Implementation specs — primary source of truth
+│   │   ├── INDEX.md                  # Status legend (✅/⚠️/🧪/🚫), data precedence, coverage
+│   │   ├── buttons.md                # 5 styles × 5 sizes × 2 shapes + 4 toggle + SplitButton
+│   │   ├── button-groups.md          # standard (overflow) / connected (replaces segmented)
+│   │   ├── icon-buttons.md           # 4 styles × default/toggle × 5 sizes
+│   │   ├── fabs.md                   # 56/80/96 + extended tiers + menu/toggle morphs
+│   │   ├── app-bars.md               # Small / MediumFlexible / LargeFlexible / docked toolbar
+│   │   ├── navigation.md             # Short bar / Wide rail / drawer replacement
+│   │   ├── tabs.md                   # Primary / Secondary / scrollable
+│   │   ├── text-fields.md            # Filled / Outlined / Secure / search, two API styles
+│   │   ├── selection.md              # Checkbox / Radio / Switch / Slider / Chips + decision table
+│   │   ├── feedback.md               # Progress / Loading / Snackbar / Tooltip / Badge / Divider
+│   │   ├── containers.md             # Card / Dialog / BottomSheet / Menu / ListItem
+│   │   ├── pickers.md                # Date / DateRange / DateInput / Time
+│   │   ├── carousel.md               # multi-browse / uncontained / hero
+│   │   └── foundations.md            # Breakpoints / RTL / interaction / a11y baseline
+│   ├── version-baseline.md           # Version matrix, feature gates, 1.5.0 churn (2026-11-10)
 │   ├── m3e/                          # Curated M3E notes (5 zh + 5 en mirrors, verified 2026-10-23)
 │   │   ├── design-system.md          # Theming, dynamic color, system UI (+ design-system.en.md)
 │   │   ├── color-typography-shape.md # Color / type / shape (+ color-typography-shape.en.md)
@@ -140,18 +178,12 @@ md3e/
 │   ├── m3e-api-signatures.md         # Source-verified 1.5.0-line signatures
 │   ├── compose-patterns.md           # Verified code patterns (theme/nav/toolbar/search/...)
 │   ├── official-samples.md           # Where the official samples live + what each shows
-│   ├── component-index.md            # Component -> source file -> sample -> spec page
+│   ├── component-index.md            # Component -> source file -> sample -> recipe section
 │   ├── design-tokens.md              # Color/typography/shape/motion/elevation tokens
 │   ├── components-catalog.md         # All components by category with M3/M3E tags
 │   ├── m3-vs-m3e-diff.md             # Differences + migration guide + IO2026 updates
 │   ├── expressive-design-tactics.md  # 7 expressive design tactics with guidance
-│   ├── design-research.md            # Color science, readability, motion patterns, a11y
-│   └── m3-content/                   # Mirror of m3.material.io (263 pages)
-│       ├── components/               # 36 components × overview/specs/guidelines/a11y
-│       ├── styles/                   # color, motion, shape, typography, spacing...
-│       ├── foundations/              # layout, design tokens, watches, XR, a11y
-│       ├── blog/                     # M3E / I-O 2026 articles (2026-10-19)
-│       └── develop/                  # Compose / MDC-Android / Flutter / Web guides
+│   └── design-research.md            # Color science, readability, motion patterns, a11y
 ├── assets/
 │   └── templates/
 │       ├── MD3ETheme.kt              # MaterialExpressiveTheme setup template

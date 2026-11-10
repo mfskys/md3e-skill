@@ -122,7 +122,7 @@ Official selection table ✅:
 | `PermanentNavigationDrawer` / `ModalNavigationDrawer` (combinable with `NavigationRail`) | Medium–large tablets with room for detail |
 
 > The truly adaptive approach is **`NavigationSuiteScaffold` switching by window size class** —
-> see `../m3-content/foundations/layout/scaffold/overview.md`; the table above maps the low-level components.
+> see `../recipes/foundations.md`; the table above maps the low-level components.
 
 ---
 
@@ -137,7 +137,7 @@ Official selection table ✅:
 
 ## 8. M3E Adoption Strategy (aggressive track)
 
-> 📌 This project uses **`material3 = 1.5.0-beta02`**, so **the full M3E component set is available**.
+> 📌 This project uses **`material3 = 1.5.0-rc01`**, so **the full M3E component set is available**.
 > See `../version-baseline.md`.
 
 1. **Theme first**: wire the three subsystems via `MaterialTheme` + dynamic color —

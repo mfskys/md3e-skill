@@ -8,7 +8,7 @@ Compose 中的 Material Design 3（页面更新 2026-10-19）✅ +
 ---
 
 > 📌 **版本策略**：本项目**采用最新版本（含 Alpha/Beta/RC）**——
-> 即 `material3 = 1.5.0-beta02`，见 `../version-baseline.md`。
+> 即 `material3 = 1.5.0-rc01`，见 `../version-baseline.md`。
 > 本文件中"稳定线（1.4.0）"的表述只是**官方通道状态说明**，不代表我们的选择。
 
 ## 一、版本门槛速查
@@ -74,7 +74,7 @@ Compose 中的 Material Design 3（页面更新 2026-10-19）✅ +
 
 6. 校验
    ├─ 深色模式 + 动态取色 + 大字号
-   ├─ 各窗口尺寸（见 ../m3-content/foundations/layout/breakpoints/ 的设备矩阵）
+   ├─ 各窗口尺寸（见 ../recipes/foundations.md 的设备矩阵）
    └─ 视觉回归：重点看 surfaceContainer 相关层级（1.3.0 起行为变了）
 ```
 
@@ -160,7 +160,7 @@ animateFloatAsState(targetValue = target, animationSpec = spec)
 | `MotionScheme` 签名与 token | ✅ 是 interface：`standard()` / `expressive()` + `default` / `fast` / `slow` × `Spatial` / `Effects` 六个 spec 方法；token 在 `MotionSchemeKeyTokens` |
 | `MaterialShapes` / 形状形变 | ✅ `MaterialShapes` 提供 35 个 `RoundedPolygon` 预设 + `toShape()` / `toPath()`；`PolygonShape` 在 **`androidx.compose.foundation.shape`**，用 `transform { }` / `copy()` |
 | `LoadingIndicator` 归属 | ✅ 在 `androidx.compose.material3`：`LoadingIndicator` / `ContainedLoadingIndicator`，`progress: () -> Float`；主线仍需 `@ExperimentalMaterial3ExpressiveApi` |
-| `m3.material.io` 规格表 | ⚠️ 站点需 JS 渲染；以 `m3-content/` 镜像为准，镜像不含动态规格表数值 |
+| `m3.material.io` 规格表 | ⚠️ 站点需 JS 渲染；以 `references/recipes/` 镜像为准，镜像不含动态规格表数值 |
 
 仍需编译器确认：`NavigationSuiteScaffold` 的新版 `navigationItems` + `NavigationSuiteItem` API
-在 1.5.0-beta02 是否可用（`androidx-main` 已有；发布通道以编译结果为准）。
+在 1.5.0-rc01 是否可用（`androidx-main` 已有；发布通道以编译结果为准）。

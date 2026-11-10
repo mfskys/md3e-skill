@@ -118,7 +118,7 @@ val colorScheme = when {
 | `PermanentNavigationDrawer` / `ModalNavigationDrawer`（可与 `NavigationRail` 组合） | 中型到大型平板，有足够空间展示细节 |
 
 > 真正的自适应做法是**用 `NavigationSuiteScaffold` 按窗口尺寸类自动切换**，
-> 见 `../m3-content/foundations/layout/scaffold/overview.md`；上面是底层组件对应关系。
+> 见 `../recipes/foundations.md`；上面是底层组件对应关系。
 
 ---
 
@@ -133,7 +133,7 @@ val colorScheme = when {
 
 ## 八、M3E 落地策略建议（已按"激进策略"更新）
 
-> 📌 本项目采用 **`material3 = 1.5.0-beta02`**，即 **M3E 全套组件都可用**。
+> 📌 本项目采用 **`material3 = 1.5.0-rc01`**，即 **M3E 全套组件都可用**。
 > 见 `../version-baseline.md`。
 
 1. **主题先行**：先用 `MaterialTheme` + 动态取色把三大子系统接好，

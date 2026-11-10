@@ -2,7 +2,7 @@
 
 核对日期：**2026-10-23**
 来源：Compose Material 3 官方版本说明（https://developer.android.com/jetpack/androidx/releases/compose-material3，
-页面更新 2026-10-21）+ `androidx/androidx` 源码逐文件核对 ✅
+页面更新 2026-11-04）+ `androidx/androidx` 源码逐文件核对 ✅
 
 **读法说明**：括号里的 `alphaNN` 是"该 API 从实验性毕业"的版本。
 `1.4.0` 是当前**稳定线**，`1.5.0-betaNN` 是 **1.5.0 线**。
@@ -11,7 +11,7 @@
 ---
 
 > 📌 **版本策略**：本项目**采用最新版本（含 Alpha/Beta/RC）**——
-> `material3 = 1.5.0-beta02`，因此下文所有"1.5.0 线"组件**都在我们的可用范围内**。
+> `material3 = 1.5.0-rc01`，因此下文所有"1.5.0 线"组件**都在我们的可用范围内**。
 > 见 `../version-baseline.md`。第 12 节的"采用建议"已按此更新。
 
 ## 一、按钮与操作
@@ -128,14 +128,14 @@
 
 | 组件 | 库 | 说明 |
 | --- | --- | --- |
-| `NavigationSuiteScaffold` | `material3-adaptive-navigation-suite` | 按窗口尺寸自动切换形态。⚠️ **1.5.0-alpha28 起实际渲染的是新组件**：Compact → `ShortNavigationBarCompact`（`ShortNavigationBar` 竖排条目）、其余 → `WideNavigationRailCollapsed`；旧的 `NavigationBar`/`NavigationRail`/`NavigationDrawer` 三个类型已标注"不推荐"。详见 `../m3-content/foundations/layout/scaffold/overview.md` |
+| `NavigationSuiteScaffold` | `material3-adaptive-navigation-suite` | 按窗口尺寸自动切换形态。⚠️ **1.5.0-alpha28 起实际渲染的是新组件**：Compact → `ShortNavigationBarCompact`（`ShortNavigationBar` 竖排条目）、其余 → `WideNavigationRailCollapsed`；旧的 `NavigationBar`/`NavigationRail`/`NavigationDrawer` 三个类型已标注"不推荐"。详见 `../recipes/foundations.md` |
 | `ListDetailPaneScaffold` / `NavigableListDetailPaneScaffold` | `adaptive-layout` / `adaptive-navigation` | 列表-详情规范布局 |
 | `SupportingPaneScaffold` / `NavigableSupportingPaneScaffold` | 同上 | 主窗格 + 支持窗格 |
 | `ThreePaneScaffold` 抽象 | `adaptive-layout` | 三窗格基架（含 navigator / state / predictive back handler） |
 | `AnimatedPane` | `adaptive-layout` | 窗格默认动画；1.4.0-alpha01 起支持形状 |
 | `HingeInfo` / `Posture` | `adaptive` | 铰链与设备姿态（折叠屏） |
 
-> 自适应布局规范见 `../m3-content/foundations/layout/`。
+> 自适应布局规范见 `../recipes/foundations.md`。
 
 ---
 
@@ -146,7 +146,7 @@
 | 主操作 | `Button` / `FilledTonalButton` | 一个屏幕**只放一个**最强强调按钮 |
 | 相关操作组合 | `ButtonGroup` | 1.5.0 线 |
 | 主操作 + 附加菜单 | `SplitButtonLayout` + `SplitButtonDefaults.LeadingButton/TrailingButton` | 没有 `SplitButton` composable |
-| 顶部标题 + 滚动折叠 | `MediumFlexibleTopAppBar` / `LargeFlexibleTopAppBar` | 需按窗口高度决定是否折叠（见 `../m3-content/foundations/layout/breakpoints/overview.md`） |
+| 顶部标题 + 滚动折叠 | `MediumFlexibleTopAppBar` / `LargeFlexibleTopAppBar` | 需按窗口高度决定是否折叠（见 `../recipes/foundations.md`） |
 | 底部常驻操作栏 | `FlexibleBottomAppBar` | 小屏比 TopAppBar 更易触达 |
 | 全屏/侧边导航 | `NavigationSuiteScaffold` | 不要手写三种导航的判断 |
 | 搜索 | slot 版 `SearchBar` + `SearchBarState` | 旧 API 已弃用 |
@@ -157,7 +157,7 @@
 
 ## 十二、采用建议（已按"激进策略"更新）
 
-1. **直接用 1.5.0 线的 M3E 全套**（`material3 = 1.5.0-beta02`）：
+1. **直接用 1.5.0 线的 M3E 全套**（`material3 = 1.5.0-rc01`）：
    ToggleButton / ButtonGroup / SplitButtonLayout / FAB Menu / Flexible AppBar /
    slot 版 SearchBar / LoadingIndicator / ScrollField 全部可用，不再有"稳定线拿不到"的问题。
 2. **调用点收敛**：M3E 组件集中放在 `ui/expressive/`（或 `ui/components/`），

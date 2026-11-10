@@ -391,14 +391,20 @@ M3 uses **tonal elevation** (color tone overlay) in addition to shadow elevation
 
 ### Elevation Levels (dp)
 
-| Level | dp | Usage |
-|-------|----|----|
-| Level 0 | 0dp | Flat surfaces (base) |
-| Level 1 | 1dp | Cards (resting), text fields |
-| Level 2 | 3dp | FAB (resting), raised buttons |
-| Level 3 | 6dp | Snackbars, menus |
-| Level 4 | 8dp | Dialogs, pickers |
-| Level 5 | 12dp | Scrim overlays |
+官方层级是**按组件分配的静止层级**，不是"越高越重要"。表格来自
+官方 elevation tokens 页（2026-11-10 核对，已融合）：
+
+| Level | dp | 静止时处于该层级的组件 |
+| --- | --- | --- |
+| 5 | 12dp | （未分配为静止层级，仅过渡中使用） |
+| 4 | 8dp | （未分配为静止层级，仅过渡中使用） |
+| 3 | 6dp | Date pickers、Dialogs (modal)、Extended FAB、FAB、FAB menu (close button)、Search、Time pickers |
+| 2 | 3dp | App bar (scrolled)、Menu、Navigation bar、Rich tooltip、Toolbar |
+| 1 | 1dp | Banner、Bottom sheet (modal)、Button (elevated)、Card (elevated)、Chips (elevated)、Navigation drawer (modal)、Side sheet (modal) |
+| 0 | 0dp | App bar (not scrolled)、Buttons (filled / tonal / outlined)、Button groups、Cards (filled / outlined)、Carousel、Chips、Dialog (full-screen) 等 |
+
+Level 4 / 5 平时**没有组件停在上面**，只在交互时短暂经过（例如 hover 让 FAB 从 Level 3 升到 Level 4）。
+所以不要给某个组件"永久设成 8dp"，那是跳过层级而不是提升强调。
 
 ### Compose API
 
@@ -417,6 +423,29 @@ Surface(
 
 MD3E increasingly uses `surfaceContainer*` color roles instead of tonal elevation to distinguish
 surface layers. Prefer surface container roles for layering; reserve elevation for true depth.
+
+---
+
+## 6. Spacing & Icons
+
+融合自官方 spacing 与 icons 页面（2026-11-10 核对）。
+
+### 6.1 Spacing
+
+- 基准单位 **8dp = `space100`**，全部间距都是它的倍率：
+  `space050 = 4dp`、`space100 = 8dp`、`space200 = 16dp`、`space225 = 18dp`（8×2.25）、`space300 = 24dp`……
+- 需要新值时就按这个倍率推导命名（例如 8dp×2.25 → `space225 = 18dp`），不要随手写 15dp、22dp。
+- Compose 侧没有 `spacing` 主题对象；用 `Arrangement.spacedBy(8.dp)` / `PaddingValues(16.dp)` 直接表达，
+  尺寸值取自身组件 token（如 `ButtonDefaults.MediumContentPadding`），不要自造间距体系。
+
+### 6.2 Icons
+
+- Material Symbols 有四个轴：**weight、fill、grade、optical size**。
+- **24dp 图标不要用最细 weight**，最小取 **200**；也不要在这个尺寸上用过大 weight。
+- optical size 范围 **20dp – 48dp**，随尺寸自动调描边粗细 —— 直接设 `Modifier.size(...)` 即可，
+  不要手动改 `strokeWidth`。
+- 图标尺寸在组件里有各自的 token（如 `ButtonDefaults.iconSizeFor(height)`、`IconButtonDefaults`），
+  优先用它，而不是全局写 24dp。
 
 ---
 

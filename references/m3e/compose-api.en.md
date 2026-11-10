@@ -8,7 +8,7 @@ Material Design 3 for Compose (page updated 2026-10-19) ✅ +
 ---
 
 > 📌 **Version policy**: this project **adopts the newest versions (including Alpha/Beta/RC)** —
-> i.e. `material3 = 1.5.0-beta02`, see `../version-baseline.md`.
+> i.e. `material3 = 1.5.0-rc01`, see `../version-baseline.md`.
 > Mentions of the "stable line (1.4.0)" below are **channel status notes only**, not our choice.
 
 ## 1. Version gates quick reference
@@ -75,7 +75,7 @@ The stable line (1.4.0) ships "M3 + MotionScheme + partial Expressive" without t
 
 6. Verify
    ├─ Dark mode + dynamic color + large font scale
-   ├─ Window sizes (device matrix in ../m3-content/foundations/layout/breakpoints/)
+   ├─ Window sizes (device matrix in ../recipes/foundations.md)
    └─ Visual regression: focus on surfaceContainer hierarchy (behavior changed in 1.3.0)
 ```
 
@@ -161,7 +161,7 @@ animateFloatAsState(targetValue = target, animationSpec = spec)
 | `MotionScheme` signatures / tokens | ✅ Interface: `standard()` / `expressive()` + `default`/`fast`/`slow` × `Spatial`/`Effects`; tokens live in `MotionSchemeKeyTokens` |
 | `MaterialShapes` / shape morph | ✅ 35 preset `RoundedPolygon`s + `toShape()` / `toPath()`; `PolygonShape` lives in **`androidx.compose.foundation.shape`** and uses `transform {}` / `copy()` |
 | `LoadingIndicator` ownership | ✅ `androidx.compose.material3`: `LoadingIndicator` / `ContainedLoadingIndicator`, `progress: () -> Float`; still `@ExperimentalMaterial3ExpressiveApi` on main |
-| `m3.material.io` spec tables | ⚠️ JS-rendered site; rely on the `m3-content/` mirror, which does not include dynamic spec-table values |
+| `m3.material.io` spec tables | ⚠️ JS-rendered site; rely on the `references/recipes/` mirror, which does not include dynamic spec-table values |
 
 Still compiler-dependent: whether the new `NavigationSuiteScaffold` `navigationItems` +
-`NavigationSuiteItem` API is available in 1.5.0-beta02 (present on `androidx-main`).
+`NavigationSuiteItem` API is available in 1.5.0-rc01 (present on `androidx-main`).

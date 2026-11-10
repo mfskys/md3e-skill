@@ -2,16 +2,16 @@
 
 核对日期：**2026-10-23**
 源码基线：`androidx/androidx` @ `androidx-main`（本地克隆逐文件核对，非文档摘要）
-发布通道对照：`material3` **1.5.0-beta02**（2026-10-21）/ 稳定 **1.4.0**
+发布通道对照：`material3` **1.5.0-rc01**（2026-11-04）/ 稳定 **1.4.0**
 
 > **和 `compose-api-full.md` 的分工**：那份是 **1.4.0 稳定线**的全量 API 快照（约 7900 行，
 > 没有 1.5.0 线新组件的签名）。本文补的是 **1.5.0 线 / M3E 新组件**的准确签名。
-> 查 API 的顺序：本文 → `compose-api-full.md` → `m3-content/` → 官方 samples。
+> 查 API 的顺序：本文 → `compose-api-full.md` → `recipes/` → 官方 samples。
 
 ## opt-in 说明（重要）
 
 `androidx-main` 是最新主线，很多 Expressive 组件已经**不需要** `@ExperimentalMaterial3ExpressiveApi`。
-但 **1.5.0-beta02 的发布产物可能仍要求**。实践规则：
+但 **1.5.0-rc01 的发布产物可能仍要求**。实践规则：
 
 1. 先不写 opt-in，编译；
 2. 编译器报 "requires opt-in" 时再加 `@OptIn(ExperimentalMaterial3ExpressiveApi::class)`
@@ -194,6 +194,60 @@ Modifier.floatingToolbarVerticalNestedScroll(expanded, onExpand, onCollapse)
 
 ## 4. 按钮族
 
+### Button（有两个重载，别混用）
+
+`Button` / `FilledTonalButton` / `ElevatedButton` / `OutlinedButton` / `TextButton`
+**每一种都有两个重载**，差别只在前两个参数：
+
+```kotlin
+// ① 旧重载（stable）：单个 shape，按压不变形
+@Composable
+public fun Button(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    shape: Shape = ButtonDefaults.shape,
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
+    border: BorderStroke? = null,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    interactionSource: MutableInteractionSource? = null,
+    content: @Composable RowScope.() -> Unit,
+)
+
+// ② M3E 重载：ButtonShapes + 按压形变动画
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+public fun Button(
+    onClick: () -> Unit,
+    shapes: ButtonShapes,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
+    border: BorderStroke? = null,
+    contentPadding: PaddingValues = ButtonDefaults.contentPaddingFor(ButtonDefaults.MinHeight),
+    interactionSource: MutableInteractionSource? = null,
+    content: @Composable RowScope.() -> Unit,
+)
+```
+
+**五档尺寸不是参数，是一套工厂函数**（`Button` 没有 `size`）：
+
+```kotlin
+ButtonDefaults.shapesFor(buttonHeight: Dp): ButtonShapes
+ButtonDefaults.contentPaddingFor(buttonHeight: Dp, hasStartIcon: Boolean = false, hasEndIcon: Boolean = false): PaddingValues
+ButtonDefaults.iconSizeFor(buttonHeight: Dp): Dp
+ButtonDefaults.iconSpacingFor(buttonHeight: Dp): Dp
+ButtonDefaults.textStyleFor(buttonHeight: Dp): TextStyle
+```
+
+高度常量：`ExtraSmallContainerHeight`(32dp) / `MinHeight`(40dp，精确指针下 36dp) /
+`MediumContainerHeight`(56dp) / `LargeContainerHeight`(96dp) / `ExtraLargeContainerHeight`(136dp)。
+**没有 `SmallContainerHeight`** —— Small 档就是 `MinHeight`。
+
+完整尺寸/形状/颜色矩阵与写法见 `references/recipes/buttons.md`。
+
 ### ButtonGroup
 
 ```kotlin
@@ -208,7 +262,7 @@ public fun ButtonGroup(
 )
 ```
 
-`ButtonGroupScope` 只提供两个 DSL 方法：
+`ButtonGroupScope` 只提供三个 DSL 方法：
 
 ```kotlin
 public fun clickableItem(
@@ -219,13 +273,24 @@ public fun clickableItem(
     enabled: Boolean = true,
 )
 
+public fun toggleableItem(
+    checked: Boolean,
+    label: String,
+    onCheckedChange: (Boolean) -> Unit,
+    icon: (@Composable () -> Unit)? = null,
+    weight: Float = Float.NaN,
+    enabled: Boolean = true,
+)
+
 public fun customItem(
     buttonGroupContent: @Composable () -> Unit,
     menuContent: @Composable (ButtonGroupMenuState) -> Unit,
 )
 
+public fun Modifier.weight(weight: Float): Modifier
 public fun Modifier.animateWidth(interactionSource: InteractionSource): Modifier
 public fun Modifier.animateWidth(interactionSource: InteractionSource, compressionLimit: Dp): Modifier
+public fun Modifier.align(alignment: Alignment.Vertical): Modifier
 ```
 
 `ButtonGroupDefaults` 常用成员：
@@ -267,6 +332,24 @@ public fun ToggleButton(
 
 配套：`FilledTonalToggleButton`、`ElevatedToggleButton`、`OutlinedToggleButton`；
 `ToggleButtonDefaults.IconSpacing`、`.pressedShape`、`.shapesFor(size)`。
+
+`ToggleButtonSize` 是 `value class`，只有一个 `height: Dp`，五档全在 companion 里
+（源码 `ToggleButton.kt`，2026-11-10 核对）：
+
+```kotlin
+public value class ToggleButtonSize(public val height: Dp) {
+    public companion object {
+        public val ExtraSmall: ToggleButtonSize = ToggleButtonSize(ButtonDefaults.ExtraSmallContainerHeight)
+        public val Small: ToggleButtonSize = ToggleButtonSize(ButtonSmallTokens.ContainerHeight)
+        public val Medium: ToggleButtonSize = ToggleButtonSize(ButtonDefaults.MediumContainerHeight)
+        public val Large: ToggleButtonSize = ToggleButtonSize(ButtonDefaults.LargeContainerHeight)
+        public val ExtraLarge: ToggleButtonSize = ToggleButtonSize(ButtonDefaults.ExtraLargeContainerHeight)
+    }
+}
+```
+
+`ToggleButtonDefaults.size` **默认是 `Small`**（不是 Medium）。`buttonSize` 不只改高度，
+它同时决定默认 `shapes`、`contentPadding`、图标尺寸与排版 —— 不要单独覆盖其中一项而留下其余不一致。
 
 ### SplitButton —— 没有 `SplitButton` 这个 composable
 

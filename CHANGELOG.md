@@ -4,6 +4,120 @@ All notable changes to this skill are documented here. The format is based on
 [Semantic Versioning](https://semver.org/lang/zh-CN/) and the skill follows the
 `MAJOR.MINOR.PATCH` scheme described in `PUBLISH.md`.
 
+## [1.5.0] - 2026-11-10
+
+Data refresh, implementation-spec consolidation and spec-conformance pass. No API guidance changed;
+this release realigns version numbers with what shipped on 2026-11-04, folds all official guidance
+into one implementation-spec layer, and fixes the skill's own metadata and client-support claims.
+
+### Added
+- **`references/recipes/` — implementation-spec layer (code-first).** The mirror is readable prose
+  whose measurements live inside images; this new layer carries the numbers that go into code,
+  taken from `*Tokens.kt` and re-checked against the source. Per component family it holds: full
+  variant inventory (retired variants kept and marked ⚠️, never deleted), exact size/shape/color
+  matrices, runnable snippets, accessibility rules and traps. `recipes/INDEX.md` defines the
+  conventions and tracks coverage; `recipes/buttons.md` is the reference implementation of the
+  format. Remaining families are listed as TODO rather than stubbed with guesses.
+  The mirror pages are being **folded into** the recipes rather than kept as a second source of
+  truth: `guidelines` Do/Don't callouts become a "选型与设计规则" section and `accessibility` becomes
+  its own section, so answering "which style, and how" no longer needs a trip into `m3-content/`.
+  `scripts/extract_rules.py` automates that pass (992 rules survive across the 36 component
+  folders) so the remaining families can be merged mechanically instead of hand-transcribed.
+  `recipes/button-groups.md`, `recipes/icon-buttons.md` and `recipes/fabs.md` followed the same
+  pass; the button family is now fully specified. `scripts/grab_tokens.py` pulls the
+  `tokens/*.kt` constants for that work. `recipes/app-bars.md`, `recipes/navigation.md`,
+  `recipes/text-fields.md` and `recipes/selection.md` complete app bars, navigation, input and
+  selection; `recipes/feedback.md` and `recipes/containers.md` close out indicators, cards,
+  dialogs, sheets and menus. Still open: pickers, carousel, foundations.
+- **Button has two overloads**, and the skill only documented one. `Button(...)` /
+  `FilledTonalButton` / `ElevatedButton` / `OutlinedButton` / `TextButton` each accept either
+  `shape: Shape` (no press morph) or `shapes: ButtonShapes` (M3E press morph). The five-step size
+  scale is **not** a `size` parameter — it is `ButtonDefaults.shapesFor(height)` +
+  `contentPaddingFor(height, hasStartIcon, hasEndIcon)` + `iconSizeFor(height)` +
+  `iconSpacingFor(height)` driven by `ExtraSmall/Min/Medium/Large/ExtraLargeContainerHeight`
+  (32/40/56/96/136dp). There is no `SmallContainerHeight`; `MinHeight` flips to 36dp under
+  precision-pointer sizing.
+- **Deprecation map** (`SKILL.md` → "Deprecated in M3E"). The Expressive language retired several
+  baseline components, and the skill previously had no way to say so — which is the main reason
+  generated UI could come out looking like plain M3. Two tables: components the design system no
+  longer recommends (segmented button, navigation drawer, bottom app bar, baseline nav bar/rail,
+  medium/large top app bar, 40dp small FAB, surface-colored FAB, neutral text button, 24dp small
+  button padding) with replacements, and APIs that were renamed or removed (compile-level).
+  Per-component status also added to `components-catalog.md`, `component-index.md` and
+  `m3-vs-m3e-diff.md`; the catalog header now warns that "exists" ≠ "recommended".
+- **Button group full variant matrix** (`compose-patterns.md` §5, rewritten). It now covers both
+  variants — `standard` (`ButtonGroup` + `clickableItem` / `toggleableItem` / `customItem`, overflow
+  menu, `expandedRatio` compression) and `connected` (`FlowRow` + `ToggleButton` +
+  `connected*ButtonShapes()`) — plus the single / multi / required selection modes, all five
+  `ToggleButtonSize` steps and the round/square corner table (12/12/16/28/28dp, pressed 8/8/12/16/16dp).
+- `ToggleButtonSize` definition (value class, five companion members, default is `Small`) and the
+  missing `ButtonGroupScope.toggleableItem` / `Modifier.weight` / `Modifier.align` signatures in
+  `m3e-api-signatures.md` — `toggleableItem` was absent entirely.
+- `Carousel` and `Side Sheet` entries in `components-catalog.md`. Side Sheet is documented as
+  "spec exists, no Compose API" — `api/current.txt` has no `SideSheet` symbol, so the entry exists
+  to stop assistants from inventing one.
+
+### Removed
+- **The 263-page `references/m3-content/` mirror is gone.** Everything usable was folded into
+  `references/recipes/` first (12 files, ~2800 lines), and every reference to the old paths was
+  rewritten — `SKILL.md`, `component-index.md`, `components-catalog.md`, `compose-patterns.md`,
+  `design-tokens.md`, `official-samples.md`, the `m3e/` notes and both READMEs. What was dropped and
+  why: the mirror was HTML-scraped prose whose measurements lived inside images (unusable as
+  numbers), 23 of its foundation pages were design-process content unrelated to writing code
+  (writing style, usability testing, watches, XR), and `develop/` + `blog/` duplicated what the
+  curated notes already covered. Section indices, breadcrumbs and the interactive token panels could
+  never be represented faithfully anyway. Release archive: **306 → 47 files, 2.8 MB → 1.1 MB.**
+
+### Changed
+- **Frontmatter brought in line with the published specification.** `version` is not a spec field —
+  it moved to `metadata.version: "1.5.0"`, with `metadata.baseline` and `metadata.upstream` alongside
+  it. Added `license: Apache-2.0` and `compatibility` (the skill needs a Compose project; targets
+  `material3` 1.5.0-rc01). `name: md3e` (≤64, lowercase, no edge hyphens) and `description`
+  (879 of 1024 chars, states both *what* and *when*) already conformed.
+- **Client support table corrected against the official showcase.** The previous README classified
+  Cursor, Copilot, TRAE, Gemini CLI and Codex as fallback clients — that is out of date. Agent Skills
+  now lists **46 native clients**, and Microsoft's own docs put Copilot skills at `.github/skills/`
+  following the same spec; Cursor 2.4 added `SKILL.md` support with `~/.cursor/skills/`. Only
+  Windsurf, Cline, 通义灵码 and 文心快码 remain rules-file fallbacks, and the README now states the
+  cost of that mode instead of presenting it as equivalent.
+- **READMEs rewritten around native skill loading.** Both now lead with the Agent Skills layout
+  (`SKILL.md` + on-demand `references/`) rather than a "works with N tools" claim. Also fixed: the
+  install-verification answer still said `2026-10-23`, the directory tree still listed five
+  `m3-content/` subdirectories that no longer exist, `SplitButton` was named as a composable (it is
+  `SplitButtonLayout`), and `install_skill.py`'s own usage block said `--global` when the flag is
+  `--home`.
+- Version baseline moved to **2026-11-10**: `material3` **1.5.0-rc01** (2026-11-04),
+  `compose-bom-alpha:2026.11.00` (manages the whole rc01 set), Compose core **1.13.0-rc01**,
+  `lifecycle-runtime-compose` **2.12.0-alpha05**. The 1.5.0 line is now frozen at RC.
+- `references/version-baseline.md` — rc01 entry added to the churn log (four bug fixes, no API
+  changes), BOM coverage re-verified via POM, dependency snippet updated.
+
+### Fixed
+- **Wrong elevation level assignments.** `design-tokens.md` had the component → level mapping almost
+  inverted (it put snackbars/menus at level 3 and dialogs at level 4). Official
+  the official elevation tokens page: level 1 = banner / modal sheet / elevated button / elevated card /
+  elevated chips / modal drawer / side sheet; level 2 = scrolled app bar / menu / navigation bar /
+  rich tooltip / toolbar; level 3 = date pickers / modal dialogs / extended FAB / FAB / search /
+  time pickers; levels 4–5 are **not assigned** as resting levels. Also added the missing spacing
+  system (8dp baseline, `space100`) and icon rules (four axes, minimum weight 200 at 24dp,
+  optical size 20–48dp).
+- **Wrong default button shape.** The catalog claimed `RoundedCornerShape(20.dp)`; the default is
+  `ButtonDefaults.shape` → `ButtonTokens.ContainerShapeRound` → `CornerFull` (`CircleShape`). 20dp
+  was the old M3 40dp-button radius and is not what the theme resolves to.
+- **Wrong Navigation 3 coordinates.** There is no `androidx.navigation3:navigation3` artifact —
+  it is `navigation3-runtime` / `navigation3-ui`. Latest is **1.3.0-alpha04**.
+- Spec pages re-synced before the mirror was retired. Four carried real content changes:
+  `button-groups/accessibility` (keyboard nav now Tab + arrow keys, new diagram),
+  `button-groups/specs` (Xsmall token table: container height 32dp / between space 18dp),
+  `segmented-buttons/accessibility` (keyboard nav rewritten, focused-state anchor changed) and
+  `foundations/glossary` (missing `## Glossary` heading). All four were folded into
+  `references/recipes/`; the mirror itself was then removed.
+- `scripts/check_mirror.ps1` / `check_stale.ps1` were fixed (hardcoded paths → `$PSScriptRoot`
+  resolution, 125 false positives → 3) and then **deleted together with the mirror** — once
+  `references/m3-content/` was gone they had no subject left and failed on `Resolve-Path`.
+  `extract_rules.py`, `grab_tokens.py` and `check_links.py` remain: they still have live subjects
+  (component pages, `tokens/*.kt`, the docs themselves).
+
 ## [1.4.0] - 2026-10-23
 
 Source-verified refresh: M3E signatures were checked against the actual `androidx/androidx`

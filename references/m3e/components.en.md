@@ -2,7 +2,7 @@
 
 Verified: **2026-10-23**
 Source: Compose Material 3 official release notes (https://developer.android.com/jetpack/androidx/releases/compose-material3,
-page updated 2026-10-21) + file-by-file check against the `androidx/androidx` source ✅
+page updated 2026-11-04) + file-by-file check against the `androidx/androidx` source ✅
 
 **How to read**: `alphaNN` in parentheses is the version where the API **graduated from experimental**.
 `1.4.0` is the current **stable line**; `1.5.0-betaNN` is the **1.5.0 line**.
@@ -11,7 +11,7 @@ To judge availability, first check which line it is on.
 ---
 
 > 📌 **Version policy**: this project **adopts the newest versions (including Alpha/Beta/RC)** —
-> `material3 = 1.5.0-beta02` — so all "1.5.0 line" components below **are in scope**.
+> `material3 = 1.5.0-rc01` — so all "1.5.0 line" components below **are in scope**.
 > See `../version-baseline.md`. §12 adoption advice already reflects this.
 
 ## 1. Buttons & Actions
@@ -117,14 +117,14 @@ To judge availability, first check which line it is on.
 
 | Component | Library | Notes |
 | --- | --- | --- |
-| `NavigationSuiteScaffold` | `material3-adaptive-navigation-suite` | Switches form by window size. ⚠️ **From 1.5.0-alpha28 it actually renders new components**: Compact → `ShortNavigationBarCompact` (`ShortNavigationBar` vertical items); others → `WideNavigationRailCollapsed`; old `NavigationBar`/`NavigationRail`/`NavigationDrawer` types are "not recommended". See `../m3-content/foundations/layout/scaffold/overview.md` |
+| `NavigationSuiteScaffold` | `material3-adaptive-navigation-suite` | Switches form by window size. ⚠️ **From 1.5.0-alpha28 it actually renders new components**: Compact → `ShortNavigationBarCompact` (`ShortNavigationBar` vertical items); others → `WideNavigationRailCollapsed`; old `NavigationBar`/`NavigationRail`/`NavigationDrawer` types are "not recommended". See `../recipes/foundations.md` |
 | `ListDetailPaneScaffold` / `NavigableListDetailPaneScaffold` | `adaptive-layout` / `adaptive-navigation` | List-detail canonical layout |
 | `SupportingPaneScaffold` / `NavigableSupportingPaneScaffold` | same | Main + supporting panes |
 | `ThreePaneScaffold` abstraction | `adaptive-layout` | Three-pane scaffold (navigator / state / predictive back) |
 | `AnimatedPane` | `adaptive-layout` | Default pane animation; shapes supported since 1.4.0-alpha01 |
 | `HingeInfo` / `Posture` | `adaptive` | Hinge and device posture (foldables) |
 
-> Adaptive layout specs: `../m3-content/foundations/layout/`.
+> Adaptive layout specs: `../recipes/foundations.md`.
 
 ---
 
@@ -135,7 +135,7 @@ To judge availability, first check which line it is on.
 | Primary action | `Button` / `FilledTonalButton` | **One** strongest-emphasis button per screen |
 | Related action group | `ButtonGroup` | 1.5.0 line |
 | Primary + overflow menu | `SplitButtonLayout` + `SplitButtonDefaults.LeadingButton/TrailingButton` | No `SplitButton` composable |
-| Top title + scroll collapse | `MediumFlexibleTopAppBar` / `LargeFlexibleTopAppBar` | Decide collapse by window height (see `../m3-content/foundations/layout/breakpoints/overview.md`) |
+| Top title + scroll collapse | `MediumFlexibleTopAppBar` / `LargeFlexibleTopAppBar` | Decide collapse by window height (see `../recipes/foundations.md`) |
 | Persistent bottom action bar | `FlexibleBottomAppBar` | Easier thumb reach than TopAppBar on small screens |
 | Full-screen / side navigation | `NavigationSuiteScaffold` | Do not hand-write three-nav branching |
 | Search | slot `SearchBar` + `SearchBarState` | Old APIs deprecated |
@@ -146,7 +146,7 @@ To judge availability, first check which line it is on.
 
 ## 11. Adoption advice (aggressive track)
 
-1. **Use the full 1.5.0-line M3E set** (`material3 = 1.5.0-beta02`):
+1. **Use the full 1.5.0-line M3E set** (`material3 = 1.5.0-rc01`):
    ToggleButton / ButtonGroup / SplitButtonLayout / FAB Menu / Flexible AppBar /
    slot SearchBar all available — no more "not on stable" gaps.
 2. **Confine call sites**: keep M3E components in `ui/expressive/` (or `ui/components/`)

@@ -1,47 +1,49 @@
 # MD3E Version Baseline
 
-Knowledge baseline date: **2026-10-23**. Sources: official AndroidX release notes
-(compose-material3 page updated 2026-10-21), Google Maven metadata, Compose developer guide,
-and the `androidx/androidx` source tree (signatures re-verified 2026-10-23).
+Knowledge baseline date: **2026-11-10**. Sources: official AndroidX release notes
+(compose-material3 page, `1.5.0-rc01` dated 2026-11-04), Google Maven metadata re-checked
+2026-11-10 (`material3-*` tops out at 1.5.0-rc01; `compose-bom-alpha:2026.11.00` maps it),
+Compose developer guide, and the `androidx/androidx` source tree (signatures re-verified
+2026-10-23 — rc01 is a bug-fix-only release, so those signatures still hold).
 
-> **Recommendation for full M3E**: use the 1.5.0 line — `androidx.compose.material3:material3:1.5.0-beta02`
-> (2026-10-21), with the matching `compose-bom-alpha`. The stable line **1.4.0** ships M3 +
-> `MotionScheme` + partial Expressive only. The 1.5.0 line **entered beta on 2026-10-07**, so the
-> Expressive API surface is stabilizing, but Google still does not recommend alpha/beta builds
-> for production.
+> **Recommendation for full M3E**: use the 1.5.0 line — `androidx.compose.material3:material3:1.5.0-rc01`
+> (2026-11-04), resolved via `compose-bom-alpha:2026.11.00` (or pinned explicitly). The stable line
+> **1.4.0** ships M3 + `MotionScheme` + partial Expressive only. The 1.5.0 line **entered beta on
+> 2026-10-07 and reached RC on 2026-11-04**, so the Expressive API surface is now frozen, but Google
+> still does not recommend pre-release (alpha/beta/RC) builds for production.
 
 ---
 
 ## 1. Version matrix (M3E-relevant)
 
-| Component | Stable | Latest pre-release (2026-10) | Notes |
+| Component | Stable | Latest pre-release (2026-11) | Notes |
 | --- | --- | --- | --- |
-| Compose Material 3 | **1.4.0** (2025-09-24) | **1.5.0-beta02** (2026-10-21) | Full M3E components only on the 1.5.0 line |
+| Compose Material 3 | **1.4.0** (2025-09-24) | **1.5.0-rc01** (2026-11-04) | Full M3E components only on the 1.5.0 line |
 | Compose Material 3 Adaptive | **1.3.0** (2026-08-12) | **1.4.0-alpha03** | `NavigationSuiteScaffold`, pane scaffolds |
-| Compose core (UI/Foundation/…) | **1.12.1** | **1.13.0-beta01** via `compose-bom-alpha` | BOM also maps material3 + adaptive |
-| Compose BOM | `2026.09.00` | `compose-bom-alpha:2026.10.00` (beta01 era; re-check after beta02) | Explicit versions override BOM |
+| Compose core (UI/Foundation/…) | **1.12.1** | **1.13.0-rc01** via `compose-bom-alpha` | BOM also maps material3 + adaptive |
+| Compose BOM | `2026.09.00` | `compose-bom-alpha:2026.11.00` (maps material3 **1.5.0-rc01**) | Explicit versions override BOM |
 | `material-icons-core` | 1.7.8 (frozen in BOM) | — | **No longer transitive from material3 1.4.0+** |
-| Navigation 3 | **1.2.0** | 1.3.0-alpha02 | Outside Compose BOM |
+| Navigation 3 | **1.2.1** | 1.3.0-alpha04 | Outside Compose BOM. **Artifact is `navigation3-runtime` / `navigation3-ui` — there is no `navigation3` artifact** |
 | WindowManager | 1.5.1 | 1.6.0-alpha05 | Foldables |
 | `material3-a2ui` | — | 1.0.0-alpha02 (2026-10-21) | Agent-to-UI renderer — new artifact |
-| `material3-ripple` | — | 1.5.0-beta02 | Separate artifact, tracks the 1.5.0 line |
+| `material3-ripple` | — | 1.5.0-rc01 | Separate artifact, tracks the 1.5.0 line |
 
-### BOM coverage (verified via POM, 2026-10-08 for the beta01 era)
+### BOM coverage (verified via POM, 2026-11-10)
 
-`compose-bom-alpha:2026.10.00` **does** manage:
+`compose-bom-alpha:2026.11.00` **does** manage:
 
-- `androidx.compose.material3:material3` → 1.5.0-beta01
-- `androidx.compose.material3:material3-adaptive-navigation-suite` → 1.5.0-beta01
-- `androidx.compose.material3:material3-ripple` → 1.5.0-beta01
-- `androidx.compose.material3:material3-window-size-class` → 1.5.0-beta01
-- core UI/runtime/foundation/animation → 1.13.0-beta01
+- `androidx.compose.material3:material3` → 1.5.0-rc01
+- `androidx.compose.material3:material3-adaptive-navigation-suite` → 1.5.0-rc01
+- `androidx.compose.material3:material3-ripple` → 1.5.0-rc01
+- `androidx.compose.material3:material3-window-size-class` → 1.5.0-rc01
+- `androidx.compose.material3:material3-a2ui` → 1.0.0-alpha02
+- core UI/runtime/foundation/animation → 1.13.0-rc01
 
-> beta02 shipped on 2026-10-21; the alpha BOM may still resolve beta01 until the next BOM release.
-> Pin `material3:1.5.0-beta02` explicitly if you need the newest fixes.
+> The whole material3 1.5.0-rc01 set is BOM-managed; explicit pinning is no longer needed.
 
-**Not** in BOM (declare explicitly): `navigation3`, `window`, `lifecycle`, `activity`, and
-`androidx.compose.material3.adaptive:adaptive` (1.4.0-alpha03 — a *different* group than the
-in-BOM `material3-adaptive`).
+**Not** in BOM (declare explicitly): `navigation3-runtime` / `navigation3-ui`, `window`,
+`lifecycle`, `activity`, and `androidx.compose.material3.adaptive:adaptive` (1.4.0-alpha03 —
+a *different* group than the in-BOM `material3-adaptive`).
 
 ---
 
@@ -65,7 +67,7 @@ in-BOM `material3-adaptive`).
 | Constraint | Detail |
 | --- | --- |
 | Compose 1.12+ | AGP ≥ 9.1.2; compileSdk API 37+ |
-| Compose 1.13 (alpha/beta) | compileSdk ≥ 37.1 |
+| Compose 1.13 (alpha/beta/rc) | compileSdk ≥ 37.1 |
 | Dynamic color | API **31+** (`Build.VERSION_CODES.S`); must fall back otherwise |
 | Dynamic color pairing | Always pair `primary`+`onPrimary`, `primaryContainer`+`onPrimaryContainer`. Official anti-pattern: `tertiaryContainer` + `primaryContainer` (insufficient contrast) |
 
@@ -97,6 +99,7 @@ in-BOM `material3-adaptive`).
 
 | Version | Notable changes |
 | --- | --- |
+| **rc01** (2026-11-04) | **No API changes** — bug fixes only: `ToggleButton` pressed shape now uses the `ButtonSmallTokens.PressedContainerShape` design token instead of a hardcoded value; `RangeSlider` updates values on tap when thumbs overlap; discrete `Slider`/`RangeSlider` no longer lose floating-point precision when snapping to integer ticks; `RangeSlider` inside a horizontally scrollable container no longer scrolls the container while dragging a thumb. The whole `material3-*` set moved to rc01 together. |
 | **beta02** (2026-10-21) | Release notes list **no API changes** — routine beta stabilization. `material3`, `material3-ripple` and `material3-a2ui` (1.0.0-alpha02) were bumped together. |
 | **beta01** (2026-10-07) | Restored `TopAppBarDefaults.enterAlwaysScrollBehavior` `reverseLayout` overload (**deprecated**, for 1.4 compatibility); restored `SliderState` `DraggableState` and hidden-deprecated nullable-`onValueChange` `Slider`/`VerticalSlider`/`RangeSlider` overloads (binary compatibility); `CornerRounding` moved to top level with new `dp()` / `fraction()` factories; `PolygonShape.transformed()` / `scaledToFit()` removed in favour of in-place `PolygonShape.transform(PolygonShapeTransformScope.() -> Unit)` and `PolygonShape.copy()`; `HorizontalCenteredHeroCarousel` `maxItemWidth` → **`preferredItemWidth`**; new `CarouselDefaults.ItemSpacing` / `CarouselDefaults.ContentPadding` |
 | **alpha29** (2026-09-23) | **Source-breaking**: `Slider` / `RangeSlider` `onValueChange` **required** and reordered; `Slider`/`RangeSlider` now handle `onValueChange` / `onValueChangeFinished` internally instead of forwarding to the state objects; `DatePicker` month-navigation now resolves in 1 frame; `TimeInput` / `DateInput` moved to the new `TextFieldState` text-field API |
@@ -115,16 +118,17 @@ in-BOM `material3-adaptive`).
 
 ```kotlin
 // gradle/libs.versions.toml (or module build.gradle.kts)
-implementation(platform("androidx.compose:compose-bom-alpha:2026.10.00"))
+implementation(platform("androidx.compose:compose-bom-alpha:2026.11.00"))
 implementation("androidx.compose.ui:ui")
 implementation("androidx.compose.foundation:foundation")
-implementation("androidx.compose.material3:material3") // → 1.5.0-beta01 via alpha BOM
+implementation("androidx.compose.material3:material3") // → 1.5.0-rc01 via alpha BOM
 implementation("androidx.compose.material3:material3-adaptive-navigation-suite")
 implementation("androidx.compose.material:material-icons-core") // explicit if you still use material icons
 
 // Outside BOM — explicit versions required:
 implementation("androidx.compose.material3.adaptive:adaptive:1.4.0-alpha03")
-implementation("androidx.lifecycle:lifecycle-runtime-compose:2.12.0-alpha04")
+implementation("androidx.navigation3:navigation3-runtime:1.3.0-alpha04") // + navigation3-ui if needed
+implementation("androidx.lifecycle:lifecycle-runtime-compose:2.12.0-alpha05")
 implementation("androidx.activity:activity-compose:1.14.0-alpha03")
 ```
 

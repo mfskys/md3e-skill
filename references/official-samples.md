@@ -10,14 +10,13 @@
 1. **AndroidX 源码**（`androidx-main`）—— 函数签名、默认值、opt-in 注解的唯一事实源。
 2. **官方 samples**（`material3/samples/`、`compose-samples`）—— 可运行的标准写法。
 3. **官方 API 参考 / 版本说明** —— 签名汇总与版本门槛，可能滞后于源码。
-4. **`m3.material.io` 设计规范**（本仓库 `m3-content/` 镜像）—— 尺寸、状态、anatomy。
+4. **`m3.material.io` 设计规范**—— 尺寸、状态、anatomy 已提炼进 `references/recipes/`。
    抓取于 2026-09-14；官网组件页的 `lastmod` 集中在 2026-07~09。新 Expressive 组件
    （floating toolbar、short navigation bar、scroll field）**暂无独立规范页**，此时以源码 + 示例为准。
 5. 第三方博客/视频 —— 只作灵感，不作为 API 依据。
 
 > 本文讲**源本身**；组件级的「源码 / 示例 / 规范」三处定位见 `component-index.md`。
-> `m3-content/` 里的站内链接是官网绝对路径（如 `/components/buttons`），离线不能直接点；
-> 按路径映射到本仓库的 `m3-content/components/...` 目录阅读。
+> 规范页的站内链接是官网绝对路径（如 `/components/buttons`），离线不能直接点；需要细节时读 `references/recipes/` 对应文件。
 
 > 本仓库的 `compose-api-full.md` 是 **1.4.0 稳定线**快照；1.5.0 线新组件看
 > `m3e-api-signatures.md`。两者都没有的，直接读源码。
@@ -114,9 +113,9 @@ https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/materi
 | 源 | 用途 | 备注 |
 | --- | --- | --- |
 | `developer.android.com/develop/ui/compose/designsystems/material3` | M3 in Compose 主指南 | 最后更新 **2026-10-19**；含动态取色、类型表、无障碍对比、系统 UI |
-| `developer.android.com/jetpack/androidx/releases/compose-material3` | 版本门槛与变更 | 当前 beta02（2026-10-21） |
+| `developer.android.com/jetpack/androidx/releases/compose-material3` | 版本门槛与变更 | 当前 rc01（2026-11-04） |
 | `developer.android.com/reference/kotlin/androidx/compose/material3/package-summary` | API 参考 | 与源码可能不同步，签名以源码为准 |
-| `m3.material.io`（本仓库 `references/m3-content/`） | 设计规范 | 263 页镜像，`components/{name}/specs.md` |
+| `references/recipes/` | 实现规格 | 变体 / 数值 / 代码 / 规则，按组件家族组织 |
 | `fonts.google.com/icons` | Material Symbols | `material-icons-*` 已不推荐 |
 
 ## 5. 阅读与搬运规则
