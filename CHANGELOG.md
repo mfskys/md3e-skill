@@ -4,7 +4,7 @@ All notable changes to this skill are documented here. The format is based on
 [Semantic Versioning](https://semver.org/lang/zh-CN/) and the skill follows the
 `MAJOR.MINOR.PATCH` scheme described in `PUBLISH.md`.
 
-## [Unreleased]
+## [1.6.0] - 2026-11-17
 
 ### Changed
 - **README cleanup and parity.** English `Installation` was an `h3` nested under `Features` —

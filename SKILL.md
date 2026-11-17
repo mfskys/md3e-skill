@@ -3,7 +3,7 @@ name: md3e
 license: Apache-2.0
 compatibility: Requires a Jetpack Compose project. Targets material3 1.5.0-rc01 (knowledge baseline 2026-11-10); stable 1.4.0 is supported with the partial-Expressive fallback described in references/version-baseline.md.
 metadata:
-  version: "1.5.0"
+  version: "1.6.0"
   baseline: "2026-11-10"
   upstream: "compose-material3 1.5.0-rc01"
 description: "Material Design 3 Expressive (MD3E) design system skill for Android Jetpack Compose. This skill should be used when building Android UI with Material 3 / Material 3 Expressive design language, including theming (color schemes, typography, shapes, motion), component implementation (buttons, cards, navigation, FAB, floating toolbar, button group, etc.), and design guidance (when to use which component, M3 vs M3E differences, expressive design principles). Covers both MD3E (the evolution released 2025, targeting Android 16) and baseline M3 (many components only have M3 specs). Knowledge baseline 2026-11-10: material3 1.5.0-rc01 / stable 1.4.0. Triggers on requests like Material 3 Expressive, MD3E, Material Design 3, M3 theme, MaterialExpressiveTheme, Compose Material 3 component, or when designing/building Android UI that should follow Google Material design guidelines."
