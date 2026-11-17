@@ -650,7 +650,190 @@ public fun rememberScrollFieldState(itemCount: Int, index: Int = 0): ScrollField
 
 ---
 
-## 11. 常见 API 陷阱
+## 11. 状态工厂与配套 API
+
+不是组件，但漏了写不出完整代码。全部按源码核对（2026-11-17）。
+
+### 11.1 可折叠组件的偏移状态（同一套三参数）
+
+TopAppBar / BottomAppBar / FloatingToolbar / SearchBar 的滚动 state 都是**高度偏移**模型，
+不是滚动位置：
+
+```kotlin
+rememberTopAppBarState(
+    initialHeightOffsetLimit = -Float.MAX_VALUE,
+    initialHeightOffset = 0f,
+    initialContentOffset = 0f,
+)
+
+rememberBottomAppBarState(initialHeightOffsetLimit, initialHeightOffset, initialContentOffset)
+rememberFloatingToolbarState(initialOffsetLimit, initialOffset, initialContentOffset)
+rememberSearchBarScrollState(initialScrollOffsetLimit, initialScrollOffset, initialContentOffset)
+```
+
+`-Float.MAX_VALUE` 表示"可以完全折叠"。四个函数的参数个数与默认值完全一致，只是前缀词不同。
+
+### 11.2 抽屉
+
+```kotlin
+rememberDrawerState(
+    initialValue: DrawerValue,                                  // 无默认值，必须显式给
+    confirmStateChange: (DrawerValue) -> Boolean = { true },
+)
+```
+
+### 11.3 滑块
+
+```kotlin
+rememberRangeSliderState(
+    startValue: Float = 0f,
+    endValue: Float = 1f,
+    steps: Int = 0,
+    trackRange: ClosedFloatingPointRange<Float> = 0f..1f,
+)
+```
+
+### 11.4 搜索
+
+```kotlin
+rememberContainedSearchBarState(
+    initialValue: SearchBarValue = SearchBarValue.Collapsed,
+    animationSpecForExpand: AnimationSpec<Float> = MotionSchemeKeyTokens.FastSpatial.value(),
+    animationSpecForCollapse: AnimationSpec<Float> = MotionSchemeKeyTokens.FastSpatial.value(),
+    animationSpecForContentFadeIn: AnimationSpec<Float> = AnimationForContentFadeInSpec,
+    animationSpecForContentFadeOut: AnimationSpec<Float> = AnimationForContentFadeOutSpec,
+)
+```
+
+全部有默认值，展开/收起用的是 **FastSpatial**（不是 Spring），内容淡入淡出是独立 spec。
+
+滚动位置用 `rememberSearchBarScrollState`（见 §11.1）。
+
+### 11.5 滑动删除（两个重载）
+
+```kotlin
+rememberSwipeToDismissBoxState(
+    initialValue: SwipeToDismissBoxValue = SwipeToDismissBoxValue.Settled,
+    positionalThreshold: (totalDistance: Float) -> Float =
+        SwipeToDismissBoxDefaults.positionalThreshold,
+)
+
+rememberSwipeToDismissBoxState(
+    initialValue: SwipeToDismissBoxValue = SwipeToDismissBoxValue.Settled,
+    confirmValueChange: (SwipeToDismissBoxValue) -> Boolean = { true },
+    positionalThreshold: (totalDistance: Float) -> Float =
+        SwipeToDismissBoxDefaults.positionalThreshold,
+)
+```
+
+两个重载都有完整默认值，日常用 `rememberSwipeToDismissBoxState()` 即可。
+`positionalThreshold` 的默认来自 `SwipeToDismissBoxDefaults`，**不要自己写 `{ it * 0.5f }`**
+—— 那会让触发阈值与框架内的其他手势不一致。
+
+### 11.6 下拉刷新
+
+```kotlin
+rememberPullToRefreshState(): PullToRefreshState
+```
+
+**无参数**，且位于 **`androidx.compose.material3.pulltorefresh` 子包**（不是 material3 根包）。
+import 写错会直接找不到符号。
+
+### 11.7 时间滚动（两个重载）
+
+```kotlin
+TimeScroll(
+    state: TimePickerState,
+    shapes: TimePickerShapes,
+    modifier: Modifier = Modifier,
+    colors: TimePickerColors = TimePickerDefaults.vibrantColors(),
+)
+
+TimeScroll(
+    state: TimePickerState,
+    shapes: TimePickerShapes,
+    toggle: @Composable () -> Unit,      // 自带 AM/PM 切换按钮
+    modifier: Modifier = Modifier,
+    colors: TimePickerColors = TimePickerDefaults.vibrantColors(),
+)
+```
+
+注意默认配色是 **`vibrantColors()`**，不是 `colors()`。要标准（低饱和）外观必须显式传
+`TimePickerDefaults.colors()`。
+
+### 11.8 AppBar 溢出指示器
+
+```kotlin
+AppBarOverflowIndicator(
+    menuState: AppBarMenuState,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    shape: Shape = IconButtonDefaults.standardShape,
+    colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
+    interactionSource: MutableInteractionSource? = null,
+)
+```
+
+它就是个**伪装成 overflow 的 IconButton**：形状和颜色默认值都来自 `IconButtonDefaults`，
+只是点击后展开 `AppBarMenuState` 的菜单。
+
+配合 `FlexibleTopAppBar` 系列的 `actions` 使用，把放不下的动作折叠进溢出菜单。
+
+### 11.9 全屏搜索栏
+
+```kotlin
+ExpandedFullScreenSearchBar(
+    state: SearchBarState,
+    inputField: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    collapsedShape: Shape = SearchBarDefaults.inputFieldShape,
+    colors: SearchBarColors = SearchBarDefaults.colors(),
+    tonalElevation: Dp = SearchBarDefaults.TonalElevation,
+    shadowElevation: Dp = SearchBarDefaults.ShadowElevation,
+    windowInsets: @Composable () -> WindowInsets = { SearchBarDefaults.fullScreenWindowInsets },
+    properties: DialogProperties = DialogProperties(),
+    content: @Composable ColumnScope.() -> Unit,
+)
+```
+
+它是**基于 `Dialog` 的全屏层**（`properties: DialogProperties`），`windowInsets` 用的是
+`fullScreenWindowInsets` 而不是普通的 `windowInsets`。
+
+### 11.10 FAB 菜单项（scope 扩展，不是顶层函数）
+
+```kotlin
+@Composable
+fun FloatingActionButtonMenuScope.FloatingActionButtonMenuItem(
+    onClick: () -> Unit,
+    text: @Composable () -> Unit,
+    icon: @Composable () -> Unit,                                 // 必填
+    modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    contentColor: Color = contentColorFor(containerColor),
+)
+```
+
+三点很容易踩：
+
+1. 它是 **`FloatingActionButtonMenuScope` 的扩展**，只能在 `FloatingActionButtonMenu { }`
+   的 content 里调用。当成顶层函数写会直接找不到符号。
+2. `icon` **必填**，没有默认值。
+3. 默认配色是 `primaryContainer`，不是 surface。
+
+菜单项的尺寸来自 `FabMenuBaselineTokens`：
+
+| Token | 值 |
+| --- | --- |
+| `ListItemContainerHeight` | **56dp** |
+| `ListItemContainerShape` | `CornerFull` |
+| `ListItemContainerElevation` | `Level3` |
+| `ListItemIconSize` | 24dp |
+| `ListItemIconLabelSpace` | 8dp |
+| `ListItemLeadingSpace` / `TrailingSpace` | 24dp |
+| `ListItemBetweenSpace` | 4dp |
+| 关闭按钮 | **56×56dp**，`CornerFull`，`Level3`，图标 20dp |
+
+## 12. 常见 API 陷阱
 
 | 陷阱 | 正确写法 |
 | --- | --- |

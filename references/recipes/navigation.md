@@ -18,7 +18,7 @@ M3E 把导航组件整体重排了一遍。**三个基线组件被淘汰**，替
 | --- | --- | --- |
 | Short navigation bar | `ShortNavigationBar` + `ShortNavigationBarItem` | ✅ |
 | Navigation bar（基线） | `NavigationBar` + `NavigationBarItem` | ⚠️ 不再推荐 |
-| Wide navigation rail | `WideNavigationRail` / `ModalWideNavigationRail` | ✅ |
+| Wide navigation rail | `WideNavigationRail` / `ModalWideNavigationRail` + **`WideNavigationRailItem`** | ✅ |
 | Navigation rail（基线） | `NavigationRail` + `NavigationRailItem` | ⚠️ 不再推荐 |
 | Navigation drawer | `ModalNavigationDrawer` 等 | ⚠️ 不再推荐 |
 | Suite scaffold | `NavigationSuiteScaffold` | ✅ 跨断点自动切换（推荐用它省事） |
@@ -98,15 +98,36 @@ ShortNavigationBar {
 ```kotlin
 val state = rememberWideNavigationRailState()
 WideNavigationRail(state = state) {
-    NavigationRailItem(
+    WideNavigationRailItem(
         selected = selected == 0,
         onClick = { selected = 0 },
         icon = { Icon(Icons.Filled.Home, contentDescription = null) },
         label = { Text("Home") },
+        railExpanded = state.currentValue == WideNavigationRailValue.Expanded,
     )
     // 可再放一个 ExtendedFloatingActionButton（官方允许）
 }
 ```
+
+**必须用 `WideNavigationRailItem`，不能用通用的 `NavigationRailItem`。** 两者参数不同：
+
+| | `NavigationRailItem` | `WideNavigationRailItem` |
+| --- | --- | --- |
+| `railExpanded` | ❌ 无此参数 | ✅ **必填，无默认值** |
+| `iconPosition` | — | `NavigationItemIconPosition`（图标随展开状态换位） |
+| `indicatorPadding` | — | 有（`WideNavigationRailItemDefaults.indicatorPadding`） |
+| 配套 defaults | `NavigationRailItemDefaults` | `WideNavigationRailItemDefaults`（`colors` / `iconPositionFor` / `indicatorPadding`） |
+
+`railExpanded` 没有默认值，所以**必须显式传**。取值的正确写法是
+`state.currentValue == WideNavigationRailValue.Expanded`：
+
+```kotlin
+public enum class WideNavigationRailValue { Collapsed, Expanded }
+```
+
+`WideNavigationRailValue.isExpanded` 这个扩展是 **internal** 的（源码里 `internal val`），
+外部拿不到，只能做 enum 相等比较。同理 `state` 上也没有 `isExpanded` 布尔属性，
+只有 `currentValue` / `targetValue`（`isAnimating` 是另一个含义）。
 
 ### 5.3 Modal 宽轨
 
@@ -215,3 +236,8 @@ NavigationSuiteScaffold(
 5. 少于 3 个 destination 用底部栏是反例，应该用 tabs。
 6. 不要给底部栏做横滑切换。
 7. `NavigationSuiteScaffold` 在独立 artifact 里，忘加依赖会找不到。
+8. **宽轨里要用 `WideNavigationRailItem`，不是 `NavigationRailItem`**。后者能被编译器接受
+   （它是另一个组件的合法函数），但缺少 `railExpanded`，图标不会随展开状态换位，视觉上就是错的
+   —— 这类错误编译期完全看不出来。
+9. `railExpanded` 没有默认值，必须显式传 `state.currentValue == WideNavigationRailValue.Expanded`。
+   `state` 上既没有 `isExpanded`，`WideNavigationRailValue.isExpanded` 扩展也是 internal 的。

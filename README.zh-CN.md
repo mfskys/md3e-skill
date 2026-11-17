@@ -25,13 +25,18 @@ Material 3 Expressive 是 Google 于 2025 年推出的 Material Design 3 演进�
 
 本技能**同时覆盖 MD3E 和基础 M3**——许多组件目前只有 M3 规范，因此技能在 MD3E 可用时优先使用，不可用时回退到 M3。
 
-**知识基线：2026-11-10。** 完整 M3E 组件集需要 `material3` **1.5.0-rc01**（1.5.0 线已于 2026-10-07 进入 beta，2026-11-04 转为 RC）；稳定线 **1.4.0** 仅提供 M3 + MotionScheme + 部分 Expressive。
+**知识基线：2026-11-10**（2026-11-17 复核，期间上游无新版本）。完整 M3E 组件集需要
+`material3` **1.5.0-rc01**（1.5.0 线已于 2026-10-07 进入 beta，2026-11-04 转为 RC）；稳定线
+**1.4.0** 仅提供 M3 + MotionScheme + 部分 Expressive。
 
 ## 功能特性
 
 - **实现规格（`references/recipes/`）**：按组件家族组织的代码化规格——变体全集（含已淘汰项）、
   从 `*Tokens.kt` 取的精确数值、颜色/形状/状态矩阵与可运行片段。官方页面的测量数据都在插图里，
   这一层补的正是"真正要填进代码的数字"
+- **API 索引（`references/api-index.md`）**：官方 `package-summary` 的全部 386 个公开符号
+  （176 个 composable、101 个类、67 个对象、30 个接口、7 个枚举），每条带 KDoc 原文描述与
+  对应的 m3.material.io 设计页。用于核对覆盖度、定位某个 API 属于哪份规范、以及发现上游新增
 - **完整 API 参考**：完整的 `androidx.compose.material3` 包文档（约 8000 行）
 - **源码核对的 M3E 签名**：1.5.0 线核心组件（`MaterialExpressiveTheme`、8 档 `Shapes`、
   `MotionScheme`、`FloatingToolbar`、`ButtonGroup`、`SplitButtonLayout`、`LoadingIndicator`…）
@@ -48,7 +53,8 @@ Material 3 Expressive 是 Google 于 2025 年推出的 Material Design 3 演进�
 - **版本基线**：功能门槛、1.5.0 线变动日志、BOM 覆盖范围（2026-11-10）
 - **M3E 精要笔记**：设计体系、色彩/排版/形状、动效物理、组件清单、Compose API
 - **M3 vs M3E 差异**：清晰的对比表与迁移指南
-- **官方规范已融合**：m3.material.io 的组件页面已提炼进 `references/recipes/`（变体、数值、代码、Do/Don't、无障碍），原始 263 页镜像已移除，只保留一处权威来源
+- **官方规范已融合**：m3.material.io 的组件页面已提炼进 `references/recipes/`（变体、数值、代码、
+  Do/Don't、无障碍），只保留一处权威来源，而不是堆原始页面
 - **代码模板**：可直接使用的 `MD3ETheme.kt`、`Color.kt`、`Type.kt`、`Shape.kt`
 - **主题生成器**：Python 脚本，从单个种子色生成完整配色方案
 
@@ -140,6 +146,7 @@ pip install material-color-utilities
 md3e/
 ├── SKILL.md                          # 入口：触发条件、工作流、API 速查
 ├── references/
+│   ├── api-index.md                  # 官方 API 总表：386 条 + 设计页映射
 │   ├── version-baseline.md           # 版本矩阵、功能门槛、1.5.0 线变动（2026-11-10）
 │   ├── recipes/                      # 实现规格 —— 唯一权威来源
 │   │   ├── INDEX.md                  # 状态图例（✅/⚠️/🧪/🚫）、数据优先级、覆盖进度
@@ -231,3 +238,12 @@ md3e/
 ## 开源许可
 
 [Apache License 2.0](./LICENSE) — 与 Material Design 组件和 AndroidX 库使用相同的许可证。
+
+## 参与贡献
+
+见 [CONTRIBUTING.md](https://github.com/mfskys/md3e-skill/blob/main/CONTRIBUTING.md)：如何报告问题、
+提出改动与提交 PR。该文件仅存在于仓库，不随发行包分发。
+
+## 变更日志
+
+见 [CHANGELOG.md](./CHANGELOG.md)，按语义化版本记录（SemVer）。

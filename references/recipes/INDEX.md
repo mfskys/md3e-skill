@@ -41,7 +41,7 @@
 | `fabs.md` | FAB（56/80/96 三档 + Extended 三档 + 菜单/切换形态） | ✅ |
 | `app-bars.md` | Small / MediumFlexible / LargeFlexible / TwoRows / docked toolbar | ✅ |
 | `navigation.md` | Short bar / Wide rail / drawer 替代关系 | ✅ |
-| `tabs.md` | Primary / Secondary / 可滚动 | ✅ |
+| `tabs.md` | Primary / Secondary / 可滚动（含已废弃的 `TabRow` / `ScrollableTabRow`）/ `LeadingIconTab` | ✅ |
 | `text-fields.md` | TextField / Outlined / Secure / ScrollField / 搜索 | ✅ |
 | `selection.md` | Checkbox / Radio / Switch / Slider / Chips + 选型决策表 | ✅ |
 | `pickers.md` | Date / DateRange / DateInput / Time | ✅ |

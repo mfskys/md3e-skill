@@ -199,6 +199,12 @@ Only open these when the workflow above points to them — they are large and no
   state matrices, runnable snippets, accessibility rules and traps. The official spec pages hide
   their measurement data inside images, so this layer carries the numbers that actually go into
   code. Start at `recipes/INDEX.md` for coverage; `recipes/buttons.md` is the reference shape.
+- `references/api-index.md` — **Official API index** (386 entries: 176 composables, 101 classes,
+  67 objects, 30 interfaces, 7 enums, 2 modifiers, 2 annotations, 1 type alias), scraped from the
+  official `package-summary` reference on 2026-11-17. Every composable carries its KDoc description
+  and the m3.material.io design page it belongs to. Use it to (a) check whether an API is covered,
+  (b) find which design spec an API maps to, (c) detect new APIs upstream. Implementation details are
+  not here — go to `references/recipes/`.
 - `references/compose-patterns.md` — Verified code patterns: theming, adaptive navigation,
   floating toolbars, button groups, split buttons, search, loading, lists, motion, a11y.
 - `references/official-samples.md` — Map of the 49 official `*Samples.kt` files, `compose-samples`

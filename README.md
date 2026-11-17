@@ -26,9 +26,10 @@ Material 3 Expressive is Google's 2025 evolution of Material Design 3, featuring
 
 This skill covers **both MD3E and baseline M3** — many components only have M3 specs, so the skill uses MD3E where available and falls back to M3 otherwise.
 
-**Knowledge baseline: 2026-11-10.** Full M3E component set requires `material3` **1.5.0-rc01**
-(the 1.5.0 line entered beta on 2026-10-07 and reached RC on 2026-11-04); stable **1.4.0** ships
-M3 + MotionScheme + partial Expressive only.
+**Knowledge baseline: 2026-11-10** (re-verified 2026-11-17 — no upstream release in between).
+Full M3E component set requires `material3` **1.5.0-rc01** (the 1.5.0 line entered beta on
+2026-10-07 and reached RC on 2026-11-04); stable **1.4.0** ships M3 + MotionScheme + partial
+Expressive only.
 
 ## Features
 
@@ -36,6 +37,10 @@ M3 + MotionScheme + partial Expressive only.
   variant including the retired ones, exact values lifted from `*Tokens.kt`, color / shape / state
   matrices and runnable snippets. The official pages keep their measurements inside images, so
   this is the layer that carries the numbers you actually type
+- **API index (`references/api-index.md`)**: all 386 public symbols from the official
+  `package-summary` (176 composables, 101 classes, 67 objects, 30 interfaces, 7 enums), each with its
+  KDoc description and the m3.material.io design page it maps to. Use it to check coverage or to
+  spot APIs added upstream
 - **Complete API reference**: Full `androidx.compose.material3` package documentation (~8,000 lines)
 - **Source-verified M3E signatures**: 1.5.0-line APIs (`MaterialExpressiveTheme`, 8-size `Shapes`,
   `MotionScheme`, `FloatingToolbar`, `ButtonGroup`, `SplitButtonLayout`, `LoadingIndicator`, …)
@@ -54,11 +59,13 @@ M3 + MotionScheme + partial Expressive only.
 - **Version baseline**: Feature gates, 1.5.0-line churn, BOM coverage (2026-11-10)
 - **Curated M3E notes**: Design system, color/type/shape, motion physics, components, Compose API
 - **M3 vs M3E diff**: Clear comparison and migration guide
-- **Official guidance, folded in**: the m3.material.io component pages were distilled into `references/recipes/` — variants, values, code, Do/Don't and accessibility per component — then the raw 263-page mirror was removed so there is a single source of truth
+- **Official guidance, folded in**: the m3.material.io component pages were distilled into
+  `references/recipes/` — variants, values, code, Do/Don't and accessibility per component — so there
+  is a single source of truth instead of a raw page dump
 - **Code templates**: Ready-to-use `MD3ETheme.kt`, `Color.kt`, `Type.kt`, `Shape.kt`
 - **Theme generator**: Python script to generate a complete color scheme from a single seed color
 
-### Installation
+## Installation
 
 The skill is a plain folder — `SKILL.md` + `references/` + `assets/` + `scripts/`. Pick the mode
 your assistant supports.
@@ -167,6 +174,7 @@ md3e/
 │   │   ├── pickers.md                # Date / DateRange / DateInput / Time
 │   │   ├── carousel.md               # multi-browse / uncontained / hero
 │   │   └── foundations.md            # Breakpoints / RTL / interaction / a11y baseline
+│   ├── api-index.md                  # Official API index: 386 entries + design-page mapping
 │   ├── version-baseline.md           # Version matrix, feature gates, 1.5.0 churn (2026-11-10)
 │   ├── m3e/                          # Curated M3E notes (5 zh + 5 en mirrors, verified 2026-10-23)
 │   │   ├── design-system.md          # Theming, dynamic color, system UI (+ design-system.en.md)

@@ -4,6 +4,77 @@ All notable changes to this skill are documented here. The format is based on
 [Semantic Versioning](https://semver.org/lang/zh-CN/) and the skill follows the
 `MAJOR.MINOR.PATCH` scheme described in `PUBLISH.md`.
 
+## [Unreleased]
+
+### Changed
+- **README cleanup and parity.** English `Installation` was an `h3` nested under `Features` —
+  promoted to `h2`. The Chinese README was missing the `Contributing` and `Changelog` sections
+  entirely; both added, so the two files now carry the same 11 top-level sections. Both gained an
+  `api-index.md` feature entry, and the knowledge-baseline line now records the 2026-11-17
+  re-verification instead of reading as stale. Removed environment-specific notes ("directly
+  reachable in China, no proxy") that mean nothing to someone reading the packaged skill, and
+  trimmed the repeated "263-page mirror" phrasing now that the mirror is long gone.
+
+### Added
+- **`references/api-index.md` — official API index.** Scraped from the official package-summary
+  reference page (386 entries: 176 composables, 101 classes, 67 objects, 30 interfaces, 7 enums,
+  2 modifiers, 2 annotations, 1 type alias). Each composable carries its KDoc description plus the
+  m3.material.io design page it belongs to, so the skill can be checked against upstream instead of
+  against memory. Two data problems found and fixed while building it:
+  - 5 of the official KDoc design links are dead (ottom-app-bar, 	op-app-bar, icon-button,
+    bare switch); the site was restructured and those paths no longer exist. Remapped to
+    pp-bars / icon-buttons / switch/overview — the file now has **zero dead links** against
+    the 2026-11-17 sitemap.
+  - Nested types were initially flattened (RippleConfiguration.Focus.InsetRing collapsing to
+    RippleConfiguration); the parser now keeps the fully qualified name.
+  Coverage check result: every one of the 176 composables is mentioned somewhere in the skill.
+
+### Fixed
+- **`recipes/tabs.md` used a deprecated API.** `ScrollableTabRow` and `TabRow` are both
+  `@Deprecated` in the 1.5.0 source; their `@ReplaceWith` targets are `SecondaryScrollableTabRow`
+  and `SecondaryTabRow`. The spec now uses those, documents both scrollable variants, and adds
+  `LeadingIconTab` (which was missing entirely). It also records the overload trap: the scrollable
+  variants each have a 10-parameter overload (with `minTabWidth`, current) and a 9-parameter one
+  (deprecated) — omitting `minTabWidth` silently selects the deprecated one.
+- **`recipes/containers.md` missed the whole menu-item family and the scrollbar.** Added
+  `DropdownMenuItem`'s three overloads (`onClick` / `checked + onCheckedChange` /
+  `selected + onClick`), the `Checkable-` / `SelectableDropdownMenuItem` aliases,
+  `DropdownMenuGroup`, `DropdownMenuPopup`, the full `MenuDefaults` shape matrix, and
+  `Modifier.nonInteractiveScrollbar` with `NonInteractiveScrollbarDefaults` (4dp thick, 24dp
+  thumb minimum, fade 250/400ms). Also added `SegmentedListItem`. The scrollbar example follows
+  the official sample — `scrollIndicatorState` is nullable and must be guarded, otherwise it
+  does not compile.
+- **`recipes/selection.md` missed `VerticalSlider`.** Added, including the `topToBottom`
+  semantics.
+- **`recipes/navigation.md` used the wrong item in the wide rail.** `WideNavigationRailItem` is a
+  separate composable from `NavigationRailItem` and requires a `railExpanded` boolean that has no
+  default. Passing the generic `NavigationRailItem` compiles but drops the icon-position change,
+  so the rail looks wrong at runtime. Also recorded: `WideNavigationRailValue.isExpanded` is
+  `internal`, so the only public way to derive the flag is
+  `state.currentValue == WideNavigationRailValue.Expanded`.
+- **`recipes/containers.md` had no entry for `VerticalDragHandle`, and its size was then documented
+  wrong.** Added the composable, then corrected the dimensions: it is a **4dp × 48dp vertical bar**
+  (pressed/dragged 12dp × 52dp, per `DragHandleTokens`), **not** the 32dp × 4dp horizontal pill that
+  is the bottom-sheet handle. The two are unrelated components that both happen to be called a drag
+  handle. The entry now has a side-by-side table so they cannot be confused again.
+- **Missing state factories.** Added `m3e-api-signatures.md` §11 covering the nine `remember*`
+  scroll/offset factories (`TopAppBar`, `BottomAppBar`, `FloatingToolbar`, `SearchBarScroll`,
+  `Drawer`, `RangeSlider`, `ContainedSearchBar`, `SwipeToDismissBox`, `PullToRefresh`) plus
+  `TimeScroll`, `AppBarOverflowIndicator`, `ExpandedFullScreenSearchBar` and
+  `FloatingActionButtonMenuItem`. All default values are filled in from source (no `/* default */`
+  placeholders left). Traps recorded:
+  `rememberPullToRefreshState()` takes no arguments and lives in the
+  `androidx.compose.material3.pulltorefresh` subpackage; `rememberSwipeToDismissBoxState` defaults
+  `positionalThreshold` to `SwipeToDismissBoxDefaults.positionalThreshold`, and overriding it with
+  a hand-rolled lambda desyncs the gesture from the rest of the framework;
+  `FloatingActionButtonMenuItem` is an **extension on `FloatingActionButtonMenuScope`**, not a
+  top-level function, with a mandatory `icon`; `TimeScroll` defaults to
+  `TimePickerDefaults.vibrantColors()`, not `colors()`; `rememberContainedSearchBarState` animate
+  expand/collapse with `MotionSchemeKeyTokens.FastSpatial`, not a spring.
+- **Corrupted `CHANGELOG` fragment.** An earlier edit passed the section through a Python string
+  where backslash sequences were interpreted as escapes, which ate the first letter
+  following every backtick. Rebuilt this block with a raw string.
+
 ## [1.5.0] - 2026-11-10
 
 Data refresh, implementation-spec consolidation and spec-conformance pass. No API guidance changed;
@@ -17,7 +88,7 @@ into one implementation-spec layer, and fixes the skill's own metadata and clien
   variant inventory (retired variants kept and marked ⚠️, never deleted), exact size/shape/color
   matrices, runnable snippets, accessibility rules and traps. `recipes/INDEX.md` defines the
   conventions and tracks coverage; `recipes/buttons.md` is the reference implementation of the
-  format. Remaining families are listed as TODO rather than stubbed with guesses.
+  format. Families not yet written up were left out rather than stubbed with guesses.
   The mirror pages are being **folded into** the recipes rather than kept as a second source of
   truth: `guidelines` Do/Don't callouts become a "选型与设计规则" section and `accessibility` becomes
   its own section, so answering "which style, and how" no longer needs a trip into `m3-content/`.

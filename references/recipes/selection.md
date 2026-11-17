@@ -31,7 +31,7 @@
 | 复选框 | `Checkbox`、`TriStateCheckbox` | ✅ |
 | 单选 | `RadioButton` | ✅ |
 | 开关 | `Switch` | ✅ |
-| 滑块 | `Slider`、`RangeSlider`、`SliderState`、`RangeSliderState` | ✅ |
+| 滑块 | `Slider`、`RangeSlider`、`VerticalSlider`、`SliderState`、`RangeSliderState` | ✅ |
 | 筛选条 | `FilterChip` | ✅ |
 | 输入条 | `InputChip` | ✅ |
 | 辅助条 | `AssistChip` | ✅ |
@@ -182,7 +182,25 @@ Slider(
 // 带状态对象
 val state = rememberSliderState(value = 0.5f)
 Slider(state = state)
+
+// 垂直滑块（音量、亮度这类竖向控件）
+val vState = rememberSliderState(value = 0.5f)
+VerticalSlider(
+    state = vState,
+    onValueChange = { vState.value = it },   // 或直接传 value 版本
+    topToBottom = true,                      // 默认 true：上=最大值
+)
+
+// 区间
+val rangeState = rememberRangeSliderState()   // 对应 RangeSlider(state = ...)
 ```
+
+`VerticalSlider` 的注意点：
+
+- 签名是 `VerticalSlider(state: SliderState, onValueChange, topToBottom = true, ...)`，
+  **必须给 `SliderState`**，没有接受裸 `Float` 的重载。
+- `topToBottom` 默认 `true`（顶部为最大值）。音量、亮度通常就是 `true`；进度条式的
+  "越往下越满"要设 `false`。
 
 ### 5.5 Chip
 

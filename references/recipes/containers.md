@@ -15,10 +15,13 @@
 | 基础对话框 | `AlertDialog` / `BasicAlertDialog` | ✅ |
 | 全屏对话框 | 全屏 `Surface` + `Scaffold`（无专用 composable） | ✅ |
 | 底部面板 | `ModalBottomSheet` / `BottomSheetScaffold` / `SheetDefaults` | ✅ |
+| 拖拽手柄 | `VerticalDragHandle` + `VerticalDragHandleDefaults` | ✅ 见 §5.4 |
 | 侧边面板 | **无** `SideSheet` API | 🚫 见 §8 |
-| 标准菜单 | `DropdownMenu` / `ExposedDropdownMenu` | ✅ |
+| 标准菜单 | `DropdownMenu` / `ExposedDropdownMenu` / `DropdownMenuGroup` | ✅ |
 | 分段菜单 | `SegmentedMenu`（M3E） | ✅ |
-| 列表项 | `ListItem` | ✅ |
+| 菜单项变体 | `DropdownMenuItem`（3 个重载）/ `CheckableDropdownMenuItem` / `SelectableDropdownMenuItem` | ✅ 见 §5.7 |
+| 列表项 | `ListItem` / `SegmentedListItem` | ✅ |
+| 滚动条 | `Modifier.nonInteractiveScrollbar` + `NonInteractiveScrollbarDefaults` | ✅ 见 §5.8 |
 
 ## 1. 尺寸矩阵（源码 token）
 
@@ -146,6 +149,40 @@ if (open) {
 
 需要自定义手柄时用 `SheetDefaults.DragHandle()`（32×4dp）。
 
+**手柄有独立的公开组件 `VerticalDragHandle`**（`DragHandle.kt`，358 行），比 `SheetDefaults.DragHandle()`
+多出完整的尺寸/颜色/形状三维配置：
+
+```kotlin
+VerticalDragHandle(
+    sizes = VerticalDragHandleDefaults.sizes(),
+    colors = VerticalDragHandleDefaults.colors(),
+    shapes = VerticalDragHandleDefaults.shapes(),
+)
+```
+
+| 维度 | 类型 | 默认值对象 |
+| --- | --- | --- |
+| 尺寸 | `DragHandleSizes` | `VerticalDragHandleDefaults.sizes()` |
+| 颜色 | `DragHandleColors` | `.colors()` / `.colors(color, pressedColor, draggedColor)` |
+| 形状 | `DragHandleShapes` | `.shapes()` |
+
+**尺寸不是 32×4dp。** 它和 bottom sheet 顶部那个横条手柄完全是两回事：
+
+| | `SheetDefaults.DragHandle()` | `VerticalDragHandle` |
+| --- | --- | --- |
+| 形态 | **横向胶囊** | **竖向细条** |
+| 静止 | 32dp × 4dp | **4dp × 48dp** |
+| 按下 | — | **12dp × 52dp** |
+| 拖动 | — | **12dp × 52dp** |
+| 形状 | 全圆 | 静止 `CornerFull`，按下/拖动 `CornerMedium` |
+
+数值来自 `DragHandleTokens`（`Width=4dp`、`Height=48dp`、`Pressed/DraggedWidth=12dp`、
+`Pressed/DraggedHeight=52dp`、`ContainerWidth=24dp`）。所以 `VerticalDragHandle` 是给
+**垂直边缘**用的拖动指示条，不是 bottom sheet 的顶部手柄；放错位置会显得又细又高。
+
+它内部已经调用了 `minimumInteractiveComponentSize()`，**不必再手动补 48dp**；
+同时也处理了 pressed / dragged 两种状态（`isDragged` 来自 interactionSource）。
+
 ### 5.5 菜单
 
 ```kotlin
@@ -167,7 +204,113 @@ ListItem(
     leadingContent = { Icon(Icons.Filled.Person, contentDescription = null) },
     trailingContent = { Icon(Icons.Filled.MoreVert, contentDescription = "更多") },
 )
+
+// 分段列表项：多段内容各自成块，段与段之间有形状分隔
+SegmentedListItem(
+    headlineContent = { Text("标题") },
+    supportingContent = { Text("副标题") },
+    leadingContent = { Icon(Icons.Filled.Person, contentDescription = null) },
+    trailingContent = { Icon(Icons.Filled.MoreVert, contentDescription = "更多") },
+)
 ```
+
+### 5.7 菜单项：`DropdownMenuItem` 有三个重载
+
+不是三个不同组件，是**同一个名字**按参数区分（`api/current.txt` 里被编译成
+`DropdownMenuItem` / `DropdownMenuItemChecked` / `DropdownMenuItemSelected` 三个符号）：
+
+```kotlin
+// ① 普通动作项
+DropdownMenuItem(onClick = { }, text = { Text("重命名") })
+
+// ② 可勾选（checked + onCheckedChange，带勾选语义）
+DropdownMenuItem(
+    checked = checked,
+    onCheckedChange = { checked = it },
+    text = { Text("显示网格") },
+    leadingIcon = { Icon(Icons.Filled.GridView, null) },
+    checkedLeadingIcon = { Icon(Icons.Filled.Check, null) },   // 勾选时替换前导图标
+)
+
+// ③ 选中态（selected + onClick，点击仍触发动作）
+DropdownMenuItem(
+    selected = selected,
+    onClick = { selected = true },
+    text = { Text("按日期排序") },
+    selectedLeadingIcon = { Icon(Icons.Filled.Check, null) },
+)
+```
+
+`CheckableDropdownMenuItem(...)` 与 ②、`SelectableDropdownMenuItem(...)` 与 ③ **参数完全一致**，
+是并存的别名。用哪个都行，但别在同一份代码里混用两种写法。
+
+菜单分组与新弹窗：
+
+```kotlin
+DropdownMenuPopup(
+    expanded = expanded,
+    onDismissRequest = { expanded = false },
+    popupPositionProvider = /* DropdownMenuPopupPositionProvider */,
+) {
+    DropdownMenuGroup(shapes = MenuDefaults.shapes()) {
+        DropdownMenuItem(onClick = { }, text = { Text("复制") })
+        DropdownMenuItem(onClick = { }, text = { Text("粘贴") })
+    }
+}
+```
+
+`MenuDefaults` 是菜单形状的唯一来源（**不叫** `MenuItemDefaults`）：
+
+| 成员 | 用途 |
+| --- | --- |
+| `leadingGroupShape` / `middleGroupShape` / `trailingGroupShape` | 分组在首/中/尾时的外观 |
+| `standaloneGroupShape` / `inactiveGroupShape` | 独立分组 / 未激活 |
+| `leadingItemShape` / `middleItemShape` / `trailingItemShape` / `standaloneItemShape` | 菜单项的四种位置形态 |
+| `selectedItemShape` | 选中态形状（与 chip 一样，形状参与选中表达） |
+| `GroupSpacing` | 组间距 |
+| `TonalElevation` / `ShadowElevation` | `Level0` / `MenuTokens.ContainerElevation` |
+
+### 5.8 滚动条（`Modifier.nonInteractiveScrollbar`）
+
+M3 的滚动条是**纯视觉**的，不能拖拽（名字里的 `nonInteractive` 就是这个意思）：
+
+```kotlin
+val listState = rememberLazyListState()
+val indicator = listState.scrollIndicatorState        // 类型是 ScrollIndicatorState?（可空！）
+val scrollbar = if (indicator != null) {
+    Modifier.nonInteractiveScrollbar(indicator, orientation = Orientation.Vertical)
+} else {
+    Modifier
+}
+
+LazyColumn(
+    state = listState,
+    modifier = Modifier.fillMaxSize().then(scrollbar),
+) { items(100) { Text("Item $it") } }
+```
+
+**必须判空**：`scrollIndicatorState` 是 `ScrollIndicatorState?`，而 `nonInteractiveScrollbar`
+的第一个参数非空。这是官方 sample 的写法，不是可选的防御。
+
+`NonInteractiveScrollbarDefaults`（`scrollbar` 无实验注解，不需要 opt-in）：
+
+| 成员 | 值 |
+| --- | --- |
+| `Thickness` | **4dp** |
+| `ThumbMinLength` | 24dp |
+| `ThumbMaxLengthFraction` | 0.9f |
+| `ThumbOpacity` | 0.7f |
+| `thumbColor` | `outline` @ 70% |
+| `ThumbFadeDurationMillis` | 250 |
+| `ThumbFadeDelayMillis` | 400 |
+
+行为要点：
+
+- 垂直内容画在 **end 边缘**（尊重 RTL），水平内容画在底部。
+- 内容**严格大于**视口时才出现。
+- 默认滚动时显示、停止后淡出；`isFadeEnabled = false` 可常显。
+- 内部用的是 `androidx.compose.foundation.ScrollIndicatorState`
+  （`LazyListState` / `ScrollState` 等通过 `.scrollIndicatorState` 暴露），不是 material3 自己定义的。
 
 ## 6. 选型与设计规则
 
@@ -245,3 +388,10 @@ ListItem(
 6. 给 Card 传 `elevation = CardDefaults.cardElevation(6.dp)` 会破坏交互态高度，用默认值。
 7. 44dp 的分段菜单项低于 48dp 触控标准，外层要补。
 8. `ModalBottomSheet` 忘记 `onDismissRequest` 会导致无法关闭。
+9. **滚动条必须判空**：`listState.scrollIndicatorState` 类型是 `ScrollIndicatorState?`，
+   而 `Modifier.nonInteractiveScrollbar` 的第一个参数非空。直接传会编译失败。
+10. **滚动条不可拖拽**。它是纯视觉的（`nonInteractive`），想拖拽得自己实现 pointerInput。
+11. `DropdownMenuItem` 的三个重载靠**参数名**区分：`onClick` / `checked + onCheckedChange` /
+    `selected + onClick`。传错组合会匹配到不想用的那个，或直接编译失败。
+12. 菜单默认值对象是 **`MenuDefaults`**，没有 `MenuItemDefaults` / `MenuGroupDefaults`。
+13. `SegmentedListItem` 与 `ListItem` 参数一致，但外观是分段块状；别在有分隔线的紧凑列表里用它。

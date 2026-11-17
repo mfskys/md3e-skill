@@ -8,10 +8,16 @@
 
 | 变体 | Composable | 状态 | 用途 |
 | --- | --- | --- | --- |
-| Primary | `PrimaryTabRow` + `Tab` | ✅ | 页面级主分区切换（有底部指示条） |
-| Secondary | `SecondaryTabRow` + `Tab` | ✅ | 页面内的次级分区（无指示条，靠文字/色强调） |
-| Scrollable | 上两者 + `Modifier.scrollableTabRow` 语义 | ✅ | 分区超过 3–5 个 |
-| 基线 | `TabRow` | ⚠️ 旧写法 | 保留兼容，新代码用 Primary/Secondary |
+| Primary（固定） | `PrimaryTabRow` + `Tab` | ✅ | 页面级主分区切换（底部 3dp 指示条） |
+| Primary（可滚动） | `PrimaryScrollableTabRow` + `Tab` | ✅ | 主分区超过 3–5 个 |
+| Secondary（固定） | `SecondaryTabRow` + `Tab` | ✅ | 页面内次级分区（无指示条，靠文字强调） |
+| Secondary（可滚动） | `SecondaryScrollableTabRow` + `Tab` | ✅ | 次级分区超过 3–5 个 |
+| 前置图标 | `LeadingIconTab` | ✅ | 图标在文字**之前**的 tab（`icon` 必填） |
+| ~~基线~~ | `TabRow` | ⚠️ **`@Deprecated`** → `SecondaryTabRow` | 仅旧代码 |
+| ~~基线可滚动~~ | `ScrollableTabRow` | ⚠️ **`@Deprecated`** → `SecondaryScrollableTabRow` | 仅旧代码 |
+
+两类可滚动变体各有**两个重载**：新重载（含 `minTabWidth: Dp`）可用，旧重载（9 参，无
+`minTabWidth`）已 `@Deprecated`。**传 `minTabWidth` 才会匹配到新重载**，见 §9 第 4 条。
 
 ## 1. 尺寸矩阵（源码 token）
 
@@ -107,12 +113,38 @@ SecondaryTabRow(selectedTabIndex = selected) {
 ### 5.4 可滚动（分区多）
 
 ```kotlin
-ScrollableTabRow(selectedTabIndex = selected, edgePadding = 16.dp) {
+// ✅ Primary 可滚动
+PrimaryScrollableTabRow(
+    selectedTabIndex = selected,
+    edgePadding = 16.dp,
+    minTabWidth = 72.dp,          // 新重载独有；不传会落到废弃的 9 参重载
+) {
     tabs.forEachIndexed { i, label ->
         Tab(selected = selected == i, onClick = { selected = i }, text = { Text(label) })
     }
 }
+
+// ✅ Secondary 可滚动（与上面同参，只是换成 Secondary）
+SecondaryScrollableTabRow(selectedTabIndex = selected, minTabWidth = 72.dp) { /* tabs */ }
+
+// ⚠️ ScrollableTabRow 已 @Deprecated，编译会有警告
+// ScrollableTabRow(selectedTabIndex = selected, edgePadding = 16.dp) { ... }
 ```
+
+### 5.5 前置图标（LeadingIconTab）
+
+```kotlin
+LeadingIconTab(
+    selected = selected == i,
+    onClick = { selected = i },
+    text = { Text("标签") },
+    icon = { Icon(Icons.Filled.Home, contentDescription = null) },   // 必填
+)
+```
+
+与 `Tab(icon = ...)` 的区别：`Tab` 的图标在**文字上方**（垂直堆叠，行高涨到
+`IconAndLabelTextContainerHeight` = 64dp）；`LeadingIconTab` 的图标在**文字之前**（水平排列，
+沿 `ContainerHeight` 48dp，不额外加高）。
 
 ## 6. 选型与设计规则
 
@@ -136,16 +168,26 @@ ScrollableTabRow(selectedTabIndex = selected, edgePadding = 16.dp) {
 
 ## 8. 淘汰与替代
 
-| 项 | 说明 |
-| --- | --- |
-| `TabRow`（基线） | 新代码用 `PrimaryTabRow` / `SecondaryTabRow` |
-| 圆角 tab | tab 是直角，圆角是 chip 的特征 |
-| 用 tab 做分页 | tab 是分区切换，不是分页器 |
+| 项 | 状态 | 替代 |
+| --- | --- | --- |
+| `TabRow` | `@Deprecated` | `SecondaryTabRow(selectedTabIndex, ...)` |
+| `ScrollableTabRow` | `@Deprecated` | `SecondaryScrollableTabRow(..., minTabWidth = ...)` |
+| 圆角 tab | ❌ 设计错误 | tab 是直角，圆角是 chip 的特征 |
+| 用 tab 做分页 | ❌ 用法错误 | tab 是分区切换，不是分页器 |
+
+源码里的 `@ReplaceWith` 就是上面两条：`TabRow` → `SecondaryTabRow`，
+`ScrollableTabRow` → `SecondaryScrollableTabRow`。注意替代的是 **Secondary**，不是 Primary
+—— 官方认为旧的统一入口在语义上等价于次级分区。
 
 ## 9. 陷阱
 
-1. Primary 带图标时高度变 **64dp**（48 + 图标行），布局预留高度要跟着变。
+1. Primary 带图标时高度变 **64dp**（`IconAndLabelTextContainerHeight`），布局预留高度要跟着变。
 2. Secondary **没有指示条**，它靠 1dp 分隔线，别写反。
 3. tab 容器是直角，套 `RoundedCornerShape` 会和 chip 混淆。
-4. `ScrollableTabRow` 的 `edgePadding` 默认不是 16dp，需要自己设。
-5. 切换 tab 不要销毁内容状态（用 `rememberSaveable` 或 `pagerState` 保留）。
+4. **可滚动变体必须传 `minTabWidth` 才会用到新重载**。`PrimaryScrollableTabRow` /
+   `SecondaryScrollableTabRow` 各有两个重载：10 参（含 `minTabWidth`，可用）和 9 参（无
+   `minTabWidth`，`@Deprecated`）。只传 `selectedTabIndex` 时编译器会选中那个废弃的 9 参版本，
+   出现警告却说不出原因 —— 这就是原因。
+5. `edgePadding` 默认不是 16dp，是 `TabRowDefaults.ScrollableTabRowEdgeStartPadding`。
+6. `LeadingIconTab` 的 `icon` 是**必填**参数，不是可选；只有 `Tab` 的 icon 才是可选的。
+7. 切换 tab 不要销毁内容状态（用 `rememberSaveable` 或 `pagerState` 保留）。
