@@ -8,7 +8,7 @@ Material Design 3 for Compose (page updated 2026-10-19) ✅ +
 ---
 
 > 📌 **Version policy**: this project **adopts the newest versions (including Alpha/Beta/RC)** —
-> i.e. `material3 = 1.5.0-rc01`, see `../version-baseline.md`.
+> i.e. `material3 = 1.5.0` (stable; `1.6.0-alpha01` available as a preview), see `../version-baseline.md`.
 > Mentions of the "stable line (1.4.0)" below are **channel status notes only**, not our choice.
 
 ## 1. Version gates quick reference

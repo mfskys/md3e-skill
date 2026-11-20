@@ -10,8 +10,8 @@
 
 ---
 
-> 📌 **版本策略**：本项目**采用最新版本（含 Alpha/Beta/RC）**——
-> `material3 = 1.5.0-rc01`，因此下文所有"1.5.0 线"组件**都在我们的可用范围内**。
+> 📌 **版本策略**：本项目同时跟踪最新可用线——`material3 = 1.5.0`（2026-11-18 起为正式稳定版，生产首选），
+> 另可选用 `1.6.0-alpha01` 预览未发布改动；因此下文所有"1.5.0 线"组件**都在我们的可用范围内**。
 > 见 `../version-baseline.md`。第 12 节的"采用建议"已按此更新。
 
 ## 一、按钮与操作
@@ -157,7 +157,7 @@
 
 ## 十二、采用建议（已按"激进策略"更新）
 
-1. **直接用 1.5.0 线的 M3E 全套**（`material3 = 1.5.0-rc01`）：
+1. **直接用 1.5.0 线的 M3E 全套**（`material3 = 1.5.0`，稳定版）：
    ToggleButton / ButtonGroup / SplitButtonLayout / FAB Menu / Flexible AppBar /
    slot 版 SearchBar / LoadingIndicator / ScrollField 全部可用，不再有"稳定线拿不到"的问题。
 2. **调用点收敛**：M3E 组件集中放在 `ui/expressive/`（或 `ui/components/`），

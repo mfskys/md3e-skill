@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 /**
- * MD3E Theme template — MaterialExpressiveTheme with spring motion + dynamic color.
+ * M3E Theme template — MaterialExpressiveTheme with spring motion + dynamic color.
  *
  * Replace `com.example.app` with your package name.
  * Uses `LightColorScheme` / `DarkColorScheme` from Color.kt. To use the built-in expressive

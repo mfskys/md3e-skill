@@ -116,7 +116,7 @@ Key axes:
 | `slnt` (Slant) | Italic angle | -10°–0° |
 | Plus 7 parametric axes | Fine-tuning of glyph shapes | — |
 
-### Why Variable Fonts Matter for MD3E
+### Why Variable Fonts Matter for M3E
 
 M3E emphasizes **visually emphasized typography** — heavier weights, editorial layouts, and
 dynamic adjustments. Variable fonts enable:

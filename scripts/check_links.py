@@ -2,7 +2,7 @@
 
 Skips references that are intentionally not files in this repo: the rules-mode
 install targets (AGENTS.md, GEMINI.md, QWEN.md, .cursor/.clinerules/... ) and the
-post-install path `md3e/SKILL.md`.
+post-install path `m3e/SKILL.md`.
 
 Usage:
     python scripts/check_links.py
@@ -17,7 +17,7 @@ SKIP_NAMES = {
     "AGENTS.md",
     "GEMINI.md",
     "QWEN.md",
-    "SKILL.md",  # post-install path md3e/SKILL.md
+    "SKILL.md",  # post-install path m3e/SKILL.md
 }
 SKIP_PARTS = (".clinerules/", ".continue/", ".github/", ".trae/", ".windsurf/", ".cursor/")
 

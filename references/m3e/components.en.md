@@ -10,8 +10,9 @@ To judge availability, first check which line it is on.
 
 ---
 
-> 📌 **Version policy**: this project **adopts the newest versions (including Alpha/Beta/RC)** —
-> `material3 = 1.5.0-rc01` — so all "1.5.0 line" components below **are in scope**.
+> 📌 **Version policy**: this project tracks the newest usable lines —
+> `material3 = 1.5.0` (stable since 2026-11-18) for production, with `1.6.0-alpha01` available to
+> preview unreleased changes — so all "1.5.0 line" components below **are in scope**.
 > See `../version-baseline.md`. §12 adoption advice already reflects this.
 
 ## 1. Buttons & Actions
@@ -146,7 +147,7 @@ To judge availability, first check which line it is on.
 
 ## 11. Adoption advice (aggressive track)
 
-1. **Use the full 1.5.0-line M3E set** (`material3 = 1.5.0-rc01`):
+1. **Use the full 1.5.0-line M3E set** (`material3 = 1.5.0`, stable):
    ToggleButton / ButtonGroup / SplitButtonLayout / FAB Menu / Flexible AppBar /
    slot SearchBar all available — no more "not on stable" gaps.
 2. **Confine call sites**: keep M3E components in `ui/expressive/` (or `ui/components/`)

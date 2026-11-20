@@ -1,12 +1,12 @@
 # Contributing
 
-Thanks for your interest in improving the **MD3E** skill! This document explains how
+Thanks for your interest in improving the **M3E** skill! This document explains how
 to contribute.
 
 ## Ways to Contribute
 
 - **Fix errors** in design tokens, API references, or component specs.
-- **Add content** for new MD3E components or updated Material guidelines.
+- **Add content** for new M3E components or updated Material guidelines.
 - **Improve templates** (`assets/templates/*.kt`) or the theme generator
   (`scripts/generate_theme.py`).
 - **Translate** docs or add examples.
@@ -35,7 +35,7 @@ to contribute.
 - Reference **official** sources: [m3.material.io](https://m3.material.io/) and the
   [androidx.compose.material3](https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary)
   API reference.
-- Prefer MD3E APIs where available; fall back to baseline M3 and say so explicitly.
+- Prefer M3E APIs where available; fall back to baseline M3 and say so explicitly.
 - Update `CHANGELOG.md` under the appropriate version (SemVer, see `PUBLISH.md`).
 - When refreshing the version baseline, update the date in `SKILL.md`, `README.md`,
   `README.zh-CN.md`, `references/version-baseline.md` and every `references/m3e/*.md`

@@ -4,6 +4,31 @@ All notable changes to this skill are documented here. The format is based on
 [Semantic Versioning](https://semver.org/lang/zh-CN/) and the skill follows the
 `MAJOR.MINOR.PATCH` scheme described in `PUBLISH.md`.
 
+## [1.7.0] - 2026-11-20
+
+### Changed
+- **Upstream baseline → `material3` 1.5.0 stable (2026-11-18).** Knowledge baseline moved to
+  **2026-11-20**. Documented both usable lines: **1.5.0 stable** (recommended for production) and
+  **1.6.0-alpha01** (latest pre-release, opt-in), plus the older **1.4.0** partial-Expressive line.
+  Recorded the 1.5.0 stable behaviour notes (`Slider`/`RangeSlider` stateless overloads deprecated,
+  `SecureTextField` default obfuscation, `BottomSheet` anchor, `MaterialTheme` CompositionLocal,
+  `Checkbox` re-calibration) — API surface is unchanged from rc01.
+- **Naming unified: `md3e` → `m3e` (identifier) / `MD3E` → `M3E` (display).** The skill `name` is now
+  `m3e` (still lowercase per the Agent Skills convention); all display text, install paths, package
+  names and script constants use the `m3e` / `M3E` forms. `assets/templates/MD3ETheme.kt` renamed to
+  `M3ETheme.kt`. Repository URL `github.com/mfskys/md3e-skill` is intentionally unchanged.
+- Dependencies snippet now pins `material3:1.5.0` (Option A) with `1.6.0-alpha01` as Option B.
+
+### Fixed
+- **`audit_run.py` drift.** Baseline constant updated to `2026-11-20`; `name` check now expects
+  `m3e`; nested `metadata.version` is parsed correctly; removed the obsolete `m3-content` mirror
+  checks (replaced with recipes-coverage checks); zip path corrected to `dist/m3e.zip`; SKILL.md
+  line budget raised to 260 (actual 244) instead of forcing content deletion.
+- `scripts/install_skill.py` / `scripts/package_skill.py`: defaults switched to `m3e`, package
+  output moved to in-repo `dist/`, verification answer updated to `2026-11-20`.
+- `PUBLISH.md`: release examples updated to `v1.7.0`; removed the stale "263 official pages" line
+  (mirror no longer exists); package output path aligned with the script.
+
 ## [1.6.0] - 2026-11-17
 
 ### Changed

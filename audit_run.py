@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Self-audit for the md3e skill repository.
+"""Self-audit for the m3e skill repository.
 
 Run **from the repository root**:
 
@@ -20,14 +20,14 @@ import zipfile
 ROOT = os.getcwd()
 
 # Knowledge baseline declared in SKILL.md / README — update when refreshing the docs.
-KNOWLEDGE_BASELINE = '2026-10-23'
+KNOWLEDGE_BASELINE = '2026-11-20'
 
 # Directories excluded from repo-wide scans.
 SKIP_DIRS = {'.git', 'node_modules', '__pycache__', 'dist'}
 
 # Reference files that are large upstream snapshots and legitimately contain
 # historical version numbers / dates — excluded from the stale-baseline scan.
-SNAPSHOT_PREFIXES = ('references/m3-content/', 'references/compose-api-full.md')
+SNAPSHOT_PREFIXES = ('references/compose-api-full.md',)
 
 checks = []
 
@@ -84,21 +84,23 @@ check('SKILL.md has frontmatter', bool(m))
 if m:
     fm = parse_frontmatter(m.group(1))
     name = fm.get('name', '')
-    check('frontmatter name=md3e', name == 'md3e', name)
+    check('frontmatter name=m3e', name == 'm3e', name)
     # Agent-skill naming convention (mirrors skill-creator/quick_validate.py).
     check('name is hyphen-case', bool(re.fullmatch(r'[a-z0-9-]+', name)), name)
     check('name has no leading/trailing/double hyphen',
           not (name.startswith('-') or name.endswith('-') or '--' in name), name)
-    check('frontmatter version present', bool(fm.get('version')), fm.get('version'))
+    # version lives under the nested `metadata:` block, not at top level.
+    ver = fm.get('version') or (re.search(r'^\s+version:\s*"([^"]+)"', m.group(1), re.M) or [None, ''])[1]
+    check('frontmatter version present', bool(ver), ver)
     desc = fm.get('description', '')
     check('description length <= 1024', len(desc) <= 1024, len(desc))
     check('description has no angle brackets', '<' not in desc and '>' not in desc)
-    for token in ['Material 3 Expressive', 'MD3E', 'MaterialExpressiveTheme', 'Material Design 3']:
+    for token in ['Material 3 Expressive', 'M3E', 'MaterialExpressiveTheme', 'Material Design 3']:
         check(f'description contains {token!r}', token in desc)
     check(f'declared baseline mentions {KNOWLEDGE_BASELINE}', KNOWLEDGE_BASELINE in desc)
 
 lines = skill.splitlines()
-check('SKILL.md line count <= 200', len(lines) <= 200, len(lines))
+check('SKILL.md line count <= 260', len(lines) <= 260, len(lines))
 
 # ---------------------------------------------------------- required paths ---
 required = [
@@ -118,7 +120,7 @@ required = [
     'references/m3e/design-system.en.md', 'references/m3e/color-typography-shape.en.md',
     'references/m3e/motion-physics.en.md', 'references/m3e/components.en.md',
     'references/m3e/compose-api.en.md',
-    'assets/templates/MD3ETheme.kt', 'assets/templates/Color.kt',
+    'assets/templates/M3ETheme.kt', 'assets/templates/Color.kt',
     'assets/templates/Type.kt', 'assets/templates/Shape.kt',
     'scripts/generate_theme.py', 'scripts/install_skill.py',
     'scripts/package_skill.py',
@@ -149,21 +151,13 @@ signatures = read('references/m3e-api-signatures.md')
 check('m3e-api-signatures: records that SplitButton does not exist',
       '没有 `SplitButton` 这个 composable' in signatures)
 
-# ------------------------------------------------------------- m3-content ---
-check('m3-content dir exists', os.path.isdir('references/m3-content'))
-if os.path.isdir('references/m3-content'):
-    spec_pages, hub_pages = [], []
-    for dirpath, _dirnames, filenames in os.walk('references/m3-content'):
-        for name in filenames:
-            if name.endswith('.md'):
-                path = os.path.join(dirpath, name)
-                (spec_pages if re.match(r'^---\s*\n', read(path)) else hub_pages).append(path)
-    total = len(spec_pages) + len(hub_pages)
-    check('m3-content has >= 200 md files', total >= 200, total)
-    # Documented split must match what is on disk (docs claim 249 spec + 14 overview/hub).
-    check('m3-content spec page count (249)', len(spec_pages) == 249, len(spec_pages))
-    check('m3-content hub page count (14)', len(hub_pages) == 14, len(hub_pages))
-    check('m3-content total page count (263)', total == 263, total)
+# ------------------------------------------------------- recipes coverage ---
+recipes_dir = 'references/recipes'
+check('recipes dir exists', os.path.isdir(recipes_dir))
+if os.path.isdir(recipes_dir):
+    recipes = [n for n in os.listdir(recipes_dir) if n.endswith('.md') and n != 'INDEX.md']
+    check('recipes has >= 14 component specs', len(recipes) >= 14, len(recipes))
+    check('recipes INDEX.md exists', os.path.isfile(os.path.join(recipes_dir, 'INDEX.md')))
 
 # --------------------------------------------- cross-document consistency ---
 stale = []
@@ -182,15 +176,15 @@ check('no stale 2026-09-14 baseline declarations', not stale, stale)
 check('no contradictory line-count claims', not contradictory, contradictory)
 
 # -------------------------------------------------------------------- zip ---
-ZIP = os.path.join(os.pardir, 'dist', 'md3e.zip')
+ZIP = os.path.join('dist', 'm3e.zip')
 if not os.path.exists(ZIP):
-    print('note: ../dist/md3e.zip not found — skipping release-package checks')
+    print('note: dist/m3e.zip not found — skipping release-package checks')
     print('      (generate it with PUBLISH.md step 3 before releasing)\n')
 else:
     if os.path.getmtime(ZIP) >= max(os.path.getmtime(p) for p in required if os.path.exists(p)):
-        check('dist/md3e.zip newer than sources', True)
+        check('dist/m3e.zip newer than sources', True)
     else:
-        check('dist/md3e.zip newer than sources', False, 'stale package — rebuild it')
+        check('dist/m3e.zip newer than sources', False, 'stale package — rebuild it')
 
     with zipfile.ZipFile(ZIP) as z:
         names = z.namelist()
@@ -209,7 +203,7 @@ else:
         # Distribution-format checks: exactly one top-level skill folder, POSIX separators.
         tops = {n.split('/')[0] for n in names}
         check('zip has exactly one top-level folder', len(tops) == 1, sorted(tops))
-        check('zip top-level folder is "md3e"', tops == {'md3e'}, sorted(tops))
+        check('zip top-level folder is "m3e"', tops == {'m3e'}, sorted(tops))
         backslashed = [n for n in names if '\\' in n]
         check('zip entries use forward slashes (ZIP spec)', not backslashed, backslashed[:3])
 

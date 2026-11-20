@@ -1,7 +1,7 @@
 # API 索引（官方 package-summary）
 
 > 来源：`developer.android.com/reference/kotlin/androidx/compose/material3/package-summary`
-> 抓取 **2026-11-17**，对应 `material3` 1.5.0-rc01 线。
+> 抓取 **2026-11-17**，对应 `material3` 1.5.0-rc01 线（该线已于 **2026-11-18** 转为正式稳定版 `1.5.0`，API 无变化）。
 >
 > 这份文件是**官方 API 总表**：每个条目带 KDoc 原始描述与对应的 m3.material.io 设计页。
 > 用途：① 校验 `recipes/` 覆盖度；② 查某个 composable 对应哪份设计规范；

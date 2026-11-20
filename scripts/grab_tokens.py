@@ -23,10 +23,10 @@ except AttributeError:  # pragma: no cover
 
 BASE = ("https://raw.githubusercontent.com/androidx/androidx/androidx-main/"
         "compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/")
-CACHE = Path(tempfile.gettempdir()) / "md3e-token-cache"
+CACHE = Path(tempfile.gettempdir()) / "m3e-token-cache"
 CACHE.mkdir(exist_ok=True)
 
-PROXY = os.environ.get("MD3E_PROXY")  # e.g. http://127.0.0.1:7897
+PROXY = os.environ.get("M3E_PROXY")  # e.g. http://127.0.0.1:7897
 
 
 def fetch(name: str) -> Path:

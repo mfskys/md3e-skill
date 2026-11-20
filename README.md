@@ -1,8 +1,8 @@
-# MD3E Skill
+# M3E Skills
 
 **[English](./README.md)** | **[中文](./README.zh-CN.md)**
 
-An **Agent Skill** for building Android UI with **Material Design 3 Expressive (MD3E)** on
+An **Agent Skill** for building Android UI with **Material Design 3 Expressive (M3E)** on
 **Jetpack Compose**.
 
 It follows the [Agent Skills specification](https://agentskills.io/specification): a slim `SKILL.md`
@@ -16,7 +16,7 @@ A few editors still have no skill mechanism (Windsurf, Cline, 通义灵码, 文�
 skill through a rules file, but the cost is real: rules are injected every turn and cannot pull in
 `references/` by themselves, so the model may answer from the `SKILL.md` summary alone.
 
-## What is MD3E?
+## What is M3E?
 
 Material 3 Expressive is Google's 2025 evolution of Material Design 3, featuring:
 - **Spring-based motion** (MotionScheme) replacing easing curves
@@ -24,12 +24,11 @@ Material 3 Expressive is Google's 2025 evolution of Material Design 3, featuring
 - **New components**: FloatingToolbar, ButtonGroup, `SplitButtonLayout`, WideNavigationRail, ShortNavigationBar, ToggleFloatingActionButton, LoadingIndicator, and more
 - **Expressive design principles**: bolder colors, varied shapes, variable typography, container grouping
 
-This skill covers **both MD3E and baseline M3** — many components only have M3 specs, so the skill uses MD3E where available and falls back to M3 otherwise.
+This skill covers **both M3E and baseline M3** — many components only have M3 specs, so the skill uses M3E where available and falls back to M3 otherwise.
 
-**Knowledge baseline: 2026-11-10** (re-verified 2026-11-17 — no upstream release in between).
-Full M3E component set requires `material3` **1.5.0-rc01** (the 1.5.0 line entered beta on
-2026-10-07 and reached RC on 2026-11-04); stable **1.4.0** ships M3 + MotionScheme + partial
-Expressive only.
+**Knowledge baseline: 2026-11-20.** Full M3E component set requires `material3` **1.5.0**
+(**stable since 2026-11-18**) or the latest pre-release **1.6.0-alpha01** (opt-in); the older
+**1.4.0** line ships M3 + MotionScheme + partial Expressive only.
 
 ## Features
 
@@ -56,13 +55,13 @@ Expressive only.
 - **Deprecation map**: The baseline components M3E retired — segmented button, navigation drawer,
   bottom app bar, baseline nav bar/rail, 40dp small FAB, medium/large top app bar — and what
   replaces each. Keeps generated UI from looking like plain M3
-- **Version baseline**: Feature gates, 1.5.0-line churn, BOM coverage (2026-11-10)
+- **Version baseline**: Feature gates, 1.5.0-line churn, BOM coverage (2026-11-20)
 - **Curated M3E notes**: Design system, color/type/shape, motion physics, components, Compose API
 - **M3 vs M3E diff**: Clear comparison and migration guide
 - **Official guidance, folded in**: the m3.material.io component pages were distilled into
   `references/recipes/` — variants, values, code, Do/Don't and accessibility per component — so there
   is a single source of truth instead of a raw page dump
-- **Code templates**: Ready-to-use `MD3ETheme.kt`, `Color.kt`, `Type.kt`, `Shape.kt`
+- **Code templates**: Ready-to-use `M3ETheme.kt`, `Color.kt`, `Type.kt`, `Shape.kt`
 - **Theme generator**: Python script to generate a complete color scheme from a single seed color
 
 ## Installation
@@ -70,15 +69,15 @@ Expressive only.
 The skill is a plain folder — `SKILL.md` + `references/` + `assets/` + `scripts/`. Pick the mode
 your assistant supports.
 
-**Mode 1 — native skill support (recommended).** Copy `md3e/` into the client's skills directory,
-keeping `SKILL.md` at the folder root. The directory name must match the `name` field (`md3e`):
+**Mode 1 — native skill support (recommended).** Copy `m3e/` into the client's skills directory,
+keeping `SKILL.md` at the folder root. The directory name must match the `name` field (`m3e`):
 
 | Client | Project-level | User-level |
 | --- | --- | --- |
-| Claude Code | `.claude/skills/md3e/` | `~/.claude/skills/md3e/` |
-| Cursor | `.cursor/skills/md3e/` | `~/.cursor/skills/md3e/` |
-| VS Code / GitHub Copilot | `.github/skills/md3e/` | `~/.copilot/skills/md3e/` |
-| CodeBuddy | `.codebuddy/skills/md3e/` | `~/.codebuddy/skills/md3e/` |
+| Claude Code | `.claude/skills/m3e/` | `~/.claude/skills/m3e/` |
+| Cursor | `.cursor/skills/m3e/` | `~/.cursor/skills/m3e/` |
+| VS Code / GitHub Copilot | `.github/skills/m3e/` | `~/.copilot/skills/m3e/` |
+| CodeBuddy | `.codebuddy/skills/m3e/` | `~/.codebuddy/skills/m3e/` |
 | Other native clients | see the [client showcase](https://agentskills.io/clients) (46 listed) | |
 
 **How it is used:** no slash command needed. The `description` in `SKILL.md` is the trigger — ask a
@@ -86,14 +85,14 @@ normal question ("build a floating toolbar", "what are the M3E color roles") and
 decides to load the skill, then reads `references/*.md` on demand.
 
 **Mode 2 — rules file (fallback for clients without skill support).** Put **only the body of
-`SKILL.md`** into the rules entry and keep the `md3e/` folder in the repo, so the relative
+`SKILL.md`** into the rules entry and keep the `m3e/` folder in the repo, so the relative
 `references/...` paths still resolve. Never inline the whole `references/` tree — rules files are
 injected every turn, and inlining turns a 3k-line skill into a permanent context tax.
 
 | Client | Rules entry |
 | --- | --- |
-| Windsurf | `.windsurf/rules/md3e.md` |
-| Cline | `.clinerules/md3e.md` |
+| Windsurf | `.windsurf/rules/m3e.md` |
+| Cline | `.clinerules/m3e.md` |
 | 通义灵码 / 文心快码 | the tool's custom-instruction entry |
 | Anything else | `AGENTS.md` at the repo root (widely recognised) |
 
@@ -104,35 +103,35 @@ a `references/` file, so it may answer from the summary alone.
 
 Most assistants with terminal access can install the skill themselves. Paste this prompt:
 
-> Install the MD3E skill from `<path-to-md3e>/`:
-> 1. run `python <path-to-md3e>/scripts/install_skill.py --target <skills-dir>`
-> 2. verify `<skills-dir>/md3e/SKILL.md` starts with `name: md3e`
+> Install the M3E skill from `<path-to-m3e>/`:
+> 1. run `python <path-to-m3e>/scripts/install_skill.py --target <skills-dir>`
+> 2. verify `<skills-dir>/m3e/SKILL.md` starts with `name: m3e`
 > 3. verify `references/component-index.md` and `references/m3e-api-signatures.md` exist
 > 4. tell me the install path and how to verify it
 
 Known locations are built in:
 
 ```bash
-python scripts/install_skill.py --assistant claude --home      # ~/.claude/skills/md3e
-python scripts/install_skill.py --assistant cursor --home      # ~/.cursor/skills/md3e
-python scripts/install_skill.py --assistant copilot            # .github/skills/md3e
-python scripts/install_skill.py --assistant codebuddy --home   # ~/.codebuddy/skills/md3e
-python scripts/install_skill.py --target ./skills              # ./skills/md3e
+python scripts/install_skill.py --assistant claude --home      # ~/.claude/skills/m3e
+python scripts/install_skill.py --assistant cursor --home      # ~/.cursor/skills/m3e
+python scripts/install_skill.py --assistant copilot            # .github/skills/m3e
+python scripts/install_skill.py --assistant codebuddy --home   # ~/.codebuddy/skills/m3e
+python scripts/install_skill.py --target ./skills              # ./skills/m3e
 python scripts/install_skill.py --target ./skills --dry-run    # show the plan only
 ```
 
 The script installs skill content only (allow-list), refuses to install inside the source folder,
 and refuses to overwrite an existing install without `--force`.
 
-If the assistant cannot run commands, ask it to extract `md3e.zip`, copy the `md3e/` folder into the
+If the assistant cannot run commands, ask it to extract `m3e.zip`, copy the `m3e/` folder into the
 skills directory, and then run the same four checks.
 
-**Verify the install**: ask "What is the MD3E knowledge baseline?" — the expected answer is
-`2026-11-10`, citing `references/version-baseline.md` and `material3` 1.5.0-rc01. Any other answer
+**Verify the install**: ask "What is the M3E knowledge baseline?" — the expected answer is
+`2026-11-20`, citing `references/version-baseline.md` and `material3` 1.5.0. Any other answer
 means the skill is not loaded.
 
 ```
-md3e/
+m3e/
 ├── SKILL.md
 ├── references/
 ├── assets/
@@ -155,7 +154,7 @@ pip install material-color-utilities
 ## Skill Structure
 
 ```
-md3e/
+m3e/
 ├── SKILL.md                          # Entry point: triggers, workflow, quick reference
 ├── references/
 │   ├── recipes/                      # Implementation specs — primary source of truth
@@ -175,7 +174,7 @@ md3e/
 │   │   ├── carousel.md               # multi-browse / uncontained / hero
 │   │   └── foundations.md            # Breakpoints / RTL / interaction / a11y baseline
 │   ├── api-index.md                  # Official API index: 386 entries + design-page mapping
-│   ├── version-baseline.md           # Version matrix, feature gates, 1.5.0 churn (2026-11-10)
+│   ├── version-baseline.md           # Version matrix, feature gates, 1.5.0 churn (2026-11-20)
 │   ├── m3e/                          # Curated M3E notes (5 zh + 5 en mirrors, verified 2026-10-23)
 │   │   ├── design-system.md          # Theming, dynamic color, system UI (+ design-system.en.md)
 │   │   ├── color-typography-shape.md # Color / type / shape (+ color-typography-shape.en.md)
@@ -194,19 +193,19 @@ md3e/
 │   └── design-research.md            # Color science, readability, motion patterns, a11y
 ├── assets/
 │   └── templates/
-│       ├── MD3ETheme.kt              # MaterialExpressiveTheme setup template
+│       ├── M3ETheme.kt              # MaterialExpressiveTheme setup template
 │       ├── Color.kt                  # Full 48-role color scheme template
 │       ├── Type.kt                   # 15 base type styles (+ 15 Emphasized slots documented)
 │       └── Shape.kt                  # 8-size shape scale template
 └── scripts/
     ├── generate_theme.py             # Seed color -> complete Compose theme
     ├── install_skill.py              # Install into a skills directory (AI can run this)
-    └── package_skill.py              # Build dist/md3e.zip (repository only, not shipped)
+    └── package_skill.py              # Build dist/m3e.zip (repository only, not shipped)
 ```
 
 ## Key APIs
 
-| Category | M3 | MD3E |
+| Category | M3 | M3E |
 |----------|----|------|
 | Theme | `MaterialTheme` | `MaterialExpressiveTheme` |
 | Color | `lightColorScheme()` / `darkColorScheme()` | + `expressiveLightColorScheme()` |
@@ -222,11 +221,11 @@ After installing the skill, just ask your AI assistant naturally. The skill auto
 
 **Component creation:**
 > "Create a Material 3 Expressive floating toolbar with 3 action buttons"
-> "Build a button group with overflow menu using MD3E"
+> "Build a button group with overflow menu using M3E"
 > "Make a Material 3 card list following the design spec"
 
 **Design guidance:**
-> "What are the MD3E color roles and when to use each?"
+> "What are the M3E color roles and when to use each?"
 > "What's the difference between M3 and M3E motion system?"
 > "Which shape should I use for a FAB?"
 

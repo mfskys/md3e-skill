@@ -1,4 +1,4 @@
-# MD3E Design Tokens
+# M3E Design Tokens
 
 Complete design token reference for Material Design 3 Expressive, extracted from the official
 `androidx.compose.material3` API reference and m3.material.io guidelines.
@@ -93,7 +93,7 @@ These replace the old elevation overlay system with discrete tonal surface level
 fun lightColorScheme(primary, onPrimary, primaryContainer, ...): ColorScheme
 fun darkColorScheme(primary, onPrimary, primaryContainer, ...): ColorScheme
 
-// MD3E expressive defaults
+// M3E expressive defaults
 fun expressiveLightColorScheme(): ColorScheme  // M3E default light scheme
 
 // Dynamic color (Android 12+, from wallpaper)
@@ -103,7 +103,7 @@ fun dynamicDarkColorScheme(context: Context): ColorScheme
 
 ### 1.3 Contrast Levels (Android 16)
 
-MD3E supports three contrast levels accessible via system settings:
+M3E supports three contrast levels accessible via system settings:
 - **Default** — standard contrast
 - **Medium** — enhanced contrast
 - **High** — maximum contrast
@@ -144,9 +144,9 @@ every M3 version; the Emphasized variants are M3E-only (`Typography` on stable 1
 | `labelMedium` | 12 / 16 | Medium (500) | 0.5sp | Small labels |
 | `labelSmall` | 11 / 16 | Medium (500) | 0.5sp | Tiny labels, captions |
 
-### MD3E Typography Enhancements
+### M3E Typography Enhancements
 
-- **Variable fonts**: MD3E encourages variable fonts for dynamic weight/width adjustments
+- **Variable fonts**: M3E encourages variable fonts for dynamic weight/width adjustments
 - **Emphasized slots (M3E)**: `Typography` gains 15 parallel slots — `displayLargeEmphasized`,
   `headlineSmallEmphasized`, `titleLargeEmphasized`, `bodyMediumEmphasized`, `labelSmallEmphasized`,
   … Read them with `MaterialTheme.typography.titleLargeEmphasized`. Their token values live in
@@ -210,10 +210,10 @@ val shapes = Shapes(
 
 Access via `MaterialTheme.shapes.medium`, etc.
 
-### MD3E Shape Principles
+### M3E Shape Principles
 
 - **Break uniformity**: mix shapes to create visual tension and guide attention
-- **Shape morphing**: MD3E supports animated shape transitions (e.g., toggle FAB morphing)
+- **Shape morphing**: M3E supports animated shape transitions (e.g., toggle FAB morphing)
 - **35 shape variants**: official spec includes 35 shapes for image cropping, avatars, etc.
 - **Component-specific shapes**: `ButtonShapes`, `ChipShapes`, `SplitButtonShapes` classes
   allow per-component shape customization
@@ -242,9 +242,9 @@ Access via `MaterialTheme.shapes.medium`, etc.
 | `Medium1`–`Medium4` | 250–400ms | Medium transitions |
 | `Long1`–`Long4` | 450–600ms | Large/complex transitions |
 
-### 4.2 MD3E: Spring-Based Motion
+### 4.2 M3E: Spring-Based Motion
 
-MD3E replaces easing curves with **spring physics** driven by three parameters:
+M3E replaces easing curves with **spring physics** driven by three parameters:
 - **Stiffness** — controls overall animation speed
 - **DampingRatio** — controls bounce/overshoot
 - **InitialVelocity** — starting velocity
@@ -419,9 +419,9 @@ Surface(
 - In **dark** mode: tonal elevation lightens the surface using primary color tint
 - `shadowElevation` adds a drop shadow in both modes
 
-### MD3E Elevation Changes
+### M3E Elevation Changes
 
-MD3E increasingly uses `surfaceContainer*` color roles instead of tonal elevation to distinguish
+M3E increasingly uses `surfaceContainer*` color roles instead of tonal elevation to distinguish
 surface layers. Prefer surface container roles for layering; reserve elevation for true depth.
 
 ---

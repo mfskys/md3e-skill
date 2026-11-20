@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Package the md3e skill into a distributable zip.
+"""Package the m3e skill into a distributable zip.
 
-Produces ``dist/md3e.zip`` containing a single top-level ``md3e/`` folder, which
+Produces ``dist/m3e.zip`` containing a single top-level ``m3e/`` folder, which
 is what the agent-skill distribution format expects — users extract the archive
-and drop the resulting ``md3e/`` folder straight into their skills directory:
+and drop the resulting ``m3e/`` folder straight into their skills directory:
 
-    md3e.zip
-    └── md3e/
+    m3e.zip
+    └── m3e/
         ├── SKILL.md
         ├── references/
         ├── assets/
@@ -25,7 +25,7 @@ names contain literal ``\\`` characters.
 
 Usage:
     python scripts/package_skill.py
-    python scripts/package_skill.py --source . --out ../dist --name md3e
+    python scripts/package_skill.py --source . --out ../dist --name m3e
 """
 
 import argparse
@@ -35,7 +35,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-DEFAULT_NAME = 'md3e'
+DEFAULT_NAME = 'm3e'
 
 # Whitelist: only these ship. Everything else in the working tree (VCS data,
 # local source checkouts, scratch dirs, maintenance scripts) is ignored by
@@ -79,9 +79,9 @@ def iter_skill_files(root: Path):
 
 
 def main():
-    ap = argparse.ArgumentParser(description='Package the md3e skill into a distributable zip.')
+    ap = argparse.ArgumentParser(description='Package the m3e skill into a distributable zip.')
     ap.add_argument('--source', default='.', help='skill source directory (default: current directory)')
-    ap.add_argument('--out', default=os.path.join('..', 'dist'), help='output directory for the zip')
+    ap.add_argument('--out', default='dist', help='output directory for the zip (default: dist/)')
     ap.add_argument('--name', default=DEFAULT_NAME, help='skill folder name used inside the archive')
     args = ap.parse_args()
 

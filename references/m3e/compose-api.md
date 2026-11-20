@@ -8,7 +8,7 @@ Compose 中的 Material Design 3（页面更新 2026-10-19）✅ +
 ---
 
 > 📌 **版本策略**：本项目**采用最新版本（含 Alpha/Beta/RC）**——
-> 即 `material3 = 1.5.0-rc01`，见 `../version-baseline.md`。
+> 即 `material3 = 1.5.0`（稳定版；另可选 `1.6.0-alpha01` 预览），见 `../version-baseline.md`。
 > 本文件中"稳定线（1.4.0）"的表述只是**官方通道状态说明**，不代表我们的选择。
 
 ## 一、版本门槛速查

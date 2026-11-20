@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install the MD3E skill into an AI assistant's skills directory.
+"""Install the M3E skill into an AI assistant's skills directory.
 
 The whole folder is copied, so relative paths such as ``references/version-baseline.md``
 keep working after installation.
@@ -19,7 +19,7 @@ import shutil
 import sys
 from pathlib import Path
 
-SKILL_NAME = 'md3e'
+SKILL_NAME = 'm3e'
 SOURCE = Path(__file__).resolve().parent.parent
 
 REQUIRED = [
@@ -27,7 +27,7 @@ REQUIRED = [
     'references/version-baseline.md',
     'references/component-index.md',
     'references/compose-patterns.md',
-    'assets/templates/MD3ETheme.kt',
+    'assets/templates/M3ETheme.kt',
 ]
 
 # Well-known skill directories, relative to the project or the user home.
@@ -54,8 +54,8 @@ def validate(source):
     skill = source / 'SKILL.md'
     if skill.is_file():
         head = skill.read_text(encoding='utf-8', errors='replace')[:2000]
-        if 'name: md3e' not in head:
-            problems.append('SKILL.md frontmatter name is not "md3e"')
+        if 'name: m3e' not in head:
+            problems.append('SKILL.md frontmatter name is not "m3e"')
         if 'description:' not in head:
             problems.append('SKILL.md frontmatter has no description')
     return problems
@@ -88,8 +88,8 @@ def copy_skill(source, dest):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Install the MD3E skill for an AI assistant.')
-    parser.add_argument('--target', help='skills directory; the skill is created as <target>/md3e')
+    parser = argparse.ArgumentParser(description='Install the M3E skill for an AI assistant.')
+    parser.add_argument('--target', help='skills directory; the skill is created as <target>/m3e')
     parser.add_argument('--assistant', choices=sorted(ASSISTANT_DIRS),
                         help='use a well-known skills directory (project-level by default)')
     parser.add_argument('--home', action='store_true',
@@ -131,8 +131,8 @@ def main():
     count = copy_skill(SOURCE, dest)
 
     print(f'installed {count} files -> {dest}')
-    print('verify: ask your assistant "What is the MD3E knowledge baseline?" '
-          '(expected answer: 2026-10-23).')
+    print('verify: ask your assistant "What is the M3E knowledge baseline?" '
+          '(expected answer: 2026-11-20).')
 
 
 if __name__ == '__main__':

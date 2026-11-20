@@ -20,7 +20,7 @@ and content set the tone at first glance.
 - **Do**: break from the surrounding shape style to draw attention to a particular element
 - **Caution**: smaller shapes can make essential actions look less important
 
-### MD3E Shape Features
+### M3E Shape Features
 - **35 shape variants** in the official shape library for image crops, avatars, decorative elements
 - **Shape-morph animation**: smooth transitions from one shape to another (e.g., square → circle)
 - **Component shape classes**: `ButtonShapes`, `ChipShapes`, `SplitButtonShapes`
@@ -37,14 +37,14 @@ surfaces. Mixing these for key components helps emphasize the main takeaway of a
   surfaceContainerHighest) to layer content
 - Use **contrast between primary, secondary, and tertiary** color roles to prioritize actions
   and simplify navigation
-- MD3E adds **Fixed color roles** that don't change between light/dark — use for brand elements,
+- M3E adds **Fixed color roles** that don't change between light/dark — use for brand elements,
   illustrations, or content that must look identical in both themes
 
 ### Do / Caution
 - **Do**: use contrast to emphasize the main takeaway or element
 - **Caution**: without contrast, elements can blend together
 
-### MD3E Color Features
+### M3E Color Features
 - 18 new Fixed color roles (primaryFixed, secondaryFixed, tertiaryFixed + dim/variant)
 - 7 surface container roles (surfaceDim, surfaceBright, surfaceContainerLowest through Highest)
 - Three contrast levels (Default, Medium, High) on Android 16
@@ -62,7 +62,7 @@ Use emphasized text styles to draw attention to important UI elements like headl
 - Use additional type styles from the Material type scale to create appropriate hierarchy within
   and between blocks of content
 
-### MD3E Typography Features
+### M3E Typography Features
 - **Emphasized text styles** — new type styles for variable and static fonts expressing emotional
   states
 - **Variable fonts** — dynamically adjust weight, width for readability

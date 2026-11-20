@@ -3,9 +3,9 @@
 Material 3 Expressive (M3E) is an **expansion** of Material Design 3, not a replacement. This
 document covers what changed, what's new, and what stayed the same.
 
-> **Version baseline (2026-10-23):** full M3E component set ships only on the **1.5.0 line**
-> (`material3` **1.5.0-rc01**, 2026-11-04; the line entered beta on 2026-10-07). Stable **1.4.0** = M3 +
-> `MotionScheme` + partial Expressive. Since **1.4.0-beta01**, all public
+> **Version baseline (2026-11-20):** full M3E component set ships on the **1.5.0 line**
+> (`material3` **1.5.0**, **stable since 2026-11-18**) or the latest pre-release **1.6.0-alpha01**.
+> The older **1.4.0** = M3 + `MotionScheme` + partial Expressive. Since **1.4.0-beta01**, all public
 > `ExperimentalMaterial3ExpressiveApi` APIs were **removed from the stable line**.
 > Details: `references/version-baseline.md`, `references/m3e/compose-api.md`.
 
