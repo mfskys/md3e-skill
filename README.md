@@ -252,7 +252,7 @@ This skill is for reference and educational purposes. The actual behavior of Mat
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/mfskys/md3e-skill/blob/main/CONTRIBUTING.md) for how to
+See [CONTRIBUTING.md](https://github.com/mfskys/M3E-Skills/blob/main/CONTRIBUTING.md) for how to
 report issues, propose changes, and submit pull requests. The file is repository-only and is not
 included in the release zip.
 

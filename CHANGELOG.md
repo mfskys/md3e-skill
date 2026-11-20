@@ -13,10 +13,11 @@ All notable changes to this skill are documented here. The format is based on
   Recorded the 1.5.0 stable behaviour notes (`Slider`/`RangeSlider` stateless overloads deprecated,
   `SecureTextField` default obfuscation, `BottomSheet` anchor, `MaterialTheme` CompositionLocal,
   `Checkbox` re-calibration) — API surface is unchanged from rc01.
-- **Naming unified: `md3e` → `m3e` (identifier) / `MD3E` → `M3E` (display).** The skill `name` is now
-  `m3e` (still lowercase per the Agent Skills convention); all display text, install paths, package
-  names and script constants use the `m3e` / `M3E` forms. `assets/templates/MD3ETheme.kt` renamed to
-  `M3ETheme.kt`. Repository URL `github.com/mfskys/md3e-skill` is intentionally unchanged.
+- **Naming unified: `md3e` → `m3e` (identifier) / `MD3E` → `M3E` (display), display name `M3E Skills`.**
+  The skill `name` is now `m3e` (still lowercase per the Agent Skills convention); all display text,
+  install paths, package names and script constants use the `m3e` / `M3E` forms. `assets/templates/MD3ETheme.kt`
+  renamed to `M3ETheme.kt`. The GitHub repository was also renamed to `mfskys/M3E-Skills`; all links
+  now point at the new URL.
 - Dependencies snippet now pins `material3:1.5.0` (Option A) with `1.6.0-alpha01` as Option B.
 
 ### Fixed
@@ -429,4 +430,4 @@ that support the agent skill format.
 - Bilingual README (`README.md` / `README.zh-CN.md`).
 - Apache License 2.0.
 
-[1.0.0]: https://github.com/mfskys/md3e-skill/releases/tag/v1.0.0
+[1.0.0]: https://github.com/mfskys/M3E-Skills/releases/tag/v1.0.0

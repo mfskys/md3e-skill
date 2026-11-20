@@ -1,10 +1,10 @@
 # 发布与同步流程
 
-本文件记录 md3e-skill 仓库的 Git 推送、本地技能同步、发布包生成、GitHub Release 发布的完整流程。
+本文件记录 M3E-Skills 仓库的 Git 推送、本地技能同步、发布包生成、GitHub Release 发布的完整流程。
 
 > 工作区（源）：克隆到本地的仓库目录（下文用 `<repo>` 表示）
 > 安装位置（目标）：`~/.codebuddy/skills/m3e`（Windows 为 `%USERPROFILE%\.codebuddy\skills\m3e`）
-> 仓库地址：https://github.com/mfskys/md3e-skill
+> 仓库地址：https://github.com/mfskys/M3E-Skills
 > 邮箱：使用 GitHub **noreply** 邮箱（在 GitHub → Settings → Emails 查看；避免 GH007）
 
 以下示例中的 `<repo>` 仅为占位，请替换为你本机的实际克隆路径（不要在仓库文档里写真实路径）。
@@ -76,7 +76,7 @@ python scripts/package_skill.py
 
 ## 4. 创建 GitHub Release
 
-1. 打开：https://github.com/mfskys/md3e-skill/releases/new
+1. 打开：https://github.com/mfskys/M3E-Skills/releases/new
 2. 填写：
    - **Choose a tag**：选刚推的 `v1.7.0`（或新版本号）
    - **Release title**：`M3E Skills v1.7.0`
@@ -110,7 +110,7 @@ M3E Skills v1.7.0 — Material Design 3 Expressive (M3E) AI 技能包
 - 规则驱动：把 `SKILL.md` 内容放进规则入口（`.cursor/rules/`、`.windsurf/rules/`、
   `AGENTS.md`、`.github/copilot-instructions.md` 等），并保留 `m3e/` 文件夹
 
-仓库: https://github.com/mfskys/md3e-skill
+仓库: https://github.com/mfskys/M3E-Skills
 ```
 
 升级版本时改写 "新版本" 段落，列出本次新增/修复内容。
@@ -167,7 +167,7 @@ python scripts/package_skill.py
 $dest = Join-Path $env:USERPROFILE '.codebuddy\skills\m3e'
 robocopy $repo $dest /E /XD .git .github dist __pycache__ /XF .gitignore .gitattributes *.pyc *.zip /NFL /NDL /NJH /NJS /NP
 
-Write-Host "完成。接下来去 https://github.com/mfskys/md3e-skill/releases/new 创建 Release。"
+Write-Host "完成。接下来去 https://github.com/mfskys/M3E-Skills/releases/new 创建 Release。"
 ```
 
 ---

@@ -240,7 +240,7 @@ m3e/
 
 ## 参与贡献
 
-见 [CONTRIBUTING.md](https://github.com/mfskys/md3e-skill/blob/main/CONTRIBUTING.md)：如何报告问题、
+见 [CONTRIBUTING.md](https://github.com/mfskys/M3E-Skills/blob/main/CONTRIBUTING.md)：如何报告问题、
 提出改动与提交 PR。该文件仅存在于仓库，不随发行包分发。
 
 ## 变更日志
